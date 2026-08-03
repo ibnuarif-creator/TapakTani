@@ -6,6 +6,10 @@
 // ============================================================
 // KOORDINAT KECAMATAN (lat, lng) — Kabupaten Kubu Raya
 // ============================================================
+// Warna & label kelas kesesuaian lahan (dipakai hero map & peta detail desa)
+const kelasColor = { S1: '#1a6e3c', S2: '#5aac72', S3: '#e8c53a', N: '#d94f3a' };
+const kelasLabel = { S1: 'Sangat Sesuai', S2: 'Cukup Sesuai', S3: 'Sesuai Marginal', N: 'Tidak Sesuai' };
+
 const kecamatanCoords = {
   'sungai-raya':      { lat: -0.0522,  lng: 109.3620, zoom: 12 },
   'sungai-kakap':     { lat: -0.1700,  lng: 109.2200, zoom: 12 },
@@ -23,7 +27,7 @@ const kecamatanCoords = {
 // ============================================================
 const kecamatanData = {
   'sungai-raya': {
-    number: '01',
+    number: '02',
     name: 'Sungai Raya',
     tagline: 'Ibu Kota Kabupaten Kubu Raya',
     desc: 'Kecamatan Sungai Raya terletak di dataran rendah aluvial dengan elevasi rata-rata 6 m dpl. Jenis tanah didominasi Lempung Liat Berdebu (Silty Clay Loam) dengan kapasitas tukar kation (KTK) sedang hingga tinggi, drainase sedang, dan kemampuan menahan air yang baik — karakteristik ideal untuk budidaya padi sawah beririgasi dan tanaman hortikultura semusim. Curah hujan tahunan 3.262 mm dengan distribusi merata mencukupi kebutuhan air tanaman pada fase vegetatif maupun generatif, sedangkan suhu rata-rata 26,2°C mendukung proses metabolisme tanaman tropika basah secara optimal. Analisis citra Sentinel-2 (2022–2024) menunjukkan NDVI rata-rata 0,66, mencerminkan dominasi tutupan lahan pertanian aktif dan vegetasi campuran yang produktif. Kecamatan ini merupakan sentra produksi nanas dan hortikultura yang didukung aksesibilitas jalan memadai untuk distribusi hasil panen.',
@@ -54,7 +58,7 @@ const kecamatanData = {
     ]
   },
   'sungai-kakap': {
-    number: '02',
+    number: '03',
     name: 'Sungai Kakap',
     tagline: 'Sentra Kelapa & Padi Pasang Surut',
     desc: 'Kecamatan Sungai Kakap merupakan kawasan pertanian lahan pasang surut di pesisir barat dengan elevasi 3 m dpl. Jenis tanah berupa Lempung Berliat (Clay Loam) pada sistem rawa pasang surut memiliki kapasitas tukar kation (KTK) sedang dan kemampuan menahan air tinggi, mendukung budidaya tanaman yang toleran terhadap fluktuasi muka air tanah. Sistem tata air pada tipologi lahan pasang surut tipe B memungkinkan penerapan pola tanam padi–palawija dengan pengelolaan saluran drainase yang terencana. Curah hujan 2.743 mm/tahun mencukupi kebutuhan air kelapa dan sagu tanpa menyebabkan kelebihan air pada lahan yang telah memiliki infrastruktur drainase. Analisis citra Sentinel-2 (2022–2024) mencatat NDVI rata-rata 0,69, menunjukkan kerapatan tutupan vegetasi perkebunan kelapa dan sawah pasang surut yang stabil sepanjang tahun.',
@@ -83,7 +87,7 @@ const kecamatanData = {
     ]
   },
   'rasau-jaya': {
-    number: '03',
+    number: '01',
     name: 'Rasau Jaya',
     tagline: 'Kawasan Transmigrasi Pertanian Gambut',
     desc: 'Kecamatan Rasau Jaya adalah kawasan transmigrasi yang berkembang di atas lahan gambut dangkal hingga sedang (kedalaman 0,5–2 m) dengan elevasi 7 m dpl. Jenis tanah berupa Lempung Liat Berpasir (Sandy Clay Loam) pada lapisan mineral di bawah gambut memberikan aerasi perakaran yang cukup baik untuk sistem perakaran tanaman perkebunan. Lapisan gambut bagian atas bersifat masam dengan pH 3,5–4,5 dan kandungan bahan organik tinggi, sehingga diperlukan ameliorasi lahan berupa pengapuran (liming) dan pemupukan berimbang untuk mendukung budidaya tanaman pangan. Curah hujan 2.984 mm/tahun mendukung pola tanam ganda dan menjaga kelembaban gambut agar tidak mengalami kekeringan irreversibel. Nilai NDVI 0,69 dari analisis Sentinel-2 (2022–2024) mencerminkan aktivitas fotosintesis yang stabil pada lahan gambut terkelola, dengan semangka sebagai komoditas unggulan hasil adaptasi teknik budidaya musiman setempat.',
@@ -471,7 +475,7 @@ function renderSyaratTumbuh(kecId) {
         <div class="crop-vc-row">${dots}</div>
         <div class="crop-st-right">
           <div class="crop-badge-block">
-            <span class="crop-badge-st bdg-${hasil.level}">${hasil.label}</span>
+            <span class="crop-badge-st bdg-${hasil.level}">${hasil.label.replace(' ', '<br>')}</span>
             <span class="crop-saw-val">${hasil.sawScore.toFixed(2)}</span>
           </div>
           <div class="crop-chevron-btn">
@@ -552,6 +556,10 @@ const petaImages = {
 let modalMap = null;
 let modalMapMarker = null;
 let modalMapCircle = null;
+let modalDesaMap = null;
+let modalDesaGeoLayer = null;
+let desaDetailMap = null;
+let desaDetailLayer = null;
 
 function initOrUpdateModalMap(kecId) {
   try {
@@ -665,6 +673,450 @@ function initOrUpdateModalMap(kecId) {
 }
 
 // ============================================================
+// PETA DETAIL DESA — Khusus Kecamatan Rasau Jaya
+// ============================================================
+function initRasauJayaDesaMap() {
+  try {
+    if (typeof rasauJayaDesaData === 'undefined') {
+      console.warn('rasauJayaDesaData tidak ditemukan — pastikan data/rasau_jaya_desa.js dimuat.');
+      return;
+    }
+
+    // Init peta sekali saja
+    if (!modalDesaMap) {
+      modalDesaMap = L.map('modalDesaMap', {
+        zoomControl: true,
+        scrollWheelZoom: false,
+        attributionControl: true
+      });
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+        maxZoom: 18,
+      }).addTo(modalDesaMap);
+    }
+
+    // Bersihkan layer lama (kalau modal dibuka berkali-kali)
+    if (modalDesaGeoLayer) {
+      modalDesaMap.removeLayer(modalDesaGeoLayer);
+      modalDesaGeoLayer = null;
+    }
+
+    modalDesaGeoLayer = L.geoJSON(rasauJayaDesaData, {
+      style: feature => {
+        const k = feature.properties.kelas || 'N';
+        return {
+          color: '#ffffff',
+          weight: 1.5,
+          fillColor: kelasColor[k] || '#888',
+          fillOpacity: 0.55
+        };
+      },
+      onEachFeature: (feature, layer) => {
+        const p = feature.properties;
+        const k = p.kelas || 'N';
+        layer.bindPopup(`
+          <div style="font-family:'Outfit',sans-serif;min-width:170px;padding:2px 0">
+            <div style="font-weight:700;font-size:13px;margin-bottom:5px;color:#0D1F16">${p.NAME_4}</div>
+            <div style="font-size:11.5px;margin-bottom:2px">Kelas: <b style="color:${kelasColor[k]}">${k} — ${kelasLabel[k]}</b></div>
+            <div style="font-size:11.5px;color:#444">Skor Weighted Overlay: <b>${p.skor ? p.skor.toFixed(2) : '-'}</b></div>
+            <div style="font-size:11.5px;color:#444">NDVI rata-rata: <b>${p.ndvi ? p.ndvi.toFixed(2) : '-'}</b></div>
+          </div>
+        `, { maxWidth: 220 });
+        layer.on('mouseover', () => layer.setStyle({ fillOpacity: 0.8, weight: 2.5 }));
+        layer.on('mouseout',  () => layer.setStyle({ fillOpacity: 0.55, weight: 1.5 }));
+      }
+    }).addTo(modalDesaMap);
+
+    modalDesaMap.fitBounds(modalDesaGeoLayer.getBounds(), { padding: [12, 12] });
+
+    // Daftar desa di bawah peta, diurutkan dari skor tertinggi — bisa diklik untuk
+    // fokus ke polygon-nya sekaligus membuka popup baru berisi komoditas desa tersebut
+    const listEl = document.getElementById('modalDesaList');
+    if (listEl) {
+      const rows = [];
+      modalDesaGeoLayer.eachLayer(layer => {
+        rows.push({ layer, props: layer.feature.properties });
+      });
+      rows.sort((a, b) => (b.props.skor || 0) - (a.props.skor || 0));
+
+      listEl.innerHTML = rows.map((r, i) => {
+        const k = r.props.kelas || 'N';
+        return `
+        <div class="kelas-row kelas--${k.toLowerCase()}" data-idx="${i}" role="button" tabindex="0" aria-label="Buka detail Desa ${r.props.NAME_4}">
+          <span class="kelas-rank">${i + 1}</span>
+          <span class="kelas-badge">${k}</span>
+          <span class="kelas-name">${r.props.NAME_4}</span>
+          <span class="kelas-range">${r.props.skor ? r.props.skor.toFixed(2) : '-'}</span>
+        </div>`;
+      }).join('');
+
+      listEl.querySelectorAll('.kelas-row').forEach(row => {
+        const openRow = () => {
+          const idx = Number(row.dataset.idx);
+          const target = rows[idx];
+          if (!target) return;
+          modalDesaMap.fitBounds(target.layer.getBounds(), { padding: [40, 40], maxZoom: 15 });
+          target.layer.openPopup();
+          openDesaModal(target.layer.feature, idx + 1, rows.length);
+        };
+        row.addEventListener('click', openRow);
+        row.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openRow(); } });
+      });
+    }
+
+    setTimeout(() => { if (modalDesaMap) modalDesaMap.invalidateSize(); }, 150);
+  } catch (e) {
+    console.warn('Rasau Jaya desa map error:', e);
+  }
+}
+
+// ── SAW komoditas tingkat DESA — Rasau Jaya ────────────────────────────────
+// Memperluas hitungSkorKrop (4 kriteria iklim/tanah tingkat kecamatan) dengan
+// kriteria ke-5 "Kesesuaian Lahan Desa" (skor Weighted Overlay GIS desa
+// bersangkutan, dari data/rasau_jaya_desa.js). Kriteria ke-5 bernilai sama untuk
+// tiap komoditas dalam satu desa (karena bersumber dari kualitas lahan wilayah,
+// bukan iklim), sehingga urutan antar-komoditas tetap konsisten dengan iklim
+// kecamatan, namun skor SAW akhir & kelas kesesuaian bisa berbeda antar desa
+// sesuai kualitas lahan riil masing-masing (NDVI, tanah, air, lereng, akses).
+const SAW_BOBOT_DESA = [0.15, 0.10, 0.20, 0.25, 0.30]; // Hujan, Suhu, Elevasi, Tanah, Lahan Desa
+
+function hitungSkorKropDesa(iklim, syarat, desaProps) {
+  const dasar = hitungSkorKrop(iklim, syarat);
+  const nilaiLahanDesa = Math.max(0, Math.min(1, (desaProps.skor || 0) / 4));
+  const nilaiArr = [...dasar.nilaiArr, nilaiLahanDesa];
+  const sawScore = +nilaiArr.reduce((s, v, i) => s + SAW_BOBOT_DESA[i] * v, 0).toFixed(3);
+
+  let level, label;
+  if      (sawScore >= 0.80) { level = 'sangat-cocok'; label = 'Sangat Cocok';  }
+  else if (sawScore >= 0.60) { level = 'cocok';         label = 'Cocok';          }
+  else if (sawScore >= 0.40) { level = 'cukup';         label = 'Cukup Sesuai';  }
+  else                        { level = 'kurang';        label = 'Kurang Sesuai'; }
+
+  return { ...dasar, level, label, sawScore, nilaiArr, nilaiLahanDesa };
+}
+
+function getDesaCropRanking(desaProps) {
+  const d = kecamatanData['rasau-jaya'];
+  if (!d || !d.relevantCrops) return [];
+  if (typeof iklimKecamatan === 'undefined' || typeof syaratTumbuhDB === 'undefined') return [];
+  const iklim = iklimKecamatan['rasau-jaya'];
+  if (!iklim) return [];
+  return d.relevantCrops
+    .filter(id => syaratTumbuhDB[id])
+    .map(id => {
+      const syarat = syaratTumbuhDB[id];
+      const hasil = hitungSkorKropDesa(iklim, syarat, desaProps);
+      return { id, nama: syarat.nama, icon: syarat.icon, kategori: syarat.kategori, ...hasil };
+    })
+    .sort((a, b) => b.sawScore - a.sawScore);
+}
+
+// ── Panel detail SAW komoditas — versi desa (5 kriteria, sama formatnya
+// dengan buildSAWPanel tingkat kecamatan, ditambah baris Kesesuaian Lahan Desa) ─
+function buildSAWPanelDesa(iklim, syarat, hasil, desaProps) {
+  const tanahName = {
+    1:'Clay', 2:'Silty Clay', 3:'Sandy Clay', 4:'Clay Loam',
+    5:'Silty Clay Loam', 6:'Sandy Clay Loam', 7:'Loam', 8:'Silty Loam',
+    9:'Sandy Loam', 10:'Silt', 11:'Loamy Sand', 12:'Sand'
+  };
+  // Urutan tampilan: bobot terbesar → terkecil
+  const kriteria = [
+    {
+      idx: 4, nama: 'Kesesuaian Lahan Desa', bobot: SAW_BOBOT_DESA[4],
+      aktual: `Skor Weighted Overlay ${desaProps.skor ? desaProps.skor.toFixed(2) : '-'} / 4,00`,
+      ideal: 'Skor 4,00 (maksimum) = kesesuaian lahan desa sempurna'
+    },
+    {
+      idx: 3, nama: 'Jenis Tanah', bobot: SAW_BOBOT_DESA[3],
+      aktual: iklim.namaTanah.split(' (')[0],
+      ideal: syarat.tanah.cocok.map(k => tanahName[k] || k).join(', ')
+    },
+    {
+      idx: 2, nama: 'Elevasi', bobot: SAW_BOBOT_DESA[2],
+      aktual: `${iklim.elevasi} m dpl`,
+      ideal: `${syarat.elevasi.min}–${syarat.elevasi.max} m dpl`
+    },
+    {
+      idx: 0, nama: 'Curah Hujan', bobot: SAW_BOBOT_DESA[0],
+      aktual: `${iklim.curahHujan.toLocaleString('id')} mm/tahun`,
+      ideal: `Optimal ${syarat.curah_hujan.optMin.toLocaleString('id')}–${syarat.curah_hujan.optMax.toLocaleString('id')} mm/tahun`
+    },
+    {
+      idx: 1, nama: 'Suhu Udara', bobot: SAW_BOBOT_DESA[1],
+      aktual: `${iklim.suhu.toFixed(1)} °C`,
+      ideal: `Optimal ${syarat.suhu.optMin}–${syarat.suhu.optMax} °C`
+    }
+  ];
+  const statusLbl = { cocok: 'Sesuai', batas: 'Batas', tidak: 'Tidak Sesuai' };
+  const rows = kriteria.map((k) => {
+    const ni = hasil.nilaiArr[k.idx];
+    const wb = (k.bobot * ni).toFixed(2);
+    const nilaiCell = k.idx === 4
+      ? `<span class="saw-nilai st-lahan">${ni.toFixed(2)}<br><small>Lahan Desa</small></span>`
+      : `<span class="saw-nilai st-${hasil.checks[k.idx]}">${ni.toFixed(2)}<br><small>${statusLbl[hasil.checks[k.idx]]}</small></span>`;
+    return `<tr>
+      <td class="saw-td-name">${k.nama}</td>
+      <td class="saw-td-c">${Math.round(k.bobot * 100)}%</td>
+      <td>${k.aktual}</td>
+      <td class="saw-td-ideal">${k.ideal}</td>
+      <td class="saw-td-c">${nilaiCell}</td>
+      <td class="saw-td-c saw-wb">${wb}</td>
+    </tr>`;
+  }).join('');
+
+  return `<div class="crop-detail-panel">
+    <table class="saw-table">
+      <thead><tr>
+        <th>Kriteria</th><th class="saw-td-c">Bobot (w)</th>
+        <th>Kondisi Aktual</th><th>Syarat Ideal</th>
+        <th class="saw-td-c">Nilai (r)</th><th class="saw-td-c">w × r</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr>
+        <td colspan="5" class="saw-total-lbl">Skor SAW Total &nbsp;=&nbsp; &Sigma; (Bobot &times; Nilai)</td>
+        <td class="saw-td-c saw-total-val st-lvl-${hasil.level}">${hasil.sawScore.toFixed(2)}</td>
+      </tr></tfoot>
+    </table>
+    <p class="saw-note">SAW tingkat desa memakai 5 kriteria: 4 kriteria iklim &amp; tanah tingkat Kecamatan Rasau Jaya (sama untuk seluruh desa di kecamatan ini), ditambah kriteria <em>Kesesuaian Lahan Desa</em> — skor Weighted Overlay GIS spesifik ${desaProps.NAME_4} yang merangkum NDVI, jenis tanah, ketersediaan air, kemiringan lereng, dan aksesibilitas.</p>
+  </div>`;
+}
+
+// Jumlah komoditas yang ditampilkan per desa — desa berperingkat skor lahan lebih
+// tinggi (relatif terhadap desa lain di kecamatan yang sama) menampilkan lebih banyak
+function getDesaCropCount(rank, totalDesa, totalCrops) {
+  if (totalDesa <= 1 || totalCrops <= 1) return totalCrops;
+  const minCount = Math.max(4, Math.round(totalCrops * 0.55));
+  const step = (totalCrops - minCount) / (totalDesa - 1);
+  return Math.max(minCount, Math.round(totalCrops - step * (rank - 1)));
+}
+
+// ── Estimasi luas poligon (algoritma JPL/geojson-area, dipakai turf.js) ────
+function ringAreaM2(coords) {
+  const R = 6378137; // radius bumi (m), asumsi bola WGS84
+  const len = coords.length;
+  if (len <= 2) return 0;
+  let area = 0;
+  for (let i = 0; i < len; i++) {
+    let p1, p2, p3;
+    if (i === len - 2)      { p1 = coords[len - 2]; p2 = coords[len - 1]; p3 = coords[0]; }
+    else if (i === len - 1) { p1 = coords[len - 1]; p2 = coords[0];      p3 = coords[1]; }
+    else                    { p1 = coords[i];       p2 = coords[i + 1];  p3 = coords[i + 2]; }
+    area += (p3[0] - p1[0]) * Math.PI / 180 * Math.sin(p2[1] * Math.PI / 180);
+  }
+  return Math.abs(area * R * R / 2);
+}
+
+function polygonAreaKm2(geometry) {
+  if (!geometry) return 0;
+  const polys = geometry.type === 'MultiPolygon' ? geometry.coordinates : [geometry.coordinates];
+  let total = 0;
+  polys.forEach(rings => {
+    rings.forEach((ring, i) => {
+      const a = ringAreaM2(ring);
+      total += i === 0 ? a : -a; // ring pertama = batas luar, sisanya = lubang
+    });
+  });
+  return total / 1e6;
+}
+
+// ── Peta mini lokasi & batas desa, dipakai di dalam Modal Desa ─────────────
+function initDesaDetailMap(feature) {
+  try {
+    if (!desaDetailMap) {
+      desaDetailMap = L.map('desaDetailMap', {
+        zoomControl: true,
+        scrollWheelZoom: false,
+        attributionControl: true
+      });
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+        maxZoom: 18,
+      }).addTo(desaDetailMap);
+    }
+
+    if (desaDetailLayer) {
+      desaDetailMap.removeLayer(desaDetailLayer);
+      desaDetailLayer = null;
+    }
+
+    const k = feature.properties.kelas || 'N';
+    desaDetailLayer = L.geoJSON(feature, {
+      style: {
+        color: '#ffffff',
+        weight: 2,
+        fillColor: kelasColor[k] || '#888',
+        fillOpacity: 0.5
+      }
+    }).addTo(desaDetailMap);
+
+    desaDetailMap.fitBounds(desaDetailLayer.getBounds(), { padding: [16, 16], maxZoom: 14 });
+    setTimeout(() => { if (desaDetailMap) desaDetailMap.invalidateSize(); }, 150);
+  } catch (e) {
+    console.warn('Desa detail map error:', e);
+  }
+}
+
+// ── Narasi gambaran umum & rekomendasi, digenerasi dari data skor/kelas desa ─
+function generateDesaNarrative(props, rank, totalDesa, luasKm2) {
+  const k = props.kelas || 'N';
+  const skorTxt = props.skor ? props.skor.toFixed(2) : '-';
+  const ndviTxt = props.ndvi ? props.ndvi.toFixed(2) : '-';
+  const posisiTxt = rank === 1 ? 'skor tertinggi di kecamatan ini'
+    : rank === totalDesa ? 'skor terendah di kecamatan ini'
+    : `peringkat ke-${rank} dari ${totalDesa} desa`;
+  const ndviTxt2 = (props.ndvi || 0) >= 0.7
+    ? 'kerapatan vegetasi produktif yang tinggi'
+    : 'aktivitas fotosintesis yang stabil';
+
+  return `${props.NAME_4} merupakan salah satu dari ${totalDesa} desa di Kecamatan Rasau Jaya yang dianalisis secara rinci hingga tingkat desa atas permintaan Dinas Pertanian Kabupaten Kubu Raya. Berdasarkan overlay tertimbang 5 lapisan raster Sentinel-2 (NDVI, jenis tanah, ketersediaan air, kemiringan lereng, dan aksesibilitas), desa ini memperoleh skor Weighted Overlay ${skorTxt} dari skala 0–4 — ${posisiTxt} — dan masuk kelas kesesuaian lahan ${k} (${kelasLabel[k] || ''}). Nilai NDVI rata-rata ${ndviTxt} mencerminkan ${ndviTxt2} pada karakteristik lahan gambut dangkal hingga sedang yang menjadi ciri dominan seluruh wilayah kecamatan. Estimasi luas wilayah desa berdasarkan batas administrasi (poligon GeoJSON) adalah ±${luasKm2.toFixed(1)} km².`;
+}
+
+function generateDesaRekomendasi(props, rank, totalDesa) {
+  const k = props.kelas || 'N';
+  const rekom = [];
+
+  if (k === 'S1') {
+    rekom.push('Kelas kesesuaian sangat baik — prioritaskan sebagai kawasan percontohan intensifikasi pertanian lahan gambut.');
+  } else if (k === 'S2') {
+    rekom.push('Kelas cukup sesuai — ameliorasi lahan gambut (pengapuran & pemupukan berimbang) tetap diperlukan untuk menstabilkan pH masam (3,5–4,5) pada lapisan gambut atas.');
+  } else if (k === 'S3') {
+    rekom.push('Kesesuaian marginal — perlu perbaikan tata air dan input agronomi yang lebih intensif sebelum ekstensifikasi lahan.');
+  } else {
+    rekom.push('Kelas tidak sesuai untuk budidaya intensif — arahkan pada konservasi gambut atau komoditas yang sangat toleran lahan basah.');
+  }
+
+  rekom.push('Manajemen muka air tanah gambut perlu dijaga agar tidak terlalu kering (memicu subsiden & risiko kebakaran) maupun tergenang berlebih.');
+
+  if (rank <= Math.ceil(totalDesa / 2)) {
+    rekom.push(`Skor Weighted Overlay desa ini berada pada separuh teratas (peringkat ${rank} dari ${totalDesa}) — berpotensi menjadi lokasi replikasi model pertanian gambut adaptif ke desa lain di kecamatan.`);
+  } else {
+    rekom.push(`Skor Weighted Overlay desa ini berada pada separuh bawah (peringkat ${rank} dari ${totalDesa}) — disarankan validasi lapangan untuk memastikan faktor pembatas utama (tanah, air, atau aksesibilitas).`);
+  }
+
+  rekom.push('Prioritas: validasi lapangan produktivitas aktual komoditas unggulan untuk kalibrasi model analisis spasial penelitian ini.');
+  return rekom;
+}
+
+// ============================================================
+// MODAL DESA — popup terpisah, dibuka dari dalam modal Kecamatan Rasau Jaya
+// ============================================================
+function openDesaModal(feature, rank, totalDesa) {
+  const desaProps = feature.properties;
+  const k = desaProps.kelas || 'N';
+  const color = kelasColor[k] || '#888';
+
+  const iconEl = document.getElementById('desaModalIcon');
+  if (iconEl) {
+    iconEl.style.background = color;
+    iconEl.innerHTML = `<span class="desa-modal-icon">${k}</span>`;
+  }
+  document.getElementById('desaModalTitle').textContent   = desaProps.NAME_4;
+  document.getElementById('desaModalTagline').textContent = `Desa di Kecamatan Rasau Jaya — ${kelasLabel[k] || ''}`;
+
+  document.getElementById('desaModalStatsRow').innerHTML = [
+    { val: k, key: 'Kelas Kesesuaian' },
+    { val: desaProps.skor ? desaProps.skor.toFixed(2) : '-', key: 'Skor Weighted Overlay' },
+    { val: desaProps.ndvi ? desaProps.ndvi.toFixed(2) : '-', key: 'NDVI Rata-rata' },
+    { val: `${rank} / ${totalDesa}`, key: 'Peringkat Skor Desa' }
+  ].map(s => `
+    <div class="modal-stat">
+      <div class="modal-stat-val">${s.val}</div>
+      <div class="modal-stat-key">${s.key}</div>
+    </div>
+  `).join('');
+
+  // Peta lokasi & batas desa
+  initDesaDetailMap(feature);
+
+  // Gambaran umum (narasi otomatis dari skor/kelas/ndvi/luas)
+  const luasKm2 = polygonAreaKm2(feature.geometry);
+  document.getElementById('desaModalDesc').textContent = generateDesaNarrative(desaProps, rank, totalDesa, luasKm2);
+
+  // Data wilayah
+  document.getElementById('desaModalDataGrid').innerHTML = [
+    { key: 'Luas Wilayah (estimasi)', val: `±${luasKm2.toFixed(1)} km²` },
+    { key: 'Kelas Kesesuaian', val: `${k} — ${kelasLabel[k] || ''}` },
+    { key: 'Skor Weighted Overlay', val: `${desaProps.skor ? desaProps.skor.toFixed(2) : '-'} / 4,00` },
+    { key: 'NDVI Rata-rata', val: `${desaProps.ndvi ? desaProps.ndvi.toFixed(2) : '-'} (Sentinel-2, 2022–2024)` },
+    { key: 'Peringkat di Kecamatan', val: `${rank} dari ${totalDesa} desa` },
+    { key: 'Topografi', val: 'Lahan Gambut Dangkal–Sedang' }
+  ].map(row => `
+    <div class="data-row">
+      <span class="data-key">${row.key}</span>
+      <span class="data-val">${row.val}</span>
+    </div>
+  `).join('');
+
+  // Rekomendasi pengelolaan lahan
+  document.getElementById('desaModalPotensi').innerHTML =
+    generateDesaRekomendasi(desaProps, rank, totalDesa).map(p => `<li>${p}</li>`).join('');
+
+  const allCrops = getDesaCropRanking(desaProps);
+  const count = getDesaCropCount(rank, totalDesa, allCrops.length);
+  const items = allCrops.slice(0, count);
+
+  document.getElementById('desaModalNote').textContent =
+    `Peringkat komoditas dihitung dari SAW 5 kriteria khusus tingkat desa: Curah Hujan, Suhu, Elevasi, dan Jenis Tanah (data iklim Kecamatan Rasau Jaya), ditambah Kesesuaian Lahan Desa (skor Weighted Overlay GIS desa ini, ±${(desaProps.skor || 0).toFixed(2)}/4,00) — sehingga skor akhir setiap komoditas mencerminkan kualitas lahan spesifik ${desaProps.NAME_4}. Jumlah komoditas yang ditampilkan (${count} dari ${allCrops.length}) menyesuaikan peringkat skor desa ini relatif terhadap ${totalDesa - 1} desa lain di kecamatan yang sama.`;
+
+  const iklimDesa = (typeof iklimKecamatan !== 'undefined') ? iklimKecamatan['rasau-jaya'] : null;
+  const gridEl = document.getElementById('desaModalCropsGrid');
+
+  gridEl.innerHTML = items.map((c, i) => {
+    const barW = Math.round(c.sawScore * 100);
+    const rankCls = i < 3 ? `rank-${i + 1}` : '';
+    const syarat = (typeof syaratTumbuhDB !== 'undefined') ? syaratTumbuhDB[c.id] : null;
+    const panelHTML = (iklimDesa && syarat) ? buildSAWPanelDesa(iklimDesa, syarat, c, desaProps) : '';
+    return `
+      <div class="desa-crop-card level-${c.level}" data-crop-key="${c.id}" role="button" tabindex="0" aria-expanded="false">
+        <div class="desa-crop-rank ${rankCls}">${i + 1}</div>
+        <div class="desa-crop-body">
+          <div class="desa-crop-head">
+            <span class="desa-crop-name">${c.nama}</span>
+            <span class="desa-crop-cat">${c.kategori}</span>
+          </div>
+          <div class="desa-crop-bar-track">
+            <div class="desa-crop-bar-fill level-fill-${c.level}" style="width:${barW}%">
+              <span class="desa-crop-bar-shine"></span>
+            </div>
+          </div>
+        </div>
+        <div class="desa-crop-side">
+          <span class="desa-crop-kelas-chip chip-${c.level}">${c.label}</span>
+          <span class="desa-crop-score-val">${c.sawScore.toFixed(2)}</span>
+        </div>
+        <div class="crop-chevron-btn">
+          <svg class="crop-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="crop-detail-wrapper" data-detail="${c.id}" hidden>${panelHTML}</div>`;
+  }).join('');
+
+  gridEl.querySelectorAll('.desa-crop-card').forEach(card => {
+    const open = () => {
+      const key = card.dataset.cropKey;
+      const panel = gridEl.querySelector(`[data-detail="${key}"]`);
+      if (!panel) return;
+      const wasOpen = !panel.hidden;
+      gridEl.querySelectorAll('.crop-detail-wrapper').forEach(p => { p.hidden = true; });
+      gridEl.querySelectorAll('.desa-crop-card').forEach(c => { c.classList.remove('active'); c.setAttribute('aria-expanded', 'false'); });
+      if (!wasOpen) { panel.hidden = false; card.classList.add('active'); card.setAttribute('aria-expanded', 'true'); }
+    };
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  });
+
+  document.getElementById('modalOverlay').classList.remove('open');
+  const desaOverlay = document.getElementById('desaModalOverlay');
+  desaOverlay.classList.add('open');
+  document.getElementById('desaModalBox').scrollTop = 0;
+}
+
+function closeDesaModal() {
+  document.getElementById('desaModalOverlay').classList.remove('open');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+// ============================================================
 // HERO MAP — Full-screen Leaflet
 // ============================================================
 function initHeroMap() {
@@ -738,8 +1190,6 @@ function initHeroMap() {
     }).addTo(heroMap);
 
     // ── Layer Kesesuaian Lahan (GeoJSON) ──────────────────────
-    const kelasColor = { S1: '#1a6e3c', S2: '#5aac72', S3: '#e8c53a', N: '#d94f3a' };
-    const kelasLabel = { S1: 'Sangat Sesuai', S2: 'Cukup Sesuai', S3: 'Sesuai Marginal', N: 'Tidak Sesuai' };
     const nameToKecId = {
       'Sungai Raya': 'sungai-raya', 'Sungai Kakap': 'sungai-kakap',
       'Rasau Jaya': 'rasau-jaya', 'Sungai Ambawang': 'sungai-ambawang',
@@ -958,6 +1408,17 @@ function openModal(kecId) {
   // Init/update Leaflet map inside modal
   initOrUpdateModalMap(kecId);
   renderSyaratTumbuh(kecId);
+
+  // Rincian per desa — khusus Rasau Jaya (permintaan Kementan)
+  const desaSection = document.getElementById('modalDesaSection');
+  if (desaSection) {
+    if (kecId === 'rasau-jaya') {
+      desaSection.style.display = '';
+      initRasauJayaDesaMap();
+    } else {
+      desaSection.style.display = 'none';
+    }
+  }
 }
 
 function closeModal() {
@@ -970,7 +1431,17 @@ function initModal() {
   document.getElementById('modalOverlay').addEventListener('click', e => {
     if (e.target === document.getElementById('modalOverlay')) closeModal();
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  const desaOverlay = document.getElementById('desaModalOverlay');
+  document.getElementById('desaModalBackBtn').addEventListener('click', closeDesaModal);
+  document.getElementById('desaModalClose').addEventListener('click', closeDesaModal);
+  desaOverlay.addEventListener('click', e => { if (e.target === desaOverlay) closeDesaModal(); });
+
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (desaOverlay.classList.contains('open')) closeDesaModal();
+    else closeModal();
+  });
 }
 
 // ============================================================

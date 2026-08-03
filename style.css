@@ -40,6 +40,7 @@
 
   --font-sans:     'Outfit', sans-serif;
   --font-serif:    'Outfit', sans-serif;
+  --font-display:  'Space Grotesk', 'Outfit', sans-serif;
 }
 
 /* ── RESET ── */
@@ -738,8 +739,8 @@ body::before {
 
 /* Right side */
 .crop-st-right { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
-.crop-badge-block { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
-.crop-badge-st { font-size: 0.68rem; font-weight: 700; white-space: nowrap; }
+.crop-badge-block { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 62px; flex-shrink: 0; }
+.crop-badge-st { font-size: 0.66rem; font-weight: 700; line-height: 1.2; text-align: center; }
 .bdg-sangat-cocok { color: #15803d; }
 .bdg-cocok        { color: #4d7c0f; }
 .bdg-cukup        { color: #b45309; }
@@ -762,6 +763,111 @@ body::before {
   color: var(--accent); flex-shrink: 0; transition: transform 0.25s;
 }
 .crop-st-card.active .crop-chevron { transform: rotate(180deg); color: #fff; }
+
+/* ============================================================
+   Kartu komoditas — Modal Desa (lebih ekspresif dari kartu
+   komoditas kecamatan: tanpa emoji, bar bergradien + shine,
+   nama komoditas pakai font display Space Grotesk)
+   ============================================================ */
+.desa-crop-grid {
+  display: flex; flex-direction: column; gap: 0.6rem;
+  background: rgba(13,31,22,0.05); border-radius: 12px;
+  padding: 0.7rem;
+}
+
+.desa-crop-card {
+  position: relative; display: flex; align-items: center; gap: 0.9rem;
+  padding: 0.9rem 1.05rem 0.9rem 1.15rem;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F6FBF8 100%);
+  border: 1px solid rgba(30,107,60,0.10);
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(13,31,22,0.05);
+  overflow: hidden;
+  transition: box-shadow 0.2s var(--silk), transform 0.2s var(--silk), border-color 0.2s;
+}
+.desa-crop-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+}
+.desa-crop-card.level-sangat-cocok::before { background: linear-gradient(180deg, #15803d, #22c55e); }
+.desa-crop-card.level-cocok::before        { background: linear-gradient(180deg, #4d7c0f, #84cc16); }
+.desa-crop-card.level-cukup::before        { background: linear-gradient(180deg, #b45309, #fbbf24); }
+.desa-crop-card.level-kurang::before       { background: linear-gradient(180deg, #6b7280, #9ca3af); }
+.desa-crop-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(30,107,60,0.16);
+  border-color: var(--accent-border);
+}
+.desa-crop-card { cursor: pointer; }
+.desa-crop-card.active {
+  background: linear-gradient(135deg, #EDF7F1 0%, #E4F2EA 100%);
+  border-color: var(--accent-border);
+  box-shadow: 0 2px 12px rgba(30,107,60,0.12);
+}
+.desa-crop-card:hover .crop-chevron-btn { background: rgba(30,107,60,0.12); }
+.desa-crop-card.active .crop-chevron-btn { background: var(--accent); border-color: var(--accent); }
+.desa-crop-card.active .crop-chevron { transform: rotate(180deg); color: #fff; }
+
+.desa-crop-rank {
+  flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 0.82rem; font-weight: 700;
+  background: var(--accent-ghost); border: 1px solid var(--accent-border); color: var(--accent);
+}
+.desa-crop-rank.rank-1 { background: linear-gradient(135deg,#fde68a,#f59e0b); border-color: #f59e0b; color: #5c3d00; box-shadow: 0 2px 10px rgba(245,158,11,0.4); }
+.desa-crop-rank.rank-2 { background: linear-gradient(135deg,#eef0f2,#b6bcc4); border-color: #9ca3af; color: #33383e; }
+.desa-crop-rank.rank-3 { background: linear-gradient(135deg,#fad0a0,#c2703d); border-color: #c2703d; color: #45260a; }
+
+.desa-crop-body { flex: 1; min-width: 0; }
+.desa-crop-head {
+  display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap;
+  margin-bottom: 7px;
+}
+.desa-crop-name {
+  font-family: var(--font-display); font-size: 0.94rem; font-weight: 600;
+  color: var(--text-1); letter-spacing: 0.01em; line-height: 1.2;
+}
+.desa-crop-cat {
+  font-size: 0.58rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.045em;
+  color: var(--accent); background: var(--accent-ghost); border: 1px solid var(--accent-border);
+  padding: 2px 8px; border-radius: 99px; white-space: nowrap;
+}
+
+.desa-crop-bar-track {
+  position: relative; height: 9px; border-radius: 99px; overflow: hidden;
+  background: rgba(30,107,60,0.09);
+  box-shadow: inset 0 1px 3px rgba(13,31,22,0.14);
+}
+.desa-crop-bar-fill {
+  position: relative; height: 100%; border-radius: 99px;
+  transition: width 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.desa-crop-bar-fill.level-fill-sangat-cocok { background: linear-gradient(90deg, #15803d, #34d399); }
+.desa-crop-bar-fill.level-fill-cocok        { background: linear-gradient(90deg, #4d7c0f, #a3e635); }
+.desa-crop-bar-fill.level-fill-cukup        { background: linear-gradient(90deg, #b45309, #fcd34d); }
+.desa-crop-bar-fill.level-fill-kurang       { background: linear-gradient(90deg, #6b7280, #d1d5db); }
+.desa-crop-bar-shine {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%);
+}
+
+.desa-crop-side { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.desa-crop-kelas-chip {
+  font-size: 0.6rem; font-weight: 700; padding: 3px 10px; border-radius: 99px;
+  white-space: nowrap; text-align: center;
+}
+.desa-crop-kelas-chip.chip-sangat-cocok { background: rgba(21,128,61,0.12);  color: #15803d; }
+.desa-crop-kelas-chip.chip-cocok        { background: rgba(77,124,15,0.12);  color: #4d7c0f; }
+.desa-crop-kelas-chip.chip-cukup        { background: rgba(180,83,9,0.12);   color: #b45309; }
+.desa-crop-kelas-chip.chip-kurang       { background: rgba(107,114,128,0.14); color: #6b7280; }
+.desa-crop-score-val {
+  font-family: var(--font-display); font-size: 0.98rem; font-weight: 700; color: var(--accent);
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 640px) {
+  .desa-crop-card { gap: 0.65rem; padding: 0.8rem 0.85rem 0.8rem 0.95rem; }
+  .desa-crop-name { font-size: 0.86rem; }
+}
 
 /* SAW Detail panel */
 .crop-detail-wrapper { padding: 0 0.25rem 0.75rem; }
@@ -809,6 +915,7 @@ body::before {
 .saw-nilai.st-cocok { color: #15803d; }
 .saw-nilai.st-batas { color: #b45309; }
 .saw-nilai.st-tidak { color: #9ca3af; }
+.saw-nilai.st-lahan { color: var(--accent); }
 
 /* Method note */
 .saw-note {
@@ -1301,6 +1408,70 @@ body::before {
   box-shadow: var(--shadow-sm);
 }
 #modalLeafletMap { height: 300px; width: 100%; }
+#modalDesaMap { height: 300px; width: 100%; }
+#desaDetailMap { height: 240px; width: 100%; }
+
+/* Daftar desa (dapat diklik) — target sentuh diperbesar & tiap baris dipisah
+   tegas dengan kartu putih + border + shadow agar tidak miss-klik di mobile,
+   karena seluruh desa Rasau Jaya berkelas S2 (warna latar sama polos). */
+.modal-desa-list { margin-top: 12px; gap: 0.7rem; }
+.modal-desa-list .kelas-row {
+  cursor: pointer; position: relative;
+  min-height: 52px; padding: 0.8rem 1rem;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  box-shadow: 0 1px 3px rgba(13,31,22,0.06);
+  transition: transform 0.15s var(--silk), box-shadow 0.15s var(--silk), border-color 0.15s var(--silk);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.modal-desa-list .kelas-row:hover,
+.modal-desa-list .kelas-row:focus-visible {
+  transform: translateX(3px);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--accent-border);
+  outline: none;
+}
+.modal-desa-list .kelas-row:active {
+  transform: scale(0.98) translateX(0);
+  background: var(--accent-ghost);
+  border-color: var(--accent-border);
+}
+.modal-desa-list .kelas-rank {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+  background: var(--accent-ghost); color: var(--accent); border: 1px solid var(--accent-border);
+}
+.modal-desa-list .kelas-name { font-size: 0.86rem; }
+.modal-desa-list .kelas-range { min-width: 54px; text-align: right; font-size: 0.78rem; }
+
+@media (max-width: 640px) {
+  .modal-desa-list { gap: 0.8rem; }
+  .modal-desa-list .kelas-row { min-height: 58px; padding: 0.9rem 1.05rem; gap: 0.8rem; }
+  .modal-desa-list .kelas-name { font-size: 0.92rem; }
+  .modal-desa-list .kelas-rank { width: 28px; height: 28px; font-size: 0.74rem; }
+}
+
+/* Modal Desa — popup terpisah dibuka dari dalam modal Kecamatan Rasau Jaya */
+.desa-modal-back {
+  position: sticky; top: 1rem; float: left;
+  margin: 1rem 0 0 1rem; z-index: 20;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px 10px 14px;
+  background: var(--accent); border: 1px solid var(--accent);
+  border-radius: 99px; color: #fff;
+  font-family: var(--font-sans); font-size: 0.82rem; font-weight: 700;
+  cursor: pointer; box-shadow: 0 3px 14px rgba(30,107,60,0.35);
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.desa-modal-back:hover { background: var(--accent-light); transform: translateX(-2px); box-shadow: 0 4px 18px rgba(30,107,60,0.45); }
+.desa-modal-back svg { flex-shrink: 0; }
+
+.desa-modal-icon {
+  font-size: 1.9rem; font-weight: 800; color: #fff !important;
+}
+.desa-detail-note { font-size: 0.82rem !important; color: var(--text-3) !important; font-style: italic; line-height: 1.65; margin: 0 0 14px; }
 
 /* Badge koordinat di atas peta — ikon pin + koordinat */
 .map-coord-badge {
@@ -1453,6 +1624,8 @@ body::before {
   .footer-research-meta { justify-content: center; }
   .footer-info { text-align: center; max-width: 100%; }
   #modalLeafletMap { height: 220px; }
+  #modalDesaMap { height: 220px; }
+  #desaDetailMap { height: 200px; }
   .modal-map-icon { width: 60px; height: 60px; }
   .modal-map-icon svg { width: 44px; height: 44px; }
   .stats-bar { padding: 52px 0 60px; }

@@ -7,7 +7,7 @@
   <meta name="description" content="AgroRaya – Sistem Informasi Geografis Pertanian Kabupaten Kubu Raya, Kalimantan Barat. Jelajahi potensi pertanian 9 kecamatan." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
@@ -224,7 +224,35 @@
 
     <div class="kecamatan-grid" id="kecamatanGrid">
 
-      <!-- 1. Sungai Raya -->
+      <!-- 1. Rasau Jaya — Kecamatan Pilot Project -->
+      <div class="kec-card" id="card-rasau-jaya" data-kec="rasau-jaya" role="button" tabindex="0" aria-label="Kecamatan Rasau Jaya">
+        <div class="kec-card-inner">
+          <div class="kec-map-icon">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="20,60 18,35 38,18 62,28 65,55 42,65" fill="currentColor" opacity="0.18" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+              <circle cx="42" cy="42" r="5" fill="currentColor"/>
+              <line x1="42" y1="37" x2="42" y2="22" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3,2"/>
+              <circle cx="42" cy="21" r="2.5" fill="currentColor" opacity="0.6"/>
+            </svg>
+          </div>
+          <div class="kec-info">
+            <div class="kec-number">Kecamatan 01</div>
+            <h3 class="kec-name">Rasau Jaya</h3>
+            <p class="kec-tagline">Kawasan Transmigrasi</p>
+            <div class="kec-tags">
+              <span class="tag">Semangka</span>
+              <span class="tag">Kelapa</span>
+              <span class="tag">Padi</span>
+            </div>
+          </div>
+          <div class="kec-cta">
+            Lihat Detail
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Sungai Raya -->
       <div class="kec-card" id="card-sungai-raya" data-kec="sungai-raya" role="button" tabindex="0" aria-label="Kecamatan Sungai Raya">
         <div class="kec-card-inner">
           <div class="kec-map-icon">
@@ -236,7 +264,7 @@
             </svg>
           </div>
           <div class="kec-info">
-            <div class="kec-number">Kecamatan 01</div>
+            <div class="kec-number">Kecamatan 02</div>
             <h3 class="kec-name">Sungai Raya</h3>
             <p class="kec-tagline">Ibu Kota Kabupaten</p>
             <div class="kec-tags">
@@ -252,7 +280,7 @@
         </div>
       </div>
 
-      <!-- 2. Sungai Kakap -->
+      <!-- 3. Sungai Kakap -->
       <div class="kec-card" id="card-sungai-kakap" data-kec="sungai-kakap" role="button" tabindex="0" aria-label="Kecamatan Sungai Kakap">
         <div class="kec-card-inner">
           <div class="kec-map-icon">
@@ -264,40 +292,12 @@
             </svg>
           </div>
           <div class="kec-info">
-            <div class="kec-number">Kecamatan 02</div>
+            <div class="kec-number">Kecamatan 03</div>
             <h3 class="kec-name">Sungai Kakap</h3>
             <p class="kec-tagline">Sentra Kelapa & Pinang</p>
             <div class="kec-tags">
               <span class="tag">Kelapa</span>
               <span class="tag">Pinang</span>
-              <span class="tag">Padi</span>
-            </div>
-          </div>
-          <div class="kec-cta">
-            Lihat Detail
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. Rasau Jaya -->
-      <div class="kec-card" id="card-rasau-jaya" data-kec="rasau-jaya" role="button" tabindex="0" aria-label="Kecamatan Rasau Jaya">
-        <div class="kec-card-inner">
-          <div class="kec-map-icon">
-            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="20,60 18,35 38,18 62,28 65,55 42,65" fill="currentColor" opacity="0.18" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
-              <circle cx="42" cy="42" r="5" fill="currentColor"/>
-              <line x1="42" y1="37" x2="42" y2="22" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3,2"/>
-              <circle cx="42" cy="21" r="2.5" fill="currentColor" opacity="0.6"/>
-            </svg>
-          </div>
-          <div class="kec-info">
-            <div class="kec-number">Kecamatan 03</div>
-            <h3 class="kec-name">Rasau Jaya</h3>
-            <p class="kec-tagline">Kawasan Transmigrasi</p>
-            <div class="kec-tags">
-              <span class="tag">Semangka</span>
-              <span class="tag">Kelapa</span>
               <span class="tag">Padi</span>
             </div>
           </div>
@@ -483,7 +483,7 @@
     <div class="section-inner">
       <div class="section-label">Penelitian PDM — Untan</div>
       <h2 class="section-heading">Metodologi Analisis</h2>
-      <p class="section-sub">Kesesuaian lahan dihitung menggunakan metode <strong>Simple Additive Weighting (SAW)</strong> dengan empat parameter agroklimat berbasis data penginderaan jauh Google Earth Engine (2022–2024).</p>
+      <p class="section-sub">Penelitian ini menggunakan <strong>dua tingkat analisis</strong> yang saling melengkapi: (1) <strong>Simple Additive Weighting (SAW)</strong> untuk menilai kesesuaian tiap <em>komoditas</em> pada setiap kecamatan (dipakai kalkulator "Analisis Syarat Tumbuh" di popup kecamatan), dan (2) <strong>Weighted Overlay GIS</strong> untuk menilai kesesuaian lahan tingkat <em>wilayah</em> secara keseluruhan (dipakai peta choropleth &amp; skor pada kartu kecamatan). Keduanya berbasis data penginderaan jauh Google Earth Engine (2022–2024).</p>
 
       <div class="metod-grid">
 
@@ -588,6 +588,45 @@
               <span class="kelas-range">< 0.40</span>
             </div>
           </div>
+        </div>
+
+        <!-- Weighted Overlay (tingkat wilayah) -->
+        <div class="metod-card metod-card--formula">
+          <div class="metod-card-head">
+            <div class="metod-card-icon">⊞</div>
+            <h3 class="metod-card-title">Weighted Overlay GIS — Skor Tingkat Wilayah</h3>
+          </div>
+          <p style="font-size:0.8rem;color:var(--text-2);line-height:1.65;margin-bottom:1.1rem;">
+            Berbeda dengan SAW yang menghitung kesesuaian per-komoditas, metode ini menghasilkan <strong>satu skor kesesuaian lahan per kecamatan</strong> secara keseluruhan — ditampilkan sebagai warna pada peta interaktif (bagian Beranda) dan sebagai "Skor Weighted Overlay" pada kartu tiap kecamatan. Skor dihitung dari overlay tertimbang 5 lapisan raster Sentinel-2 SR &amp; turunannya melalui Zonal Statistics QGIS.
+          </p>
+          <div class="metod-weights">
+            <div class="weight-row">
+              <span class="wr-name">NDVI</span>
+              <div class="wr-track"><div class="wr-bar" style="--w:30%"></div></div>
+              <span class="wr-pct">30%</span>
+            </div>
+            <div class="weight-row">
+              <span class="wr-name">Jenis Tanah</span>
+              <div class="wr-track"><div class="wr-bar" style="--w:25%"></div></div>
+              <span class="wr-pct">25%</span>
+            </div>
+            <div class="weight-row">
+              <span class="wr-name">Ketersediaan Air (NDWI)</span>
+              <div class="wr-track"><div class="wr-bar" style="--w:20%"></div></div>
+              <span class="wr-pct">20%</span>
+            </div>
+            <div class="weight-row">
+              <span class="wr-name">Kemiringan Lereng</span>
+              <div class="wr-track"><div class="wr-bar" style="--w:15%"></div></div>
+              <span class="wr-pct">15%</span>
+            </div>
+            <div class="weight-row">
+              <span class="wr-name">Aksesibilitas</span>
+              <div class="wr-track"><div class="wr-bar" style="--w:10%"></div></div>
+              <span class="wr-pct">10%</span>
+            </div>
+          </div>
+          <p style="font-size:0.68rem;color:var(--text-3);margin-top:0.85rem;line-height:1.65;">Skor akhir berskala 0–4, dipetakan ke kelas kesesuaian yang sama seperti SAW (S1/S2/S3/N). Seluruh 9 kecamatan Kubu Raya saat ini berada pada kelas <strong>S2 &mdash; Cukup Sesuai (skor 2,5–3,5)</strong>.</p>
         </div>
 
       </div><!-- /metod-grid -->
@@ -739,6 +778,19 @@
           <div class="coord-info-bar" id="coordInfoBar"></div>
         </div>
 
+        <div class="modal-section" id="modalDesaSection" style="display:none">
+          <h3 class="modal-section-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6z"/><path d="M9 3v15M15 6v15"/></svg>
+            Rincian Kesesuaian per Desa
+          </h3>
+
+          <p class="modal-desc" style="margin-bottom:0.85rem;">Khusus Kecamatan Rasau Jaya, analisis kesesuaian lahan diproses lebih rinci hingga tingkat desa atas permintaan Dinas Pertanian Kabupaten Kubu Raya, agar memudahkan proses administrasi di lapangan. Klik salah satu desa untuk membuka rincian komoditas unggulannya.</p>
+          <div class="modal-map-wrapper">
+            <div id="modalDesaMap"></div>
+          </div>
+          <div class="metod-kelas modal-desa-list" id="modalDesaList"></div>
+        </div>
+
         <div class="modal-section">
           <h3 class="modal-section-title">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
@@ -783,9 +835,88 @@
     </div>
   </div>
 
+  <!-- ================================================================
+       MODAL DESA — popup terpisah, dibuka dari dalam modal Kecamatan
+       Rasau Jaya. Format identik dengan modal kecamatan di atas supaya
+       pengalaman membukanya terasa sama (header besar, stat row, grid).
+       ================================================================ -->
+  <div class="modal-overlay" id="desaModalOverlay" role="dialog" aria-modal="true" aria-labelledby="desaModalTitle">
+    <div class="modal-box" id="desaModalBox">
+
+      <button class="desa-modal-back" id="desaModalBackBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Kembali ke Kecamatan Rasau Jaya
+      </button>
+
+      <button class="modal-close" id="desaModalClose" aria-label="Tutup">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+
+      <div class="modal-header">
+        <div class="modal-map-icon desa-modal-icon" id="desaModalIcon"></div>
+        <div class="modal-header-text">
+          <div class="modal-number" id="desaModalNumber">Desa · Kecamatan Rasau Jaya</div>
+          <h2 class="modal-title" id="desaModalTitle"></h2>
+          <p class="modal-tagline" id="desaModalTagline"></p>
+        </div>
+      </div>
+
+      <div class="modal-stats-row" id="desaModalStatsRow"></div>
+
+      <div class="modal-body">
+
+        <div class="modal-section">
+          <h3 class="modal-section-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            Lokasi & Batas Wilayah Desa
+          </h3>
+          <div class="modal-map-wrapper">
+            <div id="desaDetailMap"></div>
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <h3 class="modal-section-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Gambaran Umum
+          </h3>
+          <p class="modal-desc" id="desaModalDesc"></p>
+        </div>
+
+        <div class="modal-section">
+          <h3 class="modal-section-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            Data Wilayah
+          </h3>
+          <div class="modal-data-grid" id="desaModalDataGrid"></div>
+        </div>
+
+        <div class="modal-section">
+          <h3 class="modal-section-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12c0-2.76 1.12-5.26 2.93-7.07"/><path d="M12 6v6l4 2"/></svg>
+            Komoditas Pertanian Unggulan Desa
+          </h3>
+          <p class="modal-desc desa-detail-note" id="desaModalNote"></p>
+          <div class="desa-crop-grid" id="desaModalCropsGrid"></div>
+        </div>
+
+        <div class="modal-section">
+          <h3 class="modal-section-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Rekomendasi Pengelolaan Lahan
+          </h3>
+          <ul class="modal-potensi" id="desaModalPotensi"></ul>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
   <script src="data/kesesuaian_data_v2.js?v=20260704"></script>
   <script src="data/syarat_tumbuh.js?v=20260704"></script>
-  <script src="script.js?v=20260704" defer></script>
+  <script src="data/rasau_jaya_desa.js?v=20260801"></script>
+  <script src="script.js?v=20260801" defer></script>
 </body>
 </html>
 
