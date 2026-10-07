@@ -1685,6 +1685,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initModal();
   initCounters();
   initKomparasi();
+  initZonasi();
   initMetodologiWeights();
 });
 
@@ -1797,6 +1798,80 @@ function initKomparasi() {
   renderBarChart('chartKecamatan', getKecamatanAvgScores());
   populateCropSelect();
   initChartTabs();
+}
+
+// ============================================================
+// ZONASI AGROEKOLOGI — peta 4 zona (klaster Ward) + kartu unggulan aktual/potensial
+// ============================================================
+function initZonasi() {
+  const el = document.getElementById('zonasiMap');
+  if (!el || typeof zonasiAgroekologi === 'undefined' || typeof kesesuaianLahanData === 'undefined' || typeof L === 'undefined') return;
+  const Z = zonasiAgroekologi;
+  const zonaDari = {};
+  Z.zona.forEach(z => z.kecamatan.forEach(k => { zonaDari[k] = z; }));
+  const namaKec = n => n === "Telok Pa'Kedai" ? 'Teluk Pakedai' : n;
+  const fmt = v => v.toFixed(2).replace('.', ',');
+
+  const chip = (x, kelas) => `<span class="zona-chip ${kelas}">${x.komoditas}` +
+    (x.kecamatan && x.kecamatan.length < 3 ? ` <small>(${x.kecamatan.join(', ')})</small>` : '') +
+    (x.tanpaData ? ' <small>†</small>' : '') + '</span>';
+  document.getElementById('zonasiCards').innerHTML = Z.zona.map(z => `
+    <div class="zona-card" data-zona="${z.zona}" style="--zc:${z.warna}">
+      <h3>Zona ${z.zona} — ${z.judul}</h3>
+      <div class="zona-kec">${z.kecamatan.join(' · ')}</div>
+      <div class="zona-ciri">${z.ciri}</div>
+      <div class="zona-row"><b>Kesesuaian tertinggi:</b> ${z.teratas.map(t => `${t.komoditas} (${fmt(t.skor)})`).join(', ')}</div>
+      <div class="zona-row"><b>Unggulan aktual:</b><br>${z.aktual.length ? z.aktual.map(a => chip(a, '')).join('') : '–'}</div>
+      <div class="zona-row"><b>Unggulan potensial:</b><br>${z.potensial.length ? z.potensial.map(p => chip(p, 'potensial')).join('') : '–'}</div>
+    </div>`).join('');
+  document.getElementById('zonasiLegend').innerHTML = Z.zona.map(z =>
+    `<span data-zona="${z.zona}"><i style="background:${z.warna}"></i>Zona ${z.zona}</span>`).join('');
+  document.getElementById('zonasiNote').innerHTML =
+    `Unggulan aktual: skor SAW rata-rata zona ≥ ${fmt(Z.meta.ambang)} dan LQ produksi hortikultura/perkebunan BPS 2024 > 1 pada sedikitnya satu kecamatan. ` +
+    `Unggulan potensial: sangat sesuai tetapi belum menjadi basis produksi (LQ ≤ 1); † data produksi per kecamatan tidak tersedia. ` +
+    `Klaster Ward: silhouette ${fmt(Z.meta.silhouette)}, korelasi kofenetik ${fmt(Z.meta.kofenetik)}. ` +
+    `Zonasi bersifat kesesuaian biofisik dan berlaku di luar kawasan hutan, ekosistem gambut berfungsi lindung, dan mangrove.`;
+
+  let map = null, lapisan = null;
+  const pilih = zn => {
+    document.querySelectorAll('.zona-card').forEach(c => c.classList.toggle('aktif', c.dataset.zona === zn));
+    if (!lapisan) return;
+    const terpilih = [];
+    lapisan.eachLayer(l => {
+      const z = zonaDari[namaKec(l.feature.properties.NAME_3)];
+      const cocok = !zn || (z && z.zona === zn);
+      l.setStyle({ fillOpacity: cocok ? 0.72 : 0.18, weight: cocok ? 2 : 1 });
+      if (cocok) terpilih.push(l);
+    });
+    map.fitBounds(L.featureGroup(terpilih.length ? terpilih : [lapisan]).getBounds(), { padding: [20, 20], maxZoom: 11 });
+  };
+  // Peta dibuat saat bagian mendekati layar (hemat kuota tile)
+  const buatPeta = () => {
+    map = L.map(el, { scrollWheelZoom: false, zoomControl: true });
+    addBasemap(map);
+    lapisan = L.geoJSON(kesesuaianLahanData, {
+      style: f => {
+        const z = zonaDari[namaKec(f.properties.NAME_3)];
+        return { color: '#ffffff', weight: 1.5, fillColor: z ? z.warna : '#999999', fillOpacity: 0.62 };
+      },
+      onEachFeature: (f, layer) => {
+        const n = namaKec(f.properties.NAME_3), z = zonaDari[n];
+        layer.bindTooltip(`<div class="zonasi-tip"><b>${n}</b><br>Zona ${z ? z.zona : '-'} · skor WO ${fmt(f.properties.skor || 0)}</div>`, { sticky: true });
+        layer.on('click', () => pilih(z ? z.zona : null));
+      }
+    }).addTo(map);
+    map.fitBounds(lapisan.getBounds(), { padding: [12, 12] });
+  };
+  document.querySelectorAll('.zona-card, .zonasi-legend span').forEach(c =>
+    c.addEventListener('click', () => {
+      const aktif = document.querySelector(`.zona-card.aktif[data-zona="${c.dataset.zona}"]`);
+      pilih(aktif ? null : c.dataset.zona);
+    }));
+  if (!('IntersectionObserver' in window)) { buatPeta(); return; }
+  const obs = new IntersectionObserver(es => {
+    if (es.some(e => e.isIntersecting)) { buatPeta(); obs.disconnect(); }
+  }, { rootMargin: '200px' });
+  obs.observe(el);
 }
 
 // ============================================================

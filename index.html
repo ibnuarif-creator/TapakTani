@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
-  <link rel="stylesheet" href="style.css?v=20261008b" />
+  <link rel="stylesheet" href="style.css?v=20261008c" />
 </head>
 <body>
 
@@ -30,6 +30,7 @@
     <a href="#beranda">Beranda</a>
     <a href="#statistik">Statistik</a>
     <a href="#kecamatan">Kecamatan</a>
+    <a href="#zonasi">Zonasi</a>
     <a href="#metodologi">Metodologi</a>
     <a href="#komparasi">Komparasi</a>
     <a href="sebaran.html">Sebaran</a>
@@ -49,6 +50,7 @@
         <a href="#beranda" class="nav-link active">Beranda</a>
         <a href="#statistik" class="nav-link">Statistik</a>
         <a href="#kecamatan" class="nav-link">Kecamatan</a>
+        <a href="#zonasi" class="nav-link">Zonasi</a>
         <a href="#metodologi" class="nav-link">Metodologi</a>
         <a href="#komparasi" class="nav-link">Komparasi</a>
         <a href="sebaran.html" class="nav-link">Sebaran</a>
@@ -488,6 +490,23 @@
   </section>
 
   <!-- ===== METODOLOGI ===== -->
+  <!-- ===== ZONASI AGROEKOLOGI ===== -->
+  <section class="zonasi-section reveal" id="zonasi">
+    <div class="section-inner">
+      <div class="section-label">Hasil Analisis</div>
+      <h2 class="section-heading">Zonasi Agroekologi &amp; Komoditas Unggulan</h2>
+      <p class="section-sub">Empat zona hasil klaster Ward atas skor kesesuaian SAW 20 komoditas di 9 kecamatan, dipadukan dengan <em>location quotient</em> (LQ) produksi BPS 2024 untuk membedakan komoditas unggulan aktual dan potensial.</p>
+      <div class="zonasi-grid">
+        <div class="zonasi-map-wrap">
+          <div id="zonasiMap" aria-label="Peta zona agroekologi Kabupaten Kubu Raya"></div>
+          <div class="zonasi-legend" id="zonasiLegend"></div>
+        </div>
+        <div class="zonasi-cards" id="zonasiCards"></div>
+      </div>
+      <p class="zonasi-note" id="zonasiNote"></p>
+    </div>
+  </section>
+
   <section class="metodologi-section reveal" id="metodologi">
     <div class="section-inner">
       <div class="section-label">Penelitian PDM — Untan</div>
@@ -995,11 +1014,12 @@
     </div>
   </div>
 
-  <script src="data/kesesuaian_data_v2.js?v=20261008b"></script>
+  <script src="data/kesesuaian_data_v2.js?v=20261008c"></script>
+  <script src="data/zonasi.js?v=20261008c"></script>
   <script src="data/syarat_tumbuh.js?v=20261006"></script>
   <script src="data/rasau_jaya_desa.js?v=20260801"></script>
   <script src="data/parameter_lahan_desa.js?v=20260930"></script>
-  <script src="script.js?v=20261008b" defer></script>
+  <script src="script.js?v=20261008c" defer></script>
 </body>
 </html>
 
