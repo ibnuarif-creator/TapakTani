@@ -232,11 +232,11 @@ body::before {
 #heroMap .leaflet-container { background: transparent !important; }
 #heroMap .leaflet-tile-pane { opacity: 0.12; filter: saturate(0.3) brightness(0.45); }
 
-/* Layer 1: webbackground.jpeg */
+/* Layer 1: gambar hero (gambar/herobaru.svg) */
 .hero::before {
   content: '';
   position: absolute; inset: 0; z-index: 1;
-  background: url('webbackground.jpeg') center/cover no-repeat;
+  background: url('gambar/herobaru.svg') center/cover no-repeat;
   pointer-events: none;
 }
 
