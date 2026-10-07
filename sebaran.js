@@ -1,5 +1,5 @@
 /* ============================================================
-   AgroRaya — Halaman Sebaran Potensi Padi Sawah (Rasau Jaya)
+   TapakTani — Halaman Sebaran Potensi Padi Sawah (Rasau Jaya)
    Data: data/padi_sawah.js (padiSawahData), data/rasau_jaya_desa.js
    ============================================================ */
 
