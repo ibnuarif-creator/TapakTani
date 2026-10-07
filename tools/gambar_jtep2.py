@@ -79,7 +79,7 @@ def gambar_alir():
     kotak(10.2, 2.35, 4.6, 1.2, 'Kesesuaian aktual vs\npotensial padi sawah', ukuran=6.8)
     kotak(10.2, 0.75, 4.6, 1.2, 'Sensitivitas bobot\n(±10%, ±20%)', ukuran=6.8)
     kotak(15.25, 2.75, 4.6, 2.2, 'Rekomendasi\npengelolaan lahan\n& tata air per desa', fc='#1E6B3C', tebal=True, warna_teks='white')
-    kotak(15.25, 0.35, 4.6, 1.75, 'Diseminasi\nWebGIS AgroRaya', fc='#1E6B3C', tebal=True, warna_teks='white')
+    kotak(15.25, 0.35, 4.6, 1.75, 'Diseminasi\nWebGIS TapakTani', fc='#1E6B3C', tebal=True, warna_teks='white')
 
     for y in (9.7, 8.0):
         panah(4.6, y, 5.15, 9.15)
