@@ -38,6 +38,13 @@ for k, v in bps.items():
     for kc, q in v['prod'].items():
         total_grup.setdefault(v['grup'], {}).setdefault(kc, 0.0)
         total_grup[v['grup']][kc] += q
+# perkebunan (BPS Kabupaten Kubu Raya Dalam Angka 2025, Tabel 5.2.2, ton): satu kelompok satuan 'kebun'
+for r in csv.DictReader(open(os.path.join(D, 'bps_perkebunan_2024_kecamatan.csv'), encoding='utf-8')):
+    bps.setdefault(r['komoditas'], {'grup': 'kebun', 'prod': {}})['prod'][r['kecamatan']] = float(r['produksi_ton_2024'])
+    total_grup.setdefault('kebun', {}).setdefault(r['kecamatan'], 0.0)
+    total_grup['kebun'][r['kecamatan']] += float(r['produksi_ton_2024'])
+PETA.update({'karet': ['Karet'], 'kelapa': ['Kelapa Dalam', 'Kelapa Hibrida', 'Kelapa Deres'], 'lada': ['Lada'],
+             'pinang': ['Pinang'], 'sagu': ['Sagu']})
 lq, prod = {}, {}
 for c, bs in PETA.items():
     g = bps[bs[0]]['grup']

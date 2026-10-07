@@ -89,8 +89,8 @@ const kecamatanData = {
     potensi: [
       'Zona IV: komoditas paling sesuai di kecamatan ini adalah jeruk siam (0,886), jahe (0,861), pinang (0,857).',
       'Skor weighted overlay 3,27 — peringkat 5 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
-      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): jahe.',
-      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jeruk siam, karet, lada, pinang.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura/perkebunan BPS 2024 > 1): jahe, lada.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jeruk siam, karet, pinang.',
       'Arahan zonasi bersifat biofisik dan berlaku di luar kawasan hutan serta ekosistem gambut berfungsi lindung.'
     ]
   },
@@ -119,8 +119,8 @@ const kecamatanData = {
     potensi: [
       'Zona I: komoditas paling sesuai di kecamatan ini adalah karet (0,936), padi sawah (0,917), pinang (0,917).',
       'Skor weighted overlay 3,37 — peringkat 3 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
-      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): langsat, jahe, durian, pisang.',
-      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): karet, padi sawah, pinang, lada, jeruk siam.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura/perkebunan BPS 2024 > 1): langsat, pinang, jahe, durian, pisang.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): karet, padi sawah, lada, jeruk siam.',
       'Padi sawah memperoleh skor tertinggi di zona ini; pengembangannya memerlukan pengelolaan tata air pada lahan pasang surut.'
     ]
   },
@@ -149,7 +149,7 @@ const kecamatanData = {
     potensi: [
       'Zona II: komoditas paling sesuai di kecamatan ini adalah jeruk siam (0,955), lada (0,951), jahe (0,951).',
       'Skor weighted overlay 3,40 — peringkat 1 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
-      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): durian, pepaya.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura/perkebunan BPS 2024 > 1): durian, pepaya.',
       'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jeruk siam, jahe, lada, karet, jambu biji.',
       'Wilayah percontohan: analisis 9 kriteria tingkat desa menunjukkan bahaya banjir sebagai pembatas dominan; perbaikan tata air berpotensi menaikkan lahan sesuai padi sawah dari 40,3% menjadi 84,8%.'
     ]
@@ -179,8 +179,8 @@ const kecamatanData = {
     potensi: [
       'Zona III: komoditas paling sesuai di kecamatan ini adalah jeruk siam (0,922), lada (0,890), jahe (0,890).',
       'Skor weighted overlay 3,38 — peringkat 2 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
-      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): belum ada komoditas hortikultura yang memenuhi.',
-      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jeruk siam, jahe, lada, karet.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura/perkebunan BPS 2024 > 1): lada, karet.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jeruk siam, jahe.',
       'Arahan zonasi bersifat biofisik dan berlaku di luar kawasan hutan serta ekosistem gambut berfungsi lindung.'
     ]
   },
@@ -209,7 +209,7 @@ const kecamatanData = {
     potensi: [
       'Zona II: komoditas paling sesuai di kecamatan ini adalah karet (0,931), pinang (0,882), langsat (0,882).',
       'Skor weighted overlay 3,22 — peringkat 7 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
-      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): jeruk siam, jambu biji.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura/perkebunan BPS 2024 > 1): jeruk siam, jambu biji.',
       'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jahe, lada, durian, karet, langsat.',
       'Sebagian wilayah berupa gambut dalam dan mangrove; pengembangan diarahkan di luar kawasan hutan, gambut berfungsi lindung, dan mangrove dengan tata air yang menjaga muka air tanah.'
     ]
@@ -239,8 +239,8 @@ const kecamatanData = {
     potensi: [
       'Zona IV: komoditas paling sesuai di kecamatan ini adalah karet (0,905), pinang (0,882), padi sawah (0,871).',
       'Skor weighted overlay 3,21 — peringkat 8 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
-      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): jeruk siam.',
-      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): karet, pinang, jahe, lada, padi sawah.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura/perkebunan BPS 2024 > 1): jeruk siam, lada.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): karet, pinang, jahe, padi sawah, langsat.',
       'Sebagian wilayah berupa gambut dalam dan mangrove; pengembangan diarahkan di luar kawasan hutan, gambut berfungsi lindung, dan mangrove dengan tata air yang menjaga muka air tanah.'
     ]
   },
@@ -269,8 +269,8 @@ const kecamatanData = {
     potensi: [
       'Zona I: komoditas paling sesuai di kecamatan ini adalah karet (0,953), pinang (0,912), langsat (0,912).',
       'Skor weighted overlay 3,23 — peringkat 6 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
-      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): langsat, durian, jeruk siam, jambu biji, pepaya.',
-      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): karet, jahe, lada, pinang, padi sawah.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura/perkebunan BPS 2024 > 1): langsat, pinang, durian, jeruk siam, jambu biji, pepaya.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): karet, jahe, lada, padi sawah, pisang.',
       'Padi sawah memperoleh skor tertinggi di zona ini; pengembangannya memerlukan pengelolaan tata air pada lahan pasang surut.'
     ]
   },
@@ -299,7 +299,7 @@ const kecamatanData = {
     potensi: [
       'Zona IV: komoditas paling sesuai di kecamatan ini adalah karet (0,881), pinang (0,870), jeruk siam (0,867).',
       'Skor weighted overlay 3,20 — peringkat 9 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
-      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): jeruk siam.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura/perkebunan BPS 2024 > 1): jeruk siam.',
       'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): karet, pinang, padi sawah.',
       'Arahan zonasi bersifat biofisik dan berlaku di luar kawasan hutan serta ekosistem gambut berfungsi lindung.'
     ]
@@ -329,8 +329,8 @@ const kecamatanData = {
     potensi: [
       'Zona III: komoditas paling sesuai di kecamatan ini adalah jeruk siam (0,934), lada (0,915), jahe (0,915).',
       'Skor weighted overlay 3,37 — peringkat 4 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
-      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): belum ada komoditas hortikultura yang memenuhi.',
-      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jeruk siam, jahe, lada, karet, jambu biji.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura/perkebunan BPS 2024 > 1): karet.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jeruk siam, jahe, lada, jambu biji, durian.',
       'Arahan zonasi bersifat biofisik dan berlaku di luar kawasan hutan serta ekosistem gambut berfungsi lindung.'
     ]
   }

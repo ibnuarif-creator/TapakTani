@@ -51,8 +51,8 @@ def teks(n):
             f'{f2(k["skorWO"])} menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah {top3}.')
     potensi = [f'Zona {zn}: komoditas paling sesuai di kecamatan ini adalah {top3}.',
                f'Skor weighted overlay {f2(k["skorWO"])} — peringkat {rank} dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.']
-    potensi.append('Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): ' +
-                   (', '.join(NM(c) for c in aktual) if aktual else 'belum ada komoditas hortikultura yang memenuhi') + '.')
+    potensi.append('Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura/perkebunan BPS 2024 > 1): ' +
+                   (', '.join(NM(c) for c in aktual) if aktual else 'belum ada komoditas yang memenuhi') + '.')
     potensi.append('Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): ' +
                    (', '.join(NM(c) for c in potensial) if potensial else '–') + '.')
     if zn in ('II', 'IV') and n in ('Kubu', 'Batu Ampar'):
