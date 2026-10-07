@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sebaran Potensi Padi Sawah – AgroRaya</title>
+  <meta name="description" content="Sebaran potensi lahan padi sawah Kecamatan Rasau Jaya, Kabupaten Kubu Raya — heatmap dan kelas kesesuaian lahan (S1, S2, S3, N)." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+
+  <link rel="stylesheet" href="style.css?v=20261002" />
+  <link rel="stylesheet" href="sebaran.css?v=20261002b" />
+</head>
+<body class="page-sebaran">
+
+  <!-- ── MOBILE MENU ── -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html#beranda">Beranda</a>
+    <a href="index.html#statistik">Statistik</a>
+    <a href="index.html#kecamatan">Kecamatan</a>
+    <a href="index.html#metodologi">Metodologi</a>
+    <a href="index.html#komparasi">Komparasi</a>
+    <a href="sebaran.html">Sebaran</a>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a class="nav-logo" href="index.html">
+        <img src="logo.png" alt="AgroRaya Logo" class="logo-img" />
+        <div class="logo-text">
+          <span class="logo-main">AgroRaya</span>
+          <span class="logo-sub">Kabupaten Kubu Raya</span>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="index.html#beranda" class="nav-link">Beranda</a>
+        <a href="index.html#statistik" class="nav-link">Statistik</a>
+        <a href="index.html#kecamatan" class="nav-link">Kecamatan</a>
+        <a href="index.html#metodologi" class="nav-link">Metodologi</a>
+        <a href="index.html#komparasi" class="nav-link">Komparasi</a>
+        <a href="sebaran.html" class="nav-link active" aria-current="page">Sebaran</a>
+      </div>
+      <div class="nav-badge">
+        <span class="badge-dot-nav"></span>
+        Kalimantan Barat
+      </div>
+      <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== HEADER HALAMAN ===== -->
+  <header class="sb-header">
+    <div class="section-inner">
+      <div class="sb-eyebrow">Kecamatan Rasau Jaya · Wilayah Percontohan</div>
+      <h1 class="sb-title">Sebaran Potensi Lahan <span class="gradient-text">Padi Sawah</span></h1>
+      <p class="sb-lead">Peta ini menunjukkan <strong>tingkat kesesuaian lahan untuk budidaya padi sawah</strong> di Kecamatan Rasau Jaya, berdasarkan klasifikasi kesesuaian lahan dari data spasial konsultan. Semakin hangat warna heatmap, semakin terkonsentrasi lahan yang sesuai untuk padi. Peta ini menggambarkan <em>potensi lahan</em>, bukan lokasi sawah yang sedang ditanami.</p>
+    </div>
+  </header>
+
+  <main class="sb-main">
+    <div class="section-inner">
+
+      <!-- Ringkasan luas per kelas -->
+      <section class="sb-stats" id="sbStats" aria-label="Ringkasan luas per kelas kesesuaian"></section>
+
+      <!-- Peta -->
+      <section class="sb-map-card" aria-label="Peta sebaran potensi padi sawah">
+        <div class="sb-toolbar">
+          <div class="sb-seg" role="group" aria-label="Mode tampilan peta">
+            <button type="button" class="sb-seg-btn active" data-mode="heat">Heatmap Potensi</button>
+            <button type="button" class="sb-seg-btn" data-mode="kelas">Kelas Kesesuaian</button>
+          </div>
+          <label class="sb-check">
+            <input type="checkbox" id="sbToggleDesa" checked />
+            <span>Batas desa</span>
+          </label>
+        </div>
+        <div class="sb-map-wrap">
+          <div id="sebaranMap"></div>
+          <div class="sb-legend" id="sbLegend"></div>
+        </div>
+      </section>
+
+      <!-- Tabel per desa -->
+      <section class="sb-desa">
+        <div class="sb-section-head">
+          <h2 class="sb-h2">Potensi per Desa</h2>
+          <p class="sb-sub">Luas lahan menurut kelas kesesuaian padi sawah di setiap desa, diurutkan dari persentase lahan berpotensi (S1 + S2) tertinggi. Klik baris untuk memperbesar peta ke desa tersebut.</p>
+        </div>
+        <div class="sb-table-wrap">
+          <table class="sb-table" id="sbTable">
+            <thead>
+              <tr>
+                <th>Desa</th>
+                <th class="num">S1 (ha)</th>
+                <th class="num">S2 (ha)</th>
+                <th class="num">S3 (ha)</th>
+                <th class="num">N (ha)</th>
+                <th>Lahan berpotensi (S1 + S2)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="sb-note" id="sbLuarDesa"></p>
+      </section>
+
+      <!-- Catatan metodologi -->
+      <section class="sb-notes">
+        <h2 class="sb-h2">Catatan Data</h2>
+        <ul>
+          <li><strong>Sumber:</strong> klasifikasi kesesuaian lahan padi sawah (<em>Kesesuaian_Lahan_Padi_Sawah</em>) dari konsultan spasial, dengan kelas S1 (sangat sesuai), S2 (cukup sesuai), S3 (sesuai marginal), dan N (tidak sesuai).</li>
+          <li><strong>Heatmap:</strong> titik sampel berjarak 200 m di dalam setiap poligon kelas, dengan bobot S1 = 1,00 · S2 = 0,67 · S3 = 0,33 · N = 0. Warna hangat menandakan konsentrasi lahan yang lebih sesuai.</li>
+          <li><strong>Penyederhanaan tampilan:</strong> fragmen poligon di bawah 0,5 ha tidak digambar di peta agar ringan diakses. Seluruh angka luas dihitung dari data lengkap.</li>
+          <li><strong>Batasan:</strong> peta ini menunjukkan potensi berdasarkan kondisi lahan, bukan lahan sawah eksisting. Validasi lapangan tetap diperlukan sebelum digunakan untuk perencanaan.</li>
+        </ul>
+        <a class="sb-back" href="index.html#kecamatan">← Kembali ke 9 Kecamatan Kubu Raya</a>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="logo.png" alt="AgroRaya Logo" class="logo-img footer-logo-img" />
+        <div>
+          <div class="footer-title">AgroRaya</div>
+          <div class="footer-subtitle">SIG Pertanian · Kabupaten Kubu Raya · Kalimantan Barat</div>
+        </div>
+      </div>
+      <div class="footer-info">
+        <p class="footer-copy">© 2025–2026 AgroRaya · Program Studi Informatika · Universitas Tanjungpura · Pontianak, Kalimantan Barat</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="data/rasau_jaya_desa.js?v=20260801"></script>
+  <script src="data/padi_sawah.js?v=20261002"></script>
+  <script src="sebaran.js?v=20261002b" defer></script>
+</body>
+</html>

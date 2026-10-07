@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=20261001d" />
 </head>
 <body>
 
@@ -24,7 +24,7 @@
     <a href="#kecamatan">Kecamatan</a>
     <a href="#metodologi">Metodologi</a>
     <a href="#komparasi">Komparasi</a>
-    <a href="#tentang">Tentang</a>
+    <a href="sebaran.html">Sebaran</a>
   </div>
 
   <!-- ===== NAVBAR ===== -->
@@ -43,7 +43,7 @@
         <a href="#kecamatan" class="nav-link">Kecamatan</a>
         <a href="#metodologi" class="nav-link">Metodologi</a>
         <a href="#komparasi" class="nav-link">Komparasi</a>
-        <a href="#tentang" class="nav-link">Tentang</a>
+        <a href="sebaran.html" class="nav-link">Sebaran</a>
       </div>
       <div class="nav-badge">
         <span class="badge-dot-nav"></span>
@@ -239,6 +239,7 @@
             <div class="kec-number">Kecamatan 01</div>
             <h3 class="kec-name">Rasau Jaya</h3>
             <p class="kec-tagline">Kawasan Transmigrasi</p>
+            <div class="kec-pilot-badge">Wilayah Percontohan · 9 Kriteria</div>
             <div class="kec-tags">
               <span class="tag">Semangka</span>
               <span class="tag">Kelapa</span>
@@ -557,7 +558,7 @@
               <span class="mx-val">0.00</span>
             </div>
           </div>
-          <p style="font-size:0.68rem;color:var(--text-3);margin-top:0.75rem;line-height:1.6;">Jenis tanah bersifat kategorikal: Sesuai = 1,00 &middot; Batas = 0,50 &middot; Tidak = 0,00</p>
+          <p style="font-size:0.68rem;color:var(--text-3);margin-top:0.75rem;line-height:1.6;">Jenis tanah: rata-rata tertimbang luas kelas tekstur dalam kecamatan (Sesuai = 1,00 &middot; Batas = 0,50 &middot; Tidak = 0,00)</p>
         </div>
 
         <!-- Kelas Kesesuaian -->
@@ -629,6 +630,76 @@
           <p style="font-size:0.68rem;color:var(--text-3);margin-top:0.85rem;line-height:1.65;">Skor akhir berskala 0–4, dipetakan ke kelas kesesuaian yang sama seperti SAW (S1/S2/S3/N). Seluruh 9 kecamatan Kubu Raya saat ini berada pada kelas <strong>S2 &mdash; Cukup Sesuai (skor 2,5–3,5)</strong>.</p>
         </div>
 
+        <!-- SAW tingkat desa — 9 kriteria (Rasau Jaya) -->
+        <div class="metod-card metod-card--formula">
+          <div class="metod-card-head">
+            <div class="metod-card-icon">9</div>
+            <h3 class="metod-card-title">SAW Tingkat Desa — 9 Kriteria Kualitas Lahan (Rasau Jaya)</h3>
+          </div>
+          <p style="font-size:0.8rem;color:var(--text-2);line-height:1.65;margin-bottom:1.1rem;">
+            Pada rincian desa Kecamatan Rasau Jaya, 4 kriteria iklim &amp; tanah di atas dilengkapi <strong>5 parameter kualitas lahan</strong> dari data spasial konsultan: pH tanah, C-organik, ketebalan gambut, kemiringan lereng, dan bahaya banjir. Skor tiap parameter (1–4 = N/S3/S2/S1) dirata-rata tertimbang luas per desa lalu dinormalisasi <em>r</em> = (skor &minus; 1) / 3. Bobot dikelompokkan menurut kualitas lahan Petunjuk Teknis Evaluasi Lahan BBSDLP (2011).
+          </p>
+          <div class="metod-weights">
+            <div class="weight-row">
+              <span class="wr-name">Jenis Tanah <small>rc</small></span>
+              <div class="wr-track"><div class="wr-bar" style="--w:18%"></div></div>
+              <span class="wr-pct">18%</span>
+            </div>
+            <div class="weight-row">
+              <span class="wr-name">pH Tanah <small>nr</small></span>
+              <div class="wr-track"><div class="wr-bar" style="--w:15%"></div></div>
+              <span class="wr-pct">15%</span>
+            </div>
+            <div class="weight-row">
+              <span class="wr-name">Bahaya Banjir <small>fh</small></span>
+              <div class="wr-track"><div class="wr-bar" style="--w:15%"></div></div>
+              <span class="wr-pct">15%</span>
+            </div>
+            <div class="weight-row">
+              <span class="wr-name">C-Organik <small>nr</small></span>
+              <div class="wr-track"><div class="wr-bar" style="--w:10%"></div></div>
+              <span class="wr-pct">10%</span>
+            </div>
+            <div class="weight-row">
+              <span class="wr-name">Kemiringan Lereng <small>eh</small></span>
+              <div class="wr-track"><div class="wr-bar" style="--w:10%"></div></div>
+              <span class="wr-pct">10%</span>
+            </div>
+            <div class="weight-row">
+              <span class="wr-name">Elevasi <small>tc</small></span>
+              <div class="wr-track"><div class="wr-bar" style="--w:10%"></div></div>
+              <span class="wr-pct">10%</span>
+            </div>
+            <div class="weight-row">
+              <span class="wr-name">Curah Hujan <small>wa</small></span>
+              <div class="wr-track"><div class="wr-bar" style="--w:10%"></div></div>
+              <span class="wr-pct">10%</span>
+            </div>
+            <div class="weight-row">
+              <span class="wr-name">Ketebalan Gambut <small>rc</small></span>
+              <div class="wr-track"><div class="wr-bar" style="--w:7%"></div></div>
+              <span class="wr-pct">7%</span>
+            </div>
+            <div class="weight-row">
+              <span class="wr-name">Suhu Udara <small>tc</small></span>
+              <div class="wr-track"><div class="wr-bar" style="--w:5%"></div></div>
+              <span class="wr-pct">5%</span>
+            </div>
+          </div>
+          <p style="font-size:0.68rem;color:var(--text-3);margin-top:0.85rem;line-height:1.65;">Kelompok kualitas lahan: tc temperatur 15% &middot; wa ketersediaan air 10% &middot; rc media perakaran 25% &middot; nr retensi hara 25% &middot; eh bahaya erosi 10% &middot; fh bahaya banjir 15%. Selain skor SAW, setiap komoditas juga diberi <strong>kelas Juknis</strong> dengan hukum minimum: kelas akhir = kelas kriteria terburuk, dan subkelas menunjukkan faktor pembatasnya (contoh: S3-fh = sesuai marginal karena bahaya banjir).</p>
+        </div>
+
+        <!-- Rencana Pengembangan -->
+        <div class="metod-card metod-card--formula">
+          <div class="metod-card-head">
+            <div class="metod-card-icon">→</div>
+            <h3 class="metod-card-title">Rencana Pengembangan</h3>
+          </div>
+          <p style="font-size:0.8rem;color:var(--text-2);line-height:1.65;">
+            Saat ini data 5 parameter kualitas lahan baru tersedia untuk Kecamatan Rasau Jaya (±91% wilayah kecamatan), sehingga Rasau Jaya ditetapkan sebagai <strong>wilayah percontohan</strong>. Delapan kecamatan lainnya masih dianalisis dengan SAW 4 kriteria tingkat kecamatan. Tahap berikutnya: (1) memperluas analisis 9 kriteria ke seluruh 9 kecamatan hingga tingkat desa, dan (2) menerapkan ambang kesesuaian spesifik per komoditas sesuai Juknis BBSDLP, dimulai dari padi sawah.
+          </p>
+        </div>
+
       </div><!-- /metod-grid -->
 
       <!-- Sumber Data -->
@@ -655,8 +726,8 @@
             <div class="src-icon">⛰️</div>
             <div class="src-body">
               <div class="src-param">Elevasi</div>
-              <div class="src-dataset">SRTM DEM v3</div>
-              <div class="src-detail">NASA / USGS &middot; Resolusi 30 m</div>
+              <div class="src-dataset">FABDEM (elevasi) &middot; SRTM DEM v3 (lereng)</div>
+              <div class="src-detail">Copernicus GLO-30 tanpa tajuk &amp; bangunan &middot; Resolusi 30 m</div>
             </div>
           </div>
           <div class="src-card">
@@ -737,8 +808,8 @@
       </div>
 
       <div class="footer-info">
-        <p class="footer-datasrc"><strong>Sumber Data:</strong> BPS Kabupaten Kubu Raya · Copernicus Sentinel-2 SR (ESA) · GADM Level 3 · Oxford Accessibility Map · OpenLandMap Soil · USGS SRTM DEM</p>
-        <p class="footer-method"><strong>Metodologi:</strong> Analisis kesesuaian lahan menggunakan citra multitemporal Sentinel-2 SR Harmonized (2022–2024) diproses di Google Earth Engine. Skor Weighted Overlay dihitung berdasarkan 5 kriteria: NDVI (30%), Jenis Tanah (25%), Ketersediaan Air/NDWI (20%), Kemiringan Lereng/SRTM (15%), Aksesibilitas (10%). Kelas S2 (Cukup Sesuai, skor 2,5–3,5) mencakup seluruh 9 kecamatan Kubu Raya.</p>
+        <p class="footer-datasrc"><strong>Sumber Data:</strong> BPS Kabupaten Kubu Raya · Copernicus Sentinel-2 SR (ESA) · GADM Level 3 · Oxford Accessibility Map · OpenLandMap Soil · FABDEM · USGS SRTM DEM</p>
+        <p class="footer-method"><strong>Metodologi:</strong> Analisis kesesuaian lahan menggunakan citra multitemporal Sentinel-2 SR Harmonized (2022–2024) diproses di Google Earth Engine dengan statistik zonal per poligon kecamatan. Skor Weighted Overlay dihitung berdasarkan 5 kriteria: NDVI (30%), Jenis Tanah (25%), Ketersediaan Air/NDWI (20%), Kemiringan Lereng/SRTM (15%), Aksesibilitas (10%). Kelas S2 (Cukup Sesuai, skor 2,5–3,5) mencakup seluruh 9 kecamatan Kubu Raya.</p>
         <p class="footer-copy">© 2025–2026 AgroRaya · Program Studi Informatika · Universitas Tanjungpura · Pontianak, Kalimantan Barat</p>
       </div>
 
@@ -784,7 +855,7 @@
             Rincian Kesesuaian per Desa
           </h3>
 
-          <p class="modal-desc" style="margin-bottom:0.85rem;">Khusus Kecamatan Rasau Jaya, analisis kesesuaian lahan diproses lebih rinci hingga tingkat desa atas permintaan Dinas Pertanian Kabupaten Kubu Raya, agar memudahkan proses administrasi di lapangan. Klik salah satu desa untuk membuka rincian komoditas unggulannya.</p>
+          <p class="modal-desc" style="margin-bottom:0.85rem;">Kecamatan Rasau Jaya merupakan <strong>wilayah percontohan</strong> analisis mendalam hingga tingkat desa, disusun atas permintaan Dinas Pertanian Kabupaten Kubu Raya untuk memudahkan proses administrasi di lapangan. Peringkat komoditas tiap desa dihitung dengan SAW 9 kriteria: 4 kriteria iklim &amp; tanah ditambah 5 parameter kualitas lahan (pH, C-organik, ketebalan gambut, lereng, bahaya banjir). Klik salah satu desa untuk membuka rinciannya.</p>
           <div class="modal-map-wrapper">
             <div id="modalDesaMap"></div>
           </div>
@@ -913,10 +984,11 @@
     </div>
   </div>
 
-  <script src="data/kesesuaian_data_v2.js?v=20260704"></script>
-  <script src="data/syarat_tumbuh.js?v=20260704"></script>
+  <script src="data/kesesuaian_data_v2.js?v=20261006"></script>
+  <script src="data/syarat_tumbuh.js?v=20261006"></script>
   <script src="data/rasau_jaya_desa.js?v=20260801"></script>
-  <script src="script.js?v=20260801" defer></script>
+  <script src="data/parameter_lahan_desa.js?v=20260930"></script>
+  <script src="script.js?v=20261007" defer></script>
 </body>
 </html>
 

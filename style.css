@@ -561,6 +561,27 @@ body::before {
 }
 .kec-card:hover .kec-img { transform: scale(1.06); }
 
+/* Peta mini citra satelit (menggantikan gambar PNG) */
+.kec-card .kec-img.kec-img--map { background-image: none; background-color: #1b2a22; }
+.kec-mini-map { position: absolute; inset: 0; pointer-events: none; background: #1b2a22; }
+.kec-mini-map .leaflet-control-attribution {
+  font-size: 7.5px; line-height: 1.3; padding: 1px 5px;
+  background: rgba(0,0,0,0.38); color: rgba(255,255,255,0.75);
+}
+.kec-mini-boundary { filter: drop-shadow(0 0 5px rgba(255,255,255,0.75)); }
+.kec-map-chip {
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 4px 10px 4px 4px; border-radius: 100px;
+  background: rgba(10,22,16,0.62); backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.22);
+  color: #fff; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.01em;
+}
+.kec-map-chip-kelas {
+  display: inline-grid; place-items: center; min-width: 24px; height: 20px; padding: 0 5px;
+  border-radius: 100px; font-size: 0.64rem; font-weight: 800; color: #fff;
+}
+
 /* Gambar peta per kecamatan */
 .kec-card[data-kec="sungai-raya"]     .kec-img { background-image: url('gambar/Peta_Sungai_Raya.png'); }
 .kec-card[data-kec="sungai-kakap"]    .kec-img { background-image: url('gambar/Peta_Sungai_Kakap.png'); }
@@ -587,7 +608,7 @@ body::before {
 .kec-card:hover .kec-map-icon::after { opacity: 1; }
 
 /* Hide old SVG placeholders — no longer needed */
-.kec-map-icon svg { display: none; }
+.kec-map-icon > svg { display: none; }
 
 .kec-info { padding: 20px 22px 14px; flex: 1; }
 .kec-number {
@@ -599,6 +620,11 @@ body::before {
   letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 4px;
 }
 .kec-tagline { font-size: 0.80rem; color: var(--text-3); font-weight: 500; margin-bottom: 12px; }
+.kec-pilot-badge {
+  display: inline-block; margin-bottom: 10px; padding: 3px 10px;
+  background: var(--accent); color: #fff; border-radius: 100px;
+  font-size: 0.66rem; font-weight: 700; letter-spacing: 0.03em;
+}
 .kec-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag {
   display: inline-block; padding: 3px 10px;
@@ -863,6 +889,10 @@ body::before {
   font-family: var(--font-display); font-size: 0.98rem; font-weight: 700; color: var(--accent);
   letter-spacing: -0.02em;
 }
+.desa-crop-juknis {
+  font-size: 0.58rem; font-weight: 600; color: var(--text-3); white-space: nowrap;
+  letter-spacing: 0.01em;
+}
 
 @media (max-width: 640px) {
   .desa-crop-card { gap: 0.65rem; padding: 0.8rem 0.85rem 0.8rem 0.95rem; }
@@ -916,6 +946,11 @@ body::before {
 .saw-nilai.st-batas { color: #b45309; }
 .saw-nilai.st-tidak { color: #9ca3af; }
 .saw-nilai.st-lahan { color: var(--accent); }
+.saw-kode {
+  font-size: 0.56rem; font-weight: 600; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.04em; margin-left: 2px;
+}
+.saw-juknis { color: var(--accent); white-space: nowrap; }
 
 /* Method note */
 .saw-note {

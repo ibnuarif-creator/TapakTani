@@ -10,17 +10,53 @@
 const kelasColor = { S1: '#1a6e3c', S2: '#5aac72', S3: '#e8c53a', N: '#d94f3a' };
 const kelasLabel = { S1: 'Sangat Sesuai', S2: 'Cukup Sesuai', S3: 'Sesuai Marginal', N: 'Tidak Sesuai' };
 
+// Titik penanda = representative point poligon batas kecamatan (selalu berada di dalam
+// wilayahnya); zoom hanya cadangan bila poligon batas tidak ditemukan
 const kecamatanCoords = {
-  'sungai-raya':      { lat: -0.0522,  lng: 109.3620, zoom: 12 },
-  'sungai-kakap':     { lat: -0.1700,  lng: 109.2200, zoom: 12 },
-  'rasau-jaya':       { lat: -0.2100,  lng: 109.2750, zoom: 12 },
-  'sungai-ambawang':  { lat:  0.0400,  lng: 109.4500, zoom: 12 },
-  'kubu':             { lat: -0.3800,  lng: 109.4300, zoom: 11 },
-  'batu-ampar':       { lat: -0.1000,  lng: 109.0800, zoom: 11 },
-  'teluk-pakedai':    { lat: -0.2600,  lng: 109.1100, zoom: 12 },
-  'terentang':        { lat: -0.5300,  lng: 109.3400, zoom: 11 },
-  'kuala-mandor':     { lat:  0.1000,  lng: 109.2700, zoom: 12 },
+  'sungai-raya':      { lat: -0.2270,  lng: 109.6700, zoom: 11 },
+  'sungai-kakap':     { lat: -0.1030,  lng: 109.2620, zoom: 11 },
+  'rasau-jaya':       { lat: -0.2510,  lng: 109.3340, zoom: 12 },
+  'sungai-ambawang':  { lat: -0.0580,  lng: 109.6290, zoom: 11 },
+  'kubu':             { lat: -0.4640,  lng: 109.3180, zoom: 11 },
+  'batu-ampar':       { lat: -0.8380,  lng: 109.4810, zoom: 10 },
+  'teluk-pakedai':    { lat: -0.2970,  lng: 109.1950, zoom: 11 },
+  'terentang':        { lat: -0.3710,  lng: 109.7760, zoom: 11 },
+  'kuala-mandor':     { lat:  0.1170,  lng: 109.4350, zoom: 11 },
 };
+
+// Nama kecamatan di data batas wilayah (GADM) → id kecamatan di website
+const nameToKecId = {
+  'Sungai Raya': 'sungai-raya', 'Sungai Kakap': 'sungai-kakap',
+  'Rasau Jaya': 'rasau-jaya', 'Sungai Ambawang': 'sungai-ambawang',
+  'Kubu': 'kubu', 'Batu Ampar': 'batu-ampar',
+  "Telok Pa'Kedai": 'teluk-pakedai', 'Terentang': 'terentang',
+  'Kuala Mandor B': 'kuala-mandor'
+};
+
+function getKecamatanFeature(kecId) {
+  if (typeof kesesuaianLahanData === 'undefined') return null;
+  return kesesuaianLahanData.features.find(f => nameToKecId[f.properties.NAME_3] === kecId) || null;
+}
+
+// ── Peta dasar Esri (tanpa API key) ────────────────────────────────────────
+// Tile CARTO kini mewajibkan API key (tanpa key hanya tampil watermark
+// "API KEY REQUIRED"), sehingga seluruh peta memakai layanan tile Esri.
+const ESRI_ATTRIBUTION = 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, Maxar, Earthstar Geographics, &copy; OpenStreetMap contributors';
+
+function esriLayer(service, attribution = ESRI_ATTRIBUTION) {
+  return L.tileLayer(`https://server.arcgisonline.com/ArcGIS/rest/services/${service}/MapServer/tile/{z}/{y}/{x}`, {
+    attribution,
+    maxZoom: 18
+  });
+}
+
+// Citra satelit sebagai default (peta jalan di wilayah Kubu Raya sangat minim detail),
+// dengan pilihan beralih ke peta jalan
+function addBasemap(map) {
+  const satelit = L.layerGroup([esriLayer('World_Imagery'), esriLayer('Reference/World_Boundaries_and_Places')]).addTo(map);
+  const jalan = esriLayer('World_Street_Map');
+  L.control.layers({ 'Citra Satelit': satelit, 'Peta Jalan': jalan }, null, { position: 'topright' }).addTo(map);
+}
 
 // ============================================================
 // DATA LENGKAP 9 KECAMATAN
@@ -30,7 +66,7 @@ const kecamatanData = {
     number: '02',
     name: 'Sungai Raya',
     tagline: 'Ibu Kota Kabupaten Kubu Raya',
-    desc: 'Kecamatan Sungai Raya terletak di dataran rendah aluvial dengan elevasi rata-rata 6 m dpl. Jenis tanah didominasi Lempung Liat Berdebu (Silty Clay Loam) dengan kapasitas tukar kation (KTK) sedang hingga tinggi, drainase sedang, dan kemampuan menahan air yang baik — karakteristik ideal untuk budidaya padi sawah beririgasi dan tanaman hortikultura semusim. Curah hujan tahunan 3.262 mm dengan distribusi merata mencukupi kebutuhan air tanaman pada fase vegetatif maupun generatif, sedangkan suhu rata-rata 26,2°C mendukung proses metabolisme tanaman tropika basah secara optimal. Analisis citra Sentinel-2 (2022–2024) menunjukkan NDVI rata-rata 0,66, mencerminkan dominasi tutupan lahan pertanian aktif dan vegetasi campuran yang produktif. Kecamatan ini merupakan sentra produksi nanas dan hortikultura yang didukung aksesibilitas jalan memadai untuk distribusi hasil panen.',
+    desc: 'Kecamatan Sungai Raya termasuk Zona IV hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona tekstur campuran lempung liat berpasir dan lempung berliat dengan curah hujan tinggi. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 3.284 mm/tahun, suhu udara 26,2 °C, dan elevasi median 7 m dpl (FABDEM). Tekstur tanah didominasi Lempung Liat Berpasir (53% luas) diikuti Lempung Berliat (42%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,67 (Sentinel-2) dan skor weighted overlay 3,27 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah jeruk siam (0,886), jahe (0,861), pinang (0,857).',
     stats: [
       { val: '±742 km²', key: 'Luas Wilayah' },
       { val: '17 Desa', key: 'Jumlah Desa' },
@@ -45,23 +81,24 @@ const kecamatanData = {
     relevantCrops: ['padi_sawah', 'nanas', 'kelapa', 'pisang', 'pinang', 'cabai', 'pepaya', 'jeruk_siam', 'langsat', 'jambu_biji', 'jahe'],
     data: [
       { key: 'Kelas Kesesuaian', val: 'S2 — Cukup Sesuai' },
-      { key: 'NDVI Rata-rata', val: '0,66 (Sentinel-2, 2022–2024)' },
-      { key: 'Skor Weighted Overlay', val: '3,21 / 4,00' },
+      { key: 'Zona Agroekologi', val: 'Zona IV (klaster Ward)' },
+      { key: 'NDVI Rata-rata', val: '0,67 (Sentinel-2, 2022–2024)' },
+      { key: 'Skor Weighted Overlay', val: '3,27 / 4,00' },
       { key: 'Topografi', val: 'Dataran Rendah' }
     ],
     potensi: [
-      'Kelas S2 (Cukup Sesuai) mengindikasikan potensi pertanian yang baik dengan catatan pengelolaan lahan gambut yang tepat.',
-      'Nilai NDVI 0,66 menunjukkan kerapatan vegetasi tinggi — lahan aktif dan produktif mendominasi wilayah ini.',
-      'Sentra produksi nanas dan hortikultura dengan akses distribusi terbaik menuju Kota Pontianak.',
-      'Skor weighted overlay 3,21 mencerminkan aksesibilitas jalan dan ketersediaan air yang mendukung pertanian intensif.',
-      'Prioritas pengembangan: optimasi lahan sawah eksisting dan perluasan kebun hortikultura berbasis data spasial.'
+      'Zona IV: komoditas paling sesuai di kecamatan ini adalah jeruk siam (0,886), jahe (0,861), pinang (0,857).',
+      'Skor weighted overlay 3,27 — peringkat 5 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): jahe.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jeruk siam, karet, lada, pinang.',
+      'Arahan zonasi bersifat biofisik dan berlaku di luar kawasan hutan serta ekosistem gambut berfungsi lindung.'
     ]
   },
   'sungai-kakap': {
     number: '03',
     name: 'Sungai Kakap',
     tagline: 'Sentra Kelapa & Padi Pasang Surut',
-    desc: 'Kecamatan Sungai Kakap merupakan kawasan pertanian lahan pasang surut di pesisir barat dengan elevasi 3 m dpl. Jenis tanah berupa Lempung Berliat (Clay Loam) pada sistem rawa pasang surut memiliki kapasitas tukar kation (KTK) sedang dan kemampuan menahan air tinggi, mendukung budidaya tanaman yang toleran terhadap fluktuasi muka air tanah. Sistem tata air pada tipologi lahan pasang surut tipe B memungkinkan penerapan pola tanam padi–palawija dengan pengelolaan saluran drainase yang terencana. Curah hujan 2.743 mm/tahun mencukupi kebutuhan air kelapa dan sagu tanpa menyebabkan kelebihan air pada lahan yang telah memiliki infrastruktur drainase. Analisis citra Sentinel-2 (2022–2024) mencatat NDVI rata-rata 0,69, menunjukkan kerapatan tutupan vegetasi perkebunan kelapa dan sawah pasang surut yang stabil sepanjang tahun.',
+    desc: 'Kecamatan Sungai Kakap termasuk Zona I hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona pesisir barat bercurah hujan terendah dengan tekstur lempung berliat yang seimbang dengan lempung liat berpasir. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 2.961 mm/tahun, suhu udara 26,5 °C, dan elevasi median 4 m dpl (FABDEM). Tekstur tanah didominasi Lempung Berliat (52% luas) diikuti Lempung Liat Berpasir (46%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,68 (Sentinel-2) dan skor weighted overlay 3,37 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah karet (0,936), padi sawah (0,917), pinang (0,917).',
     stats: [
       { val: '±508 km²', key: 'Luas Wilayah' }, { val: '14 Desa', key: 'Jumlah Desa' },
       { val: '~68 rb', key: 'Penduduk' }, { val: 'Sungai Kakap', key: 'Ibu Kota' }
@@ -74,23 +111,24 @@ const kecamatanData = {
     relevantCrops: ['padi_sawah', 'kelapa', 'sagu', 'pinang', 'pisang', 'karet', 'langsat', 'jeruk_siam'],
     data: [
       { key: 'Kelas Kesesuaian', val: 'S2 — Cukup Sesuai' },
-      { key: 'NDVI Rata-rata', val: '0,69 (Sentinel-2, 2022–2024)' },
-      { key: 'Skor Weighted Overlay', val: '3,28 / 4,00' },
+      { key: 'Zona Agroekologi', val: 'Zona I (klaster Ward)' },
+      { key: 'NDVI Rata-rata', val: '0,68 (Sentinel-2, 2022–2024)' },
+      { key: 'Skor Weighted Overlay', val: '3,37 / 4,00' },
       { key: 'Topografi', val: 'Rawa & Pasang Surut' }
     ],
     potensi: [
-      'Skor tertinggi kedua (3,28) di antara 9 kecamatan — potensi pertanian pasang surut sangat menjanjikan.',
-      'Perkebunan kelapa dan pinang pada lahan pasang surut merupakan model adaptasi pertanian gambut pesisir.',
-      'Nilai NDVI 0,69 mengindikasikan tutupan vegetasi produktif yang stabil sepanjang 2022–2024.',
-      'Peluang pengembangan sistem silvofishery — integrasi kebun kelapa dengan budidaya ikan air payau.',
-      'Prioritas: pemetaan lahan sawah pasang surut untuk optimasi jadwal tanam berbasis data NDWI.'
+      'Zona I: komoditas paling sesuai di kecamatan ini adalah karet (0,936), padi sawah (0,917), pinang (0,917).',
+      'Skor weighted overlay 3,37 — peringkat 3 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): langsat, jahe, durian, pisang.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): karet, padi sawah, pinang, lada, jeruk siam.',
+      'Padi sawah memperoleh skor tertinggi di zona ini; pengembangannya memerlukan pengelolaan tata air pada lahan pasang surut.'
     ]
   },
   'rasau-jaya': {
     number: '01',
     name: 'Rasau Jaya',
     tagline: 'Kawasan Transmigrasi Pertanian Gambut',
-    desc: 'Kecamatan Rasau Jaya adalah kawasan transmigrasi yang berkembang di atas lahan gambut dangkal hingga sedang (kedalaman 0,5–2 m) dengan elevasi 7 m dpl. Jenis tanah berupa Lempung Liat Berpasir (Sandy Clay Loam) pada lapisan mineral di bawah gambut memberikan aerasi perakaran yang cukup baik untuk sistem perakaran tanaman perkebunan. Lapisan gambut bagian atas bersifat masam dengan pH 3,5–4,5 dan kandungan bahan organik tinggi, sehingga diperlukan ameliorasi lahan berupa pengapuran (liming) dan pemupukan berimbang untuk mendukung budidaya tanaman pangan. Curah hujan 2.984 mm/tahun mendukung pola tanam ganda dan menjaga kelembaban gambut agar tidak mengalami kekeringan irreversibel. Nilai NDVI 0,69 dari analisis Sentinel-2 (2022–2024) mencerminkan aktivitas fotosintesis yang stabil pada lahan gambut terkelola, dengan semangka sebagai komoditas unggulan hasil adaptasi teknik budidaya musiman setempat.',
+    desc: 'Kecamatan Rasau Jaya termasuk Zona II hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona dominan lempung liat berpasir dengan curah hujan sedang. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 3.069 mm/tahun, suhu udara 26,3 °C, dan elevasi median 4 m dpl (FABDEM). Tekstur tanah didominasi Lempung Liat Berpasir (75% luas) diikuti Lempung Berliat (20%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,68 (Sentinel-2) dan skor weighted overlay 3,40 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah jeruk siam (0,955), lada (0,951), jahe (0,951).',
     stats: [
       { val: '±243 km²', key: 'Luas Wilayah' }, { val: '5 Desa', key: 'Jumlah Desa' },
       { val: '~42 rb', key: 'Penduduk' }, { val: 'Rasau Jaya', key: 'Ibu Kota' }
@@ -103,23 +141,24 @@ const kecamatanData = {
     relevantCrops: ['padi_sawah', 'kelapa', 'karet', 'pisang', 'pinang', 'semangka', 'nanas', 'jeruk_siam', 'langsat', 'durian', 'lada', 'jahe', 'jambu_biji', 'ubi_kayu'],
     data: [
       { key: 'Kelas Kesesuaian', val: 'S2 — Cukup Sesuai' },
-      { key: 'NDVI Rata-rata', val: '0,69 (Sentinel-2, 2022–2024)' },
-      { key: 'Skor Weighted Overlay', val: '3,16 / 4,00' },
+      { key: 'Zona Agroekologi', val: 'Zona II (klaster Ward)' },
+      { key: 'NDVI Rata-rata', val: '0,68 (Sentinel-2, 2022–2024)' },
+      { key: 'Skor Weighted Overlay', val: '3,40 / 4,00 (tertinggi)' },
       { key: 'Topografi', val: 'Lahan Gambut' }
     ],
     potensi: [
-      'Kawasan transmigrasi dengan sistem irigasi teknis yang mendukung pertanian intensif di lahan gambut.',
-      'Produksi semangka dan sayuran sebagai komoditas unggulan dengan nilai NDVI vegetasi aktif 0,69.',
-      'Skor kesesuaian 3,16 menunjukkan keseimbangan antara ketersediaan air gambut dan aksesibilitas yang memadai.',
-      'Model pertanian adaptif lahan gambut yang dapat direplikasi untuk kecamatan bergambut lainnya di Kubu Raya.',
-      'Prioritas: validasi lapangan produktivitas aktual padi untuk kalibrasi model analisis spasial penelitian.'
+      'Zona II: komoditas paling sesuai di kecamatan ini adalah jeruk siam (0,955), lada (0,951), jahe (0,951).',
+      'Skor weighted overlay 3,40 — peringkat 1 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): durian, pepaya.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jeruk siam, jahe, lada, karet, jambu biji.',
+      'Wilayah percontohan: analisis 9 kriteria tingkat desa menunjukkan bahaya banjir sebagai pembatas dominan; perbaikan tata air berpotensi menaikkan lahan sesuai padi sawah dari 40,3% menjadi 84,8%.'
     ]
   },
   'sungai-ambawang': {
     number: '04',
     name: 'Sungai Ambawang',
     tagline: 'Sentra Perkebunan Karet & Pertanian Terpadu',
-    desc: 'Kecamatan Sungai Ambawang memiliki topografi bergelombang dengan elevasi rata-rata 8 m dpl yang memberikan kondisi drainase alami lebih baik dibanding wilayah pesisir. Jenis tanah Lempung Liat Berpasir (Sandy Clay Loam) dengan drainase sedang hingga baik dan pH berkisar 5,0–6,0 sangat sesuai untuk pertumbuhan tanaman tahunan seperti karet (Hevea brasiliensis) yang memerlukan aerasi perakaran optimal dan tidak toleran terhadap genangan. Curah hujan 3.249 mm/tahun dengan distribusi merata mendukung kebutuhan air karet pada fase pertumbuhan aktif serta padi sawah pada fase pengisian biji. Suhu rata-rata 26,1°C mendekati kisaran optimal untuk proses biosintesis lateks. Analisis citra Sentinel-2 (2022–2024) mencatat NDVI 0,72, mencerminkan kerapatan kanopi perkebunan karet dan pertanian campuran yang rapat dan produktif di wilayah ini.',
+    desc: 'Kecamatan Sungai Ambawang termasuk Zona III hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona dominan lempung liat berpasir dengan curah hujan tinggi. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 3.341 mm/tahun, suhu udara 26,1 °C, dan elevasi median 8 m dpl (FABDEM). Tekstur tanah didominasi Lempung Liat Berpasir (76% luas) diikuti Lempung Berliat (20%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,70 (Sentinel-2) dan skor weighted overlay 3,38 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah jeruk siam (0,922), lada (0,890), jahe (0,890).',
     stats: [
       { val: '±727 km²', key: 'Luas Wilayah' }, { val: '16 Desa', key: 'Jumlah Desa' },
       { val: '~57 rb', key: 'Penduduk' }, { val: 'Sei Ambawang', key: 'Ibu Kota' }
@@ -132,23 +171,24 @@ const kecamatanData = {
     relevantCrops: ['padi_sawah', 'karet', 'pisang', 'pinang', 'kakao', 'kelapa', 'durian', 'lada', 'langsat', 'jeruk_siam', 'jahe', 'jambu_biji'],
     data: [
       { key: 'Kelas Kesesuaian', val: 'S2 — Cukup Sesuai' },
-      { key: 'NDVI Rata-rata', val: '0,72 (Sentinel-2, 2022–2024)' },
-      { key: 'Skor Weighted Overlay', val: '3,32 / 4,00 (tertinggi)' },
+      { key: 'Zona Agroekologi', val: 'Zona III (klaster Ward)' },
+      { key: 'NDVI Rata-rata', val: '0,70 (Sentinel-2, 2022–2024)' },
+      { key: 'Skor Weighted Overlay', val: '3,38 / 4,00' },
       { key: 'Topografi', val: 'Berbukit–Dataran' }
     ],
     potensi: [
-      'Skor weighted overlay tertinggi (3,32) — zona prioritas utama pengembangan komoditas pertanian unggulan Kubu Raya.',
-      'NDVI 0,72 mencerminkan kerapatan vegetasi produktif tertinggi kedua, mendukung diversifikasi pertanian.',
-      'Potensi kopi robusta dan kakao sebagai komoditas bernilai tinggi pada topografi berbukit yang sesuai.',
-      'Aksesibilitas jalan dan kemiringan lereng rendah menjadi keunggulan kompetitif dibanding kecamatan lain.',
-      'Prioritas: pengembangan kawasan pertanian terpadu berbasis hasil analisis spasial kesesuaian lahan.'
+      'Zona III: komoditas paling sesuai di kecamatan ini adalah jeruk siam (0,922), lada (0,890), jahe (0,890).',
+      'Skor weighted overlay 3,38 — peringkat 2 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): belum ada komoditas hortikultura yang memenuhi.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jeruk siam, jahe, lada, karet.',
+      'Arahan zonasi bersifat biofisik dan berlaku di luar kawasan hutan serta ekosistem gambut berfungsi lindung.'
     ]
   },
   'kubu': {
     number: '05',
     name: 'Kubu',
     tagline: 'Kelapa Hibrida & Pengelolaan Gambut',
-    desc: 'Kecamatan Kubu didominasi lahan gambut dalam (kedalaman >3 m) yang mencakup lebih dari 60% wilayahnya dengan elevasi 2 m dpl. Jenis tanah berupa Lempung Berliat (Clay Loam) pada kubah gambut memiliki kandungan bahan organik sangat tinggi (>18%), kapasitas tukar kation (KTK) tinggi, namun pH sangat masam (3,0–4,0) dan kejenuhan basa rendah akibat proses dekomposisi tidak sempurna. Sifat gambut yang bersifat hidrofobik saat mengering menjadikan manajemen muka air tanah — idealnya dijaga pada kedalaman 40–60 cm dari permukaan — sebagai kunci keberhasilan usaha pertanian. Curah hujan 2.750 mm/tahun membantu mempertahankan kelembaban gambut dan mencegah subsiden berlebih akibat oksidasi gambut. Sagu (Metroxylon sagu) merupakan komoditas paling adaptif karena tumbuh pada kondisi lahan basah permanen, sedangkan kelapa hibrida dikembangkan pada zona gambut dangkal di tepian wilayah yang lebih terdrainase. Analisis citra Sentinel-2 (2022–2024) mencatat NDVI 0,72, mencerminkan kerapatan vegetasi gambut alami yang masih terjaga.',
+    desc: 'Kecamatan Kubu termasuk Zona II hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona dominan lempung liat berpasir dengan curah hujan sedang. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 2.982 mm/tahun, suhu udara 26,4 °C, dan elevasi median 3 m dpl (FABDEM). Tekstur tanah didominasi Lempung Liat Berpasir (65% luas) diikuti Lempung Berliat (32%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,71 (Sentinel-2) dan skor weighted overlay 3,22 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah karet (0,931), pinang (0,882), langsat (0,882).',
     stats: [
       { val: '±1.212 km²', key: 'Luas Wilayah' }, { val: '20 Desa', key: 'Jumlah Desa' },
       { val: '~47 rb', key: 'Penduduk' }, { val: 'Kubu', key: 'Ibu Kota' }
@@ -161,23 +201,24 @@ const kecamatanData = {
     relevantCrops: ['kelapa', 'sagu', 'karet', 'padi_sawah', 'pisang', 'pinang', 'langsat'],
     data: [
       { key: 'Kelas Kesesuaian', val: 'S2 — Cukup Sesuai' },
-      { key: 'NDVI Rata-rata', val: '0,72 (Sentinel-2, 2022–2024)' },
-      { key: 'Skor Weighted Overlay', val: '2,99 / 4,00' },
+      { key: 'Zona Agroekologi', val: 'Zona II (klaster Ward)' },
+      { key: 'NDVI Rata-rata', val: '0,71 (Sentinel-2, 2022–2024)' },
+      { key: 'Skor Weighted Overlay', val: '3,22 / 4,00' },
       { key: 'Topografi', val: 'Lahan Gambut Dalam' }
     ],
     potensi: [
-      'NDVI tertinggi di Kubu Raya (0,72) mencerminkan ekosistem gambut yang kaya — perlu pengelolaan berbasis konservasi.',
-      'Kelapa hibrida sebagai komoditas adaptif gambut dengan produk turunan gula merah dan gula semut bernilai ekspor.',
-      'Skor 2,99 mengindikasikan keterbatasan aksesibilitas — diperlukan pengembangan infrastruktur jalan pertanian.',
-      'Luas wilayah terbesar kedua memberikan potensi skala besar untuk pertanian perkebunan ekstensif.',
-      'Prioritas: pemetaan zona gambut dalam vs gambut dangkal untuk rekomendasi komoditas yang tepat per zona.'
+      'Zona II: komoditas paling sesuai di kecamatan ini adalah karet (0,931), pinang (0,882), langsat (0,882).',
+      'Skor weighted overlay 3,22 — peringkat 7 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): jeruk siam, jambu biji.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jahe, lada, durian, karet, langsat.',
+      'Sebagian wilayah berupa gambut dalam dan mangrove; pengembangan diarahkan di luar kawasan hutan, gambut berfungsi lindung, dan mangrove dengan tata air yang menjaga muka air tanah.'
     ]
   },
   'batu-ampar': {
     number: '06',
     name: 'Batu Ampar',
     tagline: 'Ekosistem Mangrove & Pesisir Strategis',
-    desc: 'Kecamatan Batu Ampar merupakan kawasan pesisir yang didominasi ekosistem mangrove dan rawa pasang surut dengan elevasi 2 m dpl. Jenis tanah berupa Lempung Liat Berdebu (Silty Clay Loam) pada endapan aluvial marin berpotensi mengandung lapisan pirit (FeS₂) pada kedalaman 50–80 cm — apabila teroksidasi akibat drainase berlebih akan membentuk tanah sulfat masam dengan pH < 3,5 yang bersifat toksik bagi sebagian besar tanaman budidaya. Curah hujan 2.620 mm/tahun dan ketersediaan air dari dinamika pasang surut menjamin kelembaban lahan sepanjang tahun. Suhu 26,6°C mendukung pertumbuhan tanaman pesisir yang toleran terhadap salinitas rendah. Sagu dan kelapa yang memiliki toleransi terhadap lahan basah dan salinitas ringan merupakan komoditas yang paling sesuai pada zona transisi mangrove–lahan pertanian. Analisis citra Sentinel-2 (2022–2024) mencatat NDVI 0,75, mencerminkan kerapatan kanopi mangrove sebagai vegetasi dominan di wilayah ini.',
+    desc: 'Kecamatan Batu Ampar termasuk Zona IV hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona tekstur campuran lempung liat berpasir dan lempung berliat dengan curah hujan tinggi. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 3.181 mm/tahun, suhu udara 26,6 °C, dan elevasi median 5 m dpl (FABDEM). Tekstur tanah didominasi Lempung Liat Berpasir (51% luas) diikuti Lempung Berliat (46%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,75 (Sentinel-2) dan skor weighted overlay 3,21 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah karet (0,905), pinang (0,882), padi sawah (0,871).',
     stats: [
       { val: '±1.680 km²', key: 'Luas Wilayah' }, { val: '17 Desa', key: 'Jumlah Desa' },
       { val: '~30 rb', key: 'Penduduk' }, { val: 'Batu Ampar', key: 'Ibu Kota' }
@@ -190,23 +231,24 @@ const kecamatanData = {
     relevantCrops: ['sagu', 'kelapa', 'padi_sawah', 'pinang', 'pisang', 'karet', 'langsat'],
     data: [
       { key: 'Kelas Kesesuaian', val: 'S2 — Cukup Sesuai' },
+      { key: 'Zona Agroekologi', val: 'Zona IV (klaster Ward)' },
       { key: 'NDVI Rata-rata', val: '0,75 (Sentinel-2, 2022–2024)' },
-      { key: 'Skor Weighted Overlay', val: '2,99 / 4,00' },
+      { key: 'Skor Weighted Overlay', val: '3,21 / 4,00' },
       { key: 'Topografi', val: 'Rawa Mangrove & Pesisir' }
     ],
     potensi: [
-      'NDVI 0,75 (tertinggi absolut) mencerminkan ekosistem mangrove yang sangat lebat — aset blue carbon bernilai tinggi.',
-      'Silvofishery (mangrove + budidaya udang/kepiting) sebagai model pertanian-pesisir adaptif yang telah terbukti.',
-      'Sagu sebagai komoditas pangan strategis yang sangat sesuai dengan kondisi lahan basah pesisir.',
-      'Potensi karbon biru (blue carbon) dari ekosistem mangrove untuk program kredit karbon internasional.',
-      'Prioritas: pemetaan zona mangrove vs lahan pertanian potensial untuk rekomendasi tata guna lahan berbasis bukti.'
+      'Zona IV: komoditas paling sesuai di kecamatan ini adalah karet (0,905), pinang (0,882), padi sawah (0,871).',
+      'Skor weighted overlay 3,21 — peringkat 8 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): jeruk siam.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): karet, pinang, jahe, lada, padi sawah.',
+      'Sebagian wilayah berupa gambut dalam dan mangrove; pengembangan diarahkan di luar kawasan hutan, gambut berfungsi lindung, dan mangrove dengan tata air yang menjaga muka air tanah.'
     ]
   },
   'teluk-pakedai': {
     number: '07',
     name: 'Teluk Pakedai',
     tagline: 'Pertanian Sagu & Perikanan Kepulauan',
-    desc: 'Kecamatan Teluk Pakedai mencakup wilayah daratan dan gugusan pulau kecil di pesisir barat dengan elevasi rata-rata 3 m dpl. Jenis tanah Lempung Berliat (Clay Loam) pada lahan pasang surut memiliki kemampuan menahan air yang baik dan KTK sedang, cocok untuk budidaya padi sawah pasang surut pada tipologi luapan tipe A dan B. Potensi keberadaan lapisan sulfat masam (jarosite) pada kedalaman tertentu perlu diantisipasi dalam perancangan sistem tata air agar pH tanah tidak turun drastis ketika dilakukan drainase intensif. Curah hujan 2.980 mm/tahun memberikan ketersediaan air yang konsisten bagi sagu (Metroxylon sagu) yang membutuhkan kelembaban tinggi sepanjang siklus hidupnya. Analisis citra Sentinel-2 (2022–2024) mencatat NDVI 0,73, mencerminkan dominasi tutupan vegetasi sagu dan nipah pada lahan basah. Konektivitas antar-pulau menjadi faktor kritis dalam mendukung sistem distribusi hasil pertanian kepada pasar di daratan.',
+    desc: 'Kecamatan Teluk Pakedai termasuk Zona I hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona pesisir barat bercurah hujan terendah dengan tekstur lempung berliat yang seimbang dengan lempung liat berpasir. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 2.814 mm/tahun, suhu udara 26,5 °C, dan elevasi median 5 m dpl (FABDEM). Tekstur tanah didominasi Lempung Berliat (49% luas) diikuti Lempung Liat Berpasir (47%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,72 (Sentinel-2) dan skor weighted overlay 3,23 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah karet (0,953), pinang (0,912), langsat (0,912).',
     stats: [
       { val: '±506 km²', key: 'Luas Wilayah' }, { val: '10 Desa', key: 'Jumlah Desa' },
       { val: '~27 rb', key: 'Penduduk' }, { val: 'Teluk Pakedai', key: 'Ibu Kota' }
@@ -219,23 +261,24 @@ const kecamatanData = {
     relevantCrops: ['sagu', 'kelapa', 'padi_sawah', 'pinang', 'pisang', 'karet', 'langsat', 'pepaya'],
     data: [
       { key: 'Kelas Kesesuaian', val: 'S2 — Cukup Sesuai' },
-      { key: 'NDVI Rata-rata', val: '0,73 (Sentinel-2, 2022–2024)' },
-      { key: 'Skor Weighted Overlay', val: '2,99 / 4,00' },
+      { key: 'Zona Agroekologi', val: 'Zona I (klaster Ward)' },
+      { key: 'NDVI Rata-rata', val: '0,72 (Sentinel-2, 2022–2024)' },
+      { key: 'Skor Weighted Overlay', val: '3,23 / 4,00' },
       { key: 'Topografi', val: 'Rawa & Kepulauan' }
     ],
     potensi: [
-      'Nilai NDVI 0,73 menunjukkan vegetasi sagu dan mangrove yang dominan — komoditas paling sesuai dengan ekosistem setempat.',
-      'Pertanian sagu di lahan pasang surut sebagai sumber pangan alternatif dan bahan baku industri tepung.',
-      'Perikanan dan budidaya udang/kerang di perairan Selat Karimata sebagai sumber pendapatan utama masyarakat.',
-      'Skor 2,99 mengindikasikan aksesibilitas antarwilayah sebagai tantangan utama yang perlu diatasi.',
-      'Prioritas: pembangunan konektivitas antar-pulau untuk mendukung distribusi hasil pertanian dan perikanan.'
+      'Zona I: komoditas paling sesuai di kecamatan ini adalah karet (0,953), pinang (0,912), langsat (0,912).',
+      'Skor weighted overlay 3,23 — peringkat 6 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): langsat, durian, jeruk siam, jambu biji, pepaya.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): karet, jahe, lada, pinang, padi sawah.',
+      'Padi sawah memperoleh skor tertinggi di zona ini; pengembangannya memerlukan pengelolaan tata air pada lahan pasang surut.'
     ]
   },
   'terentang': {
     number: '08',
     name: 'Terentang',
     tagline: 'Kawasan Hutan & Perkebunan Penyangga',
-    desc: 'Kecamatan Terentang terletak di bagian selatan Kabupaten Kubu Raya berbatasan dengan Kabupaten Ketapang, dengan topografi berbukit lemah dan elevasi rata-rata 14 m dpl. Jenis tanah Lempung Liat Berpasir (Sandy Clay Loam) dengan drainase sedang hingga baik dan pH berkisar 5,5–6,5 memberikan kondisi aerasi perakaran yang ideal bagi tanaman tahunan seperti karet (Hevea brasiliensis) dan kakao (Theobroma cacao) yang tidak toleran terhadap genangan. Tekstur tanah yang lebih ringan dibanding lempung berat memudahkan penetrasi akar lateral dan mendukung pertumbuhan tajuk yang optimal. Curah hujan 2.849 mm/tahun terdistribusi merata, mencukupi kebutuhan air tanaman perkebunan tanpa periode kering yang memicu stres air berkepanjangan. Suhu 26,5°C berada dalam kisaran optimal untuk proses biosintesis lateks pada tanaman karet. Analisis citra Sentinel-2 (2022–2024) mencatat NDVI 0,67, mencerminkan dominasi tutupan hutan sekunder dan perkebunan karet rakyat sebagai penggunaan lahan utama.',
+    desc: 'Kecamatan Terentang termasuk Zona IV hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona tekstur campuran lempung liat berpasir dan lempung berliat dengan curah hujan tinggi. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 3.330 mm/tahun, suhu udara 26,2 °C, dan elevasi median 8 m dpl (FABDEM). Tekstur tanah didominasi Lempung Berliat (52% luas) diikuti Lempung Liat Berpasir (44%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,68 (Sentinel-2) dan skor weighted overlay 3,20 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah karet (0,881), pinang (0,870), jeruk siam (0,867).',
     stats: [
       { val: '±1.270 km²', key: 'Luas Wilayah' }, { val: '14 Desa', key: 'Jumlah Desa' },
       { val: '~18 rb', key: 'Penduduk' }, { val: 'Terentang', key: 'Ibu Kota' }
@@ -248,23 +291,24 @@ const kecamatanData = {
     relevantCrops: ['karet', 'pisang', 'kelapa', 'padi_sawah', 'pinang', 'kakao', 'durian', 'lada', 'langsat', 'jeruk_siam', 'jahe', 'alpukat'],
     data: [
       { key: 'Kelas Kesesuaian', val: 'S2 — Cukup Sesuai' },
-      { key: 'NDVI Rata-rata', val: '0,67 (Sentinel-2, 2022–2024)' },
-      { key: 'Skor Weighted Overlay', val: '2,96 / 4,00' },
+      { key: 'Zona Agroekologi', val: 'Zona IV (klaster Ward)' },
+      { key: 'NDVI Rata-rata', val: '0,68 (Sentinel-2, 2022–2024)' },
+      { key: 'Skor Weighted Overlay', val: '3,20 / 4,00' },
       { key: 'Topografi', val: 'Berbukit & Hutan' }
     ],
     potensi: [
-      'Skor kesesuaian terendah (2,96) menunjukkan aksesibilitas sebagai faktor pembatas utama — infrastruktur jalan menjadi investasi kunci.',
-      'Perkebunan karet rakyat memanfaatkan topografi berbukit yang kurang sesuai untuk padi namun ideal untuk tanaman tahunan.',
-      'Hasil hutan bukan kayu (HHBK) — rotan dan madu hutan — sebagai produk premium bernilai tinggi dari ekosistem hutan.',
-      'NDVI 0,67 mencerminkan hutan sekunder produktif yang berpotensi untuk agroforestri berbasis karet dan tanaman hutan.',
-      'Prioritas: pengembangan jalur distribusi dan akses jalan untuk membuka potensi pertanian yang selama ini terisolasi.'
+      'Zona IV: komoditas paling sesuai di kecamatan ini adalah karet (0,881), pinang (0,870), jeruk siam (0,867).',
+      'Skor weighted overlay 3,20 — peringkat 9 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): jeruk siam.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): karet, pinang, padi sawah.',
+      'Arahan zonasi bersifat biofisik dan berlaku di luar kawasan hutan serta ekosistem gambut berfungsi lindung.'
     ]
   },
   'kuala-mandor': {
     number: '09',
     name: 'Kuala Mandor B',
     tagline: 'Pertanian Organik Dekat Cagar Alam',
-    desc: 'Kecamatan Kuala Mandor B terletak di bagian utara Kabupaten Kubu Raya berbatasan dengan Cagar Alam Mandor, dengan topografi berbukit rendah dan elevasi 19 m dpl. Jenis tanah Lempung Liat Berpasir (Sandy Clay Loam) yang bersifat mineral — tidak mengandung gambut signifikan — memiliki pH 5,0–6,5, KTK sedang, dan aerasi perakaran yang baik, menjadikannya lebih mudah dikelola dan lebih responsif terhadap pemupukan dibanding tanah gambut. Curah hujan 3.040 mm/tahun memberikan neraca air yang positif sepanjang tahun, mencukupi kebutuhan evapotranspirasi tanaman perkebunan maupun tanaman pangan semusim. Suhu 26,4°C mendukung proses pembungaan dan pembuahan tanaman tropis secara optimal. Kombinasi tanah mineral bertekstur sedang, curah hujan cukup, dan suhu sesuai menjadikan karet (Hevea brasiliensis) sebagai komoditas dengan kesesuaian tumbuh terbaik di wilayah ini. Analisis citra Sentinel-2 (2022–2024) mencatat NDVI 0,73, mencerminkan kerapatan tutupan vegetasi perkebunan dan hutan sekunder yang masih produktif.',
+    desc: 'Kecamatan Kuala Mandor B termasuk Zona III hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona dominan lempung liat berpasir dengan curah hujan tinggi. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 3.244 mm/tahun, suhu udara 26,1 °C, dan elevasi median 9 m dpl (FABDEM). Tekstur tanah didominasi Lempung Liat Berpasir (77% luas) diikuti Lempung Berliat (19%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,72 (Sentinel-2) dan skor weighted overlay 3,37 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah jeruk siam (0,934), lada (0,915), jahe (0,915).',
     stats: [
       { val: '±396 km²', key: 'Luas Wilayah' }, { val: '10 Desa', key: 'Jumlah Desa' },
       { val: '~25 rb', key: 'Penduduk' }, { val: 'Kuala Mandor', key: 'Ibu Kota' }
@@ -277,24 +321,25 @@ const kecamatanData = {
     relevantCrops: ['karet', 'padi_sawah', 'pisang', 'kakao', 'pinang', 'cabai', 'durian', 'lada', 'langsat', 'jeruk_siam', 'jahe', 'alpukat', 'daun_bawang', 'jambu_biji'],
     data: [
       { key: 'Kelas Kesesuaian', val: 'S2 — Cukup Sesuai' },
-      { key: 'NDVI Rata-rata', val: '0,73 (Sentinel-2, 2022–2024)' },
-      { key: 'Skor Weighted Overlay', val: '3,17 / 4,00' },
+      { key: 'Zona Agroekologi', val: 'Zona III (klaster Ward)' },
+      { key: 'NDVI Rata-rata', val: '0,72 (Sentinel-2, 2022–2024)' },
+      { key: 'Skor Weighted Overlay', val: '3,37 / 4,00' },
       { key: 'Topografi', val: 'Berbukit Rendah' }
     ],
     potensi: [
-      'Skor 3,17 dan NDVI 0,73 menunjukkan potensi pertanian yang baik dengan jenis tanah lebih mineral dibanding kecamatan pesisir.',
-      'Kedekatan dengan Cagar Alam Mandor membuka peluang ekowisata agro dan penelitian keanekaragaman hayati.',
-      'Pertanian organik bersertifikat (padi, sayuran, kedelai) dengan keunggulan kompetitif berbasis jenis tanah mineral.',
-      'Perkebunan karet rakyat yang dapat ditingkatkan produktivitasnya melalui klon unggul RRIC dan IRCA.',
-      'Prioritas: pengembangan sertifikasi organik dan akses pasar premium Pontianak untuk produk pertanian nilai tambah tinggi.'
+      'Zona III: komoditas paling sesuai di kecamatan ini adalah jeruk siam (0,934), lada (0,915), jahe (0,915).',
+      'Skor weighted overlay 3,37 — peringkat 4 dari 9 kecamatan; seluruh kecamatan Kubu Raya berkelas S2.',
+      'Unggulan aktual (skor SAW ≥ 0,85 dan LQ produksi hortikultura BPS 2024 > 1): belum ada komoditas hortikultura yang memenuhi.',
+      'Unggulan potensial (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia; 5 teratas): jeruk siam, jahe, lada, karet, jambu biji.',
+      'Arahan zonasi bersifat biofisik dan berlaku di luar kawasan hutan serta ekosistem gambut berfungsi lindung.'
     ]
   }
 };
 
 // ============================================================
 // ANALISIS SYARAT TUMBUH — SAW (Simple Additive Weighting)
-// Bobot: Curah Hujan 30%, Suhu 25%, Elevasi 25%, Tanah 20%
-// Nilai: Sesuai=1.00, Batas Toleransi=0.50, Tidak Sesuai=0.00
+// Bobot: Tanah 35%, Elevasi 30%, Curah Hujan 20%, Suhu 15%
+// Nilai: trapesoid kontinu (lihat nilaiVariabel); tanah Sesuai=1.00, Batas=0.50, Tidak=0.00
 // Klasifikasi: ≥0.80 Sangat Cocok | ≥0.60 Cocok |
 //              ≥0.40 Cukup Sesuai | <0.40 Kurang Sesuai
 // ============================================================
@@ -327,21 +372,32 @@ function nilaiVariabel(nilai, r) {
   return (nilai >= r.min && nilai <= r.max) ? 1.0 : 0.0;
 }
 
+// Nilai tekstur tanah tertimbang luas: r = Σ (proporsi luas kelas × nilai kelas);
+// tanpa tanahProporsi dipakai kelas dominan (kodeTanah)
+const TANAH_NILAI = { cocok: 1.0, batas: 0.5, tidak: 0.0 };
+function nilaiTanah(iklim, t) {
+  if (!iklim.tanahProporsi) return TANAH_NILAI[cekTanah(iklim.kodeTanah, t)];
+  const ent = Object.entries(iklim.tanahProporsi);
+  const tot = ent.reduce((s, [, p]) => s + p, 0);
+  return ent.reduce((s, [k, p]) => s + p / tot * TANAH_NILAI[cekTanah(+k, t)], 0);
+}
+function statusDariNilai(r) { return r >= 0.95 ? 'cocok' : r <= 0.05 ? 'tidak' : 'batas'; }
+
 function hitungSkorKrop(iklim, syarat) {
+  const rTanah = nilaiTanah(iklim, syarat.tanah);
   // checks → label status untuk tampilan (Sesuai / Batas / Tidak)
   const checks = [
     cekVariabel(iklim.curahHujan, syarat.curah_hujan),
     cekVariabel(iklim.suhu,       syarat.suhu),
     cekVariabel(iklim.elevasi,    syarat.elevasi),
-    cekTanah(iklim.kodeTanah,     syarat.tanah)
+    statusDariNilai(rTanah)
   ];
   // nilaiArr → skor kontinu untuk perhitungan SAW
-  const tanahNilai = { cocok: 1.0, batas: 0.5, tidak: 0.0 };
   const nilaiArr = [
     nilaiVariabel(iklim.curahHujan, syarat.curah_hujan),
     nilaiVariabel(iklim.suhu,       syarat.suhu),
     nilaiVariabel(iklim.elevasi,    syarat.elevasi),
-    tanahNilai[checks[3]]
+    rTanah
   ];
   const sawScore = +nilaiArr.reduce((s, v, i) => s + SAW_BOBOT[i] * v, 0).toFixed(3);
   let level, label;
@@ -350,6 +406,12 @@ function hitungSkorKrop(iklim, syarat) {
   else if (sawScore >= 0.40) { level = 'cukup';         label = 'Cukup Sesuai';  }
   else                        { level = 'kurang';        label = 'Kurang Sesuai'; }
   return { level, label, sawScore, checks, nilaiArr };
+}
+
+function teksTanahAktual(iklim, tanahName) {
+  if (!iklim.tanahProporsi) return iklim.namaTanah.split(' (')[0];
+  return Object.entries(iklim.tanahProporsi).sort((a, b) => b[1] - a[1]).slice(0, 2)
+    .map(([k, p]) => `${tanahName[k] || k} ${Math.round(p * 100)}%`).join('; ');
 }
 
 function buildSAWPanel(iklim, syarat, hasil) {
@@ -362,7 +424,7 @@ function buildSAWPanel(iklim, syarat, hasil) {
   const kriteria = [
     {
       idx: 3, nama: 'Jenis Tanah', bobot: SAW_BOBOT[3],
-      aktual: iklim.namaTanah.split(' (')[0],
+      aktual: teksTanahAktual(iklim, tanahName),
       ideal: syarat.tanah.cocok.map(k => tanahName[k] || k).join(', ')
     },
     {
@@ -409,7 +471,7 @@ function buildSAWPanel(iklim, syarat, hasil) {
         <td class="saw-td-c saw-total-val st-lvl-${hasil.level}">${hasil.sawScore.toFixed(2)}</td>
       </tr></tfoot>
     </table>
-    <p class="saw-note">SAW (Simple Additive Weighting) &mdash; Normalisasi <em>r</em> kontinu: Optimal = 1,00; Zona transisi = interpolasi linear 0,00–1,00; Di luar toleransi = 0,00. Jenis tanah (kategorikal): Sesuai = 1,00; Batas = 0,50; Tidak = 0,00.</p>
+    <p class="saw-note">SAW (Simple Additive Weighting) &mdash; Normalisasi <em>r</em> kontinu: Optimal = 1,00; Zona transisi = interpolasi linear 0,00–1,00; Di luar toleransi = 0,00. Jenis tanah: rata-rata tertimbang luas kelas tekstur (Sesuai = 1,00; Batas = 0,50; Tidak = 0,00).</p>
   </div>`;
 }
 
@@ -424,7 +486,7 @@ function renderSyaratTumbuh(kecId) {
 
   const srcNote = iklim.dataStatus === 'estimasi'
     ? '<span class="st-src estimasi">* Sebagian data estimasi interpolasi regional</span>'
-    : '<span class="st-src real">Sumber: CHIRPS v2 + ERA5-Land + SRTM + OpenLandMap (GEE 2022–2024)</span>';
+    : '<span class="st-src real">Sumber: CHIRPS v2 + ERA5-Land + FABDEM + OpenLandMap (GEE 2022–2024, statistik zonal per poligon kecamatan)</span>';
 
   const iklimBarHTML = `
     <div class="st-iklim-bar">
@@ -637,26 +699,23 @@ function initOrUpdateModalMap(kecId) {
         attributionControl: true
       });
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> \u00a9 <a href="https://carto.com/">CARTO</a>',
-        maxZoom: 18,
+      addBasemap(modalMap);
+    }
+
+    // Remove old marker / batas wilayah
+    if (modalMapMarker) { modalMap.removeLayer(modalMapMarker); }
+    if (modalMapCircle) { modalMap.removeLayer(modalMapCircle); modalMapCircle = null; }
+
+    // Batas wilayah kecamatan dari data GeoJSON; tanpa data, cukup pusatkan ke titik penanda
+    const feature = getKecamatanFeature(kecId);
+    if (feature) {
+      modalMapCircle = L.geoJSON(feature, {
+        style: { color: '#ffffff', weight: 2.5, fillColor: '#4CA872', fillOpacity: 0.18 }
       }).addTo(modalMap);
+      modalMap.fitBounds(modalMapCircle.getBounds(), { padding: [16, 16] });
     } else {
       modalMap.setView([coords.lat, coords.lng], coords.zoom, { animate: true });
     }
-
-    // Remove old marker / circle
-    if (modalMapMarker) { modalMap.removeLayer(modalMapMarker); }
-    if (modalMapCircle) { modalMap.removeLayer(modalMapCircle); }
-
-    // Add pulsing circle
-    modalMapCircle = L.circle([coords.lat, coords.lng], {
-      radius: 3500,
-      color: '#2B7A4E',
-      fillColor: '#4CA872',
-      fillOpacity: 0.14,
-      weight: 2
-    }).addTo(modalMap);
 
     // Add custom marker
     const icon = createMarkerIcon('#2B7A4E', d.number);
@@ -665,8 +724,12 @@ function initOrUpdateModalMap(kecId) {
       .bindPopup(`<strong>${d.name}</strong><br/>Kecamatan ${d.number}`, { maxWidth: 200 })
       .openPopup();
 
-    // Force re-render after visibility change
-    setTimeout(() => { if (modalMap) modalMap.invalidateSize(); }, 150);
+    // Force re-render after visibility change (ukuran kontainer baru diketahui setelah modal tampil)
+    setTimeout(() => {
+      if (!modalMap) return;
+      modalMap.invalidateSize();
+      if (modalMapCircle) modalMap.fitBounds(modalMapCircle.getBounds(), { padding: [16, 16] });
+    }, 150);
   } catch (e) {
     console.warn('Modal map error:', e);
   }
@@ -689,10 +752,7 @@ function initRasauJayaDesaMap() {
         scrollWheelZoom: false,
         attributionControl: true
       });
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
-        maxZoom: 18,
-      }).addTo(modalDesaMap);
+      addBasemap(modalDesaMap);
     }
 
     // Bersihkan layer lama (kalau modal dibuka berkali-kali)
@@ -770,20 +830,52 @@ function initRasauJayaDesaMap() {
   }
 }
 
-// ── SAW komoditas tingkat DESA — Rasau Jaya ────────────────────────────────
+// ── SAW komoditas tingkat DESA — Rasau Jaya (9 kriteria) ────────────────────
 // Memperluas hitungSkorKrop (4 kriteria iklim/tanah tingkat kecamatan) dengan
-// kriteria ke-5 "Kesesuaian Lahan Desa" (skor Weighted Overlay GIS desa
-// bersangkutan, dari data/rasau_jaya_desa.js). Kriteria ke-5 bernilai sama untuk
-// tiap komoditas dalam satu desa (karena bersumber dari kualitas lahan wilayah,
-// bukan iklim), sehingga urutan antar-komoditas tetap konsisten dengan iklim
-// kecamatan, namun skor SAW akhir & kelas kesesuaian bisa berbeda antar desa
-// sesuai kualitas lahan riil masing-masing (NDVI, tanah, air, lereng, akses).
-const SAW_BOBOT_DESA = [0.15, 0.10, 0.20, 0.25, 0.30]; // Hujan, Suhu, Elevasi, Tanah, Lahan Desa
+// 5 parameter kualitas lahan per desa dari data spasial konsultan
+// (data/parameter_lahan_desa.js): pH, C-Organik, Ketebalan Gambut, Lereng,
+// Bahaya Banjir. Kelima parameter bernilai sama untuk tiap komoditas dalam satu
+// desa (kualitas lahan, bukan syarat tumbuh spesifik komoditas).
+//
+// Bobot disusun per kelompok kualitas lahan Juknis Evaluasi Lahan BBSDLP (2011):
+//   tc Temperatur        : Elevasi 0,10 · Suhu 0,05
+//   wa Ketersediaan air  : Curah Hujan 0,10
+//   rc Media perakaran   : Jenis Tanah 0,18 · Ketebalan Gambut 0,07
+//   nr Retensi hara      : pH 0,15 · C-Organik 0,10
+//   eh Bahaya erosi      : Lereng 0,10
+//   fh Bahaya banjir     : Banjir 0,15
+// Urutan indeks: 0-3 = hitungSkorKrop (CH, Suhu, Elevasi, Tanah), 4-8 = PARAM_LAHAN_DESA
+const SAW_BOBOT_DESA = [0.10, 0.05, 0.10, 0.18, 0.15, 0.10, 0.07, 0.10, 0.15];
+
+const PARAM_LAHAN_DESA = [
+  { key: 'ph',     nama: 'pH Tanah',          kode: 'nr' },
+  { key: 'corg',   nama: 'C-Organik',         kode: 'nr' },
+  { key: 'gambut', nama: 'Ketebalan Gambut',  kode: 'rc' },
+  { key: 'lereng', nama: 'Kemiringan Lereng', kode: 'eh' },
+  { key: 'banjir', nama: 'Bahaya Banjir',     kode: 'fh' }
+];
+const KODE_KUALITAS_DASAR = ['wa', 'tc', 'tc', 'rc']; // CH, Suhu, Elevasi, Tanah
+const URUTAN_KELAS = ['S1', 'S2', 'S3', 'N'];
+
+function getParamLahanDesa(namaDesa) {
+  return (typeof parameterLahanDesa !== 'undefined' && parameterLahanDesa[namaDesa]) || null;
+}
+
+// Kelas Juknis per kriteria iklim/tanah, diturunkan dari status & nilai r trapesoid
+function kelasKriteriaDasar(status, r) {
+  if (status === 'cocok') return 'S1';
+  if (status === 'tidak') return 'N';
+  return r >= 0.5 ? 'S2' : 'S3';
+}
 
 function hitungSkorKropDesa(iklim, syarat, desaProps) {
   const dasar = hitungSkorKrop(iklim, syarat);
-  const nilaiLahanDesa = Math.max(0, Math.min(1, (desaProps.skor || 0) / 4));
-  const nilaiArr = [...dasar.nilaiArr, nilaiLahanDesa];
+  const param = getParamLahanDesa(desaProps.NAME_4);
+  if (!param) return { ...dasar, juknis: null };
+
+  // Skor konsultan 1–4 → r 0–1 (N = 0, S1 = 1), sejajar dengan skala r kriteria iklim
+  const nilaiParam = PARAM_LAHAN_DESA.map(p => param[p.key] ? (param[p.key].skor - 1) / 3 : 0);
+  const nilaiArr = [...dasar.nilaiArr, ...nilaiParam];
   const sawScore = +nilaiArr.reduce((s, v, i) => s + SAW_BOBOT_DESA[i] * v, 0).toFixed(3);
 
   let level, label;
@@ -792,7 +884,18 @@ function hitungSkorKropDesa(iklim, syarat, desaProps) {
   else if (sawScore >= 0.40) { level = 'cukup';         label = 'Cukup Sesuai';  }
   else                        { level = 'kurang';        label = 'Kurang Sesuai'; }
 
-  return { ...dasar, level, label, sawScore, nilaiArr, nilaiLahanDesa };
+  // Kelas Juknis (hukum minimum): kelas akhir = kelas kriteria terburuk,
+  // subkelas = kode kualitas lahan yang menjadi faktor pembatas
+  const kelasArr = [
+    ...dasar.checks.map((st, i) => kelasKriteriaDasar(st, dasar.nilaiArr[i])),
+    ...PARAM_LAHAN_DESA.map(p => param[p.key] ? param[p.key].kelas : 'N')
+  ];
+  const kodeArr = [...KODE_KUALITAS_DASAR, ...PARAM_LAHAN_DESA.map(p => p.kode)];
+  const kelas = kelasArr.reduce((a, b) => URUTAN_KELAS.indexOf(b) > URUTAN_KELAS.indexOf(a) ? b : a, 'S1');
+  const pembatas = kelas === 'S1' ? [] : [...new Set(kodeArr.filter((_, i) => kelasArr[i] === kelas))];
+  const juknis = { kelas, pembatas, kelasArr, label: pembatas.length ? `${kelas}-${pembatas.join(',')}` : kelas };
+
+  return { ...dasar, level, label, sawScore, nilaiArr, juknis };
 }
 
 function getDesaCropRanking(desaProps) {
@@ -811,58 +914,75 @@ function getDesaCropRanking(desaProps) {
     .sort((a, b) => b.sawScore - a.sawScore);
 }
 
-// ── Panel detail SAW komoditas — versi desa (5 kriteria, sama formatnya
-// dengan buildSAWPanel tingkat kecamatan, ditambah baris Kesesuaian Lahan Desa) ─
+function fmtAngka(v, d = 2) { return v.toFixed(d).replace('.', ','); }
+
+// ── Panel detail SAW komoditas — versi desa (9 kriteria, format sama dengan
+// buildSAWPanel tingkat kecamatan, ditambah 5 parameter lahan & kelas Juknis) ─
 function buildSAWPanelDesa(iklim, syarat, hasil, desaProps) {
   const tanahName = {
     1:'Clay', 2:'Silty Clay', 3:'Sandy Clay', 4:'Clay Loam',
     5:'Silty Clay Loam', 6:'Sandy Clay Loam', 7:'Loam', 8:'Silty Loam',
     9:'Sandy Loam', 10:'Silt', 11:'Loamy Sand', 12:'Sand'
   };
+  const statusLbl = { cocok: 'Sesuai', batas: 'Batas', tidak: 'Tidak Sesuai' };
+  const param = getParamLahanDesa(desaProps.NAME_4) || {};
+
   // Urutan tampilan: bobot terbesar → terkecil
   const kriteria = [
     {
-      idx: 4, nama: 'Kesesuaian Lahan Desa', bobot: SAW_BOBOT_DESA[4],
-      aktual: `Skor Weighted Overlay ${desaProps.skor ? desaProps.skor.toFixed(2) : '-'} / 4,00`,
-      ideal: 'Skor 4,00 (maksimum) = kesesuaian lahan desa sempurna'
-    },
-    {
-      idx: 3, nama: 'Jenis Tanah', bobot: SAW_BOBOT_DESA[3],
-      aktual: iklim.namaTanah.split(' (')[0],
+      idx: 3, nama: 'Jenis Tanah', kode: 'rc',
+      aktual: teksTanahAktual(iklim, tanahName),
       ideal: syarat.tanah.cocok.map(k => tanahName[k] || k).join(', ')
     },
     {
-      idx: 2, nama: 'Elevasi', bobot: SAW_BOBOT_DESA[2],
+      idx: 2, nama: 'Elevasi', kode: 'tc',
       aktual: `${iklim.elevasi} m dpl`,
       ideal: `${syarat.elevasi.min}–${syarat.elevasi.max} m dpl`
     },
     {
-      idx: 0, nama: 'Curah Hujan', bobot: SAW_BOBOT_DESA[0],
+      idx: 0, nama: 'Curah Hujan', kode: 'wa',
       aktual: `${iklim.curahHujan.toLocaleString('id')} mm/tahun`,
       ideal: `Optimal ${syarat.curah_hujan.optMin.toLocaleString('id')}–${syarat.curah_hujan.optMax.toLocaleString('id')} mm/tahun`
     },
     {
-      idx: 1, nama: 'Suhu Udara', bobot: SAW_BOBOT_DESA[1],
+      idx: 1, nama: 'Suhu Udara', kode: 'tc',
       aktual: `${iklim.suhu.toFixed(1)} °C`,
       ideal: `Optimal ${syarat.suhu.optMin}–${syarat.suhu.optMax} °C`
-    }
-  ];
-  const statusLbl = { cocok: 'Sesuai', batas: 'Batas', tidak: 'Tidak Sesuai' };
+    },
+    ...PARAM_LAHAN_DESA.map((p, j) => {
+      const d = param[p.key];
+      return {
+        idx: 4 + j, nama: p.nama, kode: p.kode, lahan: true,
+        aktual: d ? `Skor ${fmtAngka(d.skor)} / 4 · dominan ${d.kelas} (${fmtAngka(d.dist[d.kelas], 0)}% luas)` : 'Data tidak tersedia',
+        ideal: 'S1 (skor 4)'
+      };
+    })
+  ].sort((a, b) => SAW_BOBOT_DESA[b.idx] - SAW_BOBOT_DESA[a.idx]);
+
   const rows = kriteria.map((k) => {
+    const bobot = SAW_BOBOT_DESA[k.idx];
     const ni = hasil.nilaiArr[k.idx];
-    const wb = (k.bobot * ni).toFixed(2);
-    const nilaiCell = k.idx === 4
-      ? `<span class="saw-nilai st-lahan">${ni.toFixed(2)}<br><small>Lahan Desa</small></span>`
-      : `<span class="saw-nilai st-${hasil.checks[k.idx]}">${ni.toFixed(2)}<br><small>${statusLbl[hasil.checks[k.idx]]}</small></span>`;
+    const kls = hasil.juknis ? hasil.juknis.kelasArr[k.idx] : '';
+    const st = k.lahan ? (kls === 'S1' ? 'cocok' : kls === 'N' ? 'tidak' : 'batas') : hasil.checks[k.idx];
+    const ket = k.lahan ? `Kelas ${kls}` : statusLbl[st];
     return `<tr>
-      <td class="saw-td-name">${k.nama}</td>
-      <td class="saw-td-c">${Math.round(k.bobot * 100)}%</td>
+      <td class="saw-td-name">${k.nama} <small class="saw-kode">${k.kode}</small></td>
+      <td class="saw-td-c">${Math.round(bobot * 100)}%</td>
       <td>${k.aktual}</td>
       <td class="saw-td-ideal">${k.ideal}</td>
-      <td class="saw-td-c">${nilaiCell}</td>
-      <td class="saw-td-c saw-wb">${wb}</td>
+      <td class="saw-td-c"><span class="saw-nilai st-${st}">${ni.toFixed(2)}<br><small>${ket}</small></span></td>
+      <td class="saw-td-c saw-wb">${(bobot * ni).toFixed(2)}</td>
     </tr>`;
   }).join('');
+
+  const juknisRow = hasil.juknis ? `<tr>
+        <td colspan="5" class="saw-total-lbl">Kelas Juknis BBSDLP &nbsp;=&nbsp; kelas kriteria terburuk (faktor pembatas)</td>
+        <td class="saw-td-c saw-total-val saw-juknis">${hasil.juknis.label}</td>
+      </tr>` : '';
+  const cakupanMin = Math.min(...PARAM_LAHAN_DESA.map(p => param[p.key] ? param[p.key].cakupan : 0));
+  const cakupanNote = cakupanMin < 95
+    ? ` Data parameter lahan konsultan mencakup ±${fmtAngka(cakupanMin, 0)}% wilayah ${desaProps.NAME_4}; skor dihitung dari bagian yang tercakup.`
+    : '';
 
   return `<div class="crop-detail-panel">
     <table class="saw-table">
@@ -875,9 +995,9 @@ function buildSAWPanelDesa(iklim, syarat, hasil, desaProps) {
       <tfoot><tr>
         <td colspan="5" class="saw-total-lbl">Skor SAW Total &nbsp;=&nbsp; &Sigma; (Bobot &times; Nilai)</td>
         <td class="saw-td-c saw-total-val st-lvl-${hasil.level}">${hasil.sawScore.toFixed(2)}</td>
-      </tr></tfoot>
+      </tr>${juknisRow}</tfoot>
     </table>
-    <p class="saw-note">SAW tingkat desa memakai 5 kriteria: 4 kriteria iklim &amp; tanah tingkat Kecamatan Rasau Jaya (sama untuk seluruh desa di kecamatan ini), ditambah kriteria <em>Kesesuaian Lahan Desa</em> — skor Weighted Overlay GIS spesifik ${desaProps.NAME_4} yang merangkum NDVI, jenis tanah, ketersediaan air, kemiringan lereng, dan aksesibilitas.</p>
+    <p class="saw-note">SAW tingkat desa memakai 9 kriteria yang dikelompokkan menurut kualitas lahan Juknis Evaluasi Lahan BBSDLP (2011): 4 kriteria iklim &amp; tanah tingkat Kecamatan Rasau Jaya, ditambah 5 parameter lahan spesifik ${desaProps.NAME_4} dari data spasial konsultan (rata-rata skor tertimbang luas; r = (skor &minus; 1) / 3). Kode: tc temperatur, wa ketersediaan air, rc media perakaran, nr retensi hara, eh bahaya erosi, fh bahaya banjir.${cakupanNote}</p>
   </div>`;
 }
 
@@ -928,10 +1048,7 @@ function initDesaDetailMap(feature) {
         scrollWheelZoom: false,
         attributionControl: true
       });
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
-        maxZoom: 18,
-      }).addTo(desaDetailMap);
+      addBasemap(desaDetailMap);
     }
 
     if (desaDetailLayer) {
@@ -993,6 +1110,21 @@ function generateDesaRekomendasi(props, rank, totalDesa) {
     rekom.push(`Skor Weighted Overlay desa ini berada pada separuh bawah (peringkat ${rank} dari ${totalDesa}) — disarankan validasi lapangan untuk memastikan faktor pembatas utama (tanah, air, atau aksesibilitas).`);
   }
 
+  // Faktor pembatas dari parameter lahan konsultan (kelas dominan S3/N)
+  const tindakan = {
+    ph:     'pengapuran (dolomit) dan pemupukan berimbang untuk menaikkan pH tanah',
+    corg:   'penambahan bahan organik (pupuk kandang/kompos) untuk memperbaiki C-organik',
+    gambut: 'pengelolaan gambut sesuai ketebalannya (budidaya adaptif, tanpa pembakaran)',
+    lereng: 'konservasi tanah (terasering, tanaman penutup) pada lahan berlereng',
+    banjir: 'perbaikan tata air (saluran drainase, pintu air, tanggul) untuk mengendalikan genangan'
+  };
+  const param = getParamLahanDesa(props.NAME_4);
+  if (param) {
+    PARAM_LAHAN_DESA
+      .filter(p => param[p.key] && (param[p.key].kelas === 'S3' || param[p.key].kelas === 'N'))
+      .forEach(p => rekom.push(`Faktor pembatas ${p.nama} (${p.kode}) — dominan kelas ${param[p.key].kelas} pada ${fmtAngka(param[p.key].dist[param[p.key].kelas], 0)}% luas desa; diperlukan ${tindakan[p.key]}.`));
+  }
+
   rekom.push('Prioritas: validasi lapangan produktivitas aktual komoditas unggulan untuk kalibrasi model analisis spasial penelitian ini.');
   return rekom;
 }
@@ -1039,7 +1171,14 @@ function openDesaModal(feature, rank, totalDesa) {
     { key: 'Skor Weighted Overlay', val: `${desaProps.skor ? desaProps.skor.toFixed(2) : '-'} / 4,00` },
     { key: 'NDVI Rata-rata', val: `${desaProps.ndvi ? desaProps.ndvi.toFixed(2) : '-'} (Sentinel-2, 2022–2024)` },
     { key: 'Peringkat di Kecamatan', val: `${rank} dari ${totalDesa} desa` },
-    { key: 'Topografi', val: 'Lahan Gambut Dangkal–Sedang' }
+    { key: 'Topografi', val: 'Lahan Gambut Dangkal–Sedang' },
+    ...PARAM_LAHAN_DESA.map(p => {
+      const d = (getParamLahanDesa(desaProps.NAME_4) || {})[p.key];
+      return {
+        key: `${p.nama} (${p.kode})`,
+        val: d ? `Skor ${fmtAngka(d.skor)} / 4 — dominan ${d.kelas} (${fmtAngka(d.dist[d.kelas], 0)}% luas)` : 'Data tidak tersedia'
+      };
+    })
   ].map(row => `
     <div class="data-row">
       <span class="data-key">${row.key}</span>
@@ -1056,7 +1195,7 @@ function openDesaModal(feature, rank, totalDesa) {
   const items = allCrops.slice(0, count);
 
   document.getElementById('desaModalNote').textContent =
-    `Peringkat komoditas dihitung dari SAW 5 kriteria khusus tingkat desa: Curah Hujan, Suhu, Elevasi, dan Jenis Tanah (data iklim Kecamatan Rasau Jaya), ditambah Kesesuaian Lahan Desa (skor Weighted Overlay GIS desa ini, ±${(desaProps.skor || 0).toFixed(2)}/4,00) — sehingga skor akhir setiap komoditas mencerminkan kualitas lahan spesifik ${desaProps.NAME_4}. Jumlah komoditas yang ditampilkan (${count} dari ${allCrops.length}) menyesuaikan peringkat skor desa ini relatif terhadap ${totalDesa - 1} desa lain di kecamatan yang sama.`;
+    `Peringkat komoditas dihitung dari SAW 9 kriteria khusus tingkat desa: Curah Hujan, Suhu, Elevasi, dan Jenis Tanah (data iklim Kecamatan Rasau Jaya), ditambah 5 parameter kualitas lahan ${desaProps.NAME_4} dari data spasial konsultan (pH Tanah, C-Organik, Ketebalan Gambut, Kemiringan Lereng, Bahaya Banjir). Bobot dikelompokkan menurut kualitas lahan Juknis BBSDLP (2011); kelas Juknis pada tiap kartu menunjukkan kelas kriteria terburuk beserta faktor pembatasnya. Jumlah komoditas yang ditampilkan (${count} dari ${allCrops.length}) menyesuaikan peringkat skor desa ini relatif terhadap ${totalDesa - 1} desa lain di kecamatan yang sama.`;
 
   const iklimDesa = (typeof iklimKecamatan !== 'undefined') ? iklimKecamatan['rasau-jaya'] : null;
   const gridEl = document.getElementById('desaModalCropsGrid');
@@ -1083,6 +1222,7 @@ function openDesaModal(feature, rank, totalDesa) {
         <div class="desa-crop-side">
           <span class="desa-crop-kelas-chip chip-${c.level}">${c.label}</span>
           <span class="desa-crop-score-val">${c.sawScore.toFixed(2)}</span>
+          ${c.juknis ? `<span class="desa-crop-juknis" title="Kelas Juknis BBSDLP (faktor pembatas)">Juknis ${c.juknis.label}</span>` : ''}
         </div>
         <div class="crop-chevron-btn">
           <svg class="crop-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
@@ -1133,11 +1273,9 @@ function initHeroMap() {
       attributionControl: true
     });
 
-    // CartoDB Dark Matter — modern dark map
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> \u00a9 <a href="https://carto.com/">CARTO</a>',
-      maxZoom: 18
-    }).addTo(heroMap);
+    // Esri Dark Gray Canvas — peta dasar gelap + label
+    esriLayer('Canvas/World_Dark_Gray_Base').addTo(heroMap);
+    esriLayer('Canvas/World_Dark_Gray_Reference').addTo(heroMap);
 
     // Add all 9 kecamatan markers on hero map
     Object.entries(kecamatanCoords).forEach(([kecId, coord]) => {
@@ -1167,19 +1305,6 @@ function initHeroMap() {
         .bindPopup(`<strong>${d.name}</strong>`, { maxWidth: 160, closeButton: false });
     });
 
-    // Approximate Kubu Raya boundary outline
-    const kubuRayaBounds = [
-      [-0.65, 108.90], [-0.65, 109.65],
-      [0.22, 109.65],  [0.22, 108.90]
-    ];
-    L.polygon(kubuRayaBounds, {
-      color: '#4CA872',
-      weight: 1.5,
-      fillColor: '#2B7A4E',
-      fillOpacity: 0.07,
-      dashArray: '8, 6'
-    }).addTo(heroMap);
-
     // Label
     L.marker([-0.18, 109.30], {
       icon: L.divIcon({
@@ -1190,14 +1315,6 @@ function initHeroMap() {
     }).addTo(heroMap);
 
     // ── Layer Kesesuaian Lahan (GeoJSON) ──────────────────────
-    const nameToKecId = {
-      'Sungai Raya': 'sungai-raya', 'Sungai Kakap': 'sungai-kakap',
-      'Rasau Jaya': 'rasau-jaya', 'Sungai Ambawang': 'sungai-ambawang',
-      'Kubu': 'kubu', 'Batu Ampar': 'batu-ampar',
-      "Telok Pa'Kedai": 'teluk-pakedai', 'Terentang': 'terentang',
-      'Kuala Mandor B': 'kuala-mandor'
-    };
-
     // kesesuaianLahanData dimuat dari data/kesesuaian_lahan.js
     if (typeof kesesuaianLahanData !== 'undefined') {
         const geoData = kesesuaianLahanData;
@@ -1244,9 +1361,7 @@ function initHeroMap() {
             <div class="legend-item"><span class="legend-dot" style="background:#1a6e3c"></span>S1 — Sangat Sesuai</div>
             <div class="legend-item"><span class="legend-dot" style="background:#5aac72"></span>S2 — Cukup Sesuai</div>
             <div class="legend-item"><span class="legend-dot" style="background:#e8c53a"></span>S3 — Sesuai Marginal</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#d94f3a"></span>N — Tidak Sesuai</div>
-            <div class="legend-note">*Data sementara (placeholder)</div>
-          `;
+            <div class="legend-item"><span class="legend-dot" style="background:#d94f3a"></span>N — Tidak Sesuai</div>          `;
           return div;
         };
         legend.addTo(heroMap);
@@ -1498,9 +1613,71 @@ function initCardImages() {
   });
 }
 
+// ── Peta mini citra satelit pada kartu kecamatan ───────────────────────────
+// Menggantikan gambar PNG statis: batas kecamatan berpendar di atas citra satelit,
+// batas kecamatan tetangga sebagai konteks, serta label kelas & skor kesesuaian.
+// Warna isian mengikuti kelas kesesuaian (kelasColor). Gambar PNG lama tetap menjadi
+// cadangan bila Leaflet atau data batas wilayah gagal dimuat.
+function initCardMiniMaps() {
+  if (typeof L === 'undefined' || typeof kesesuaianLahanData === 'undefined') return;
+  const buat = (card) => {
+    const kecId = card.dataset.kec;
+    const feature = getKecamatanFeature(kecId);
+    const imgEl = card.querySelector('.kec-img');
+    if (!feature || !imgEl) return;
+
+    imgEl.classList.add('kec-img--map');
+    const mapEl = document.createElement('div');
+    mapEl.className = 'kec-mini-map';
+    imgEl.appendChild(mapEl);
+
+    const map = L.map(mapEl, {
+      zoomControl: false, attributionControl: true, dragging: false, scrollWheelZoom: false,
+      doubleClickZoom: false, boxZoom: false, keyboard: false, touchZoom: false, zoomSnap: 0.25
+    });
+    map.attributionControl.setPrefix(false);
+    // Atribusi lengkap terlalu panjang untuk kartu; versi ringkas (atribusi penuh ada di peta detail)
+    esriLayer('World_Imagery', '&copy; Esri, Maxar').addTo(map);
+
+    // Batas kecamatan tetangga (konteks)
+    L.geoJSON(kesesuaianLahanData, {
+      filter: f => f !== feature,
+      style: { color: '#ffffff', weight: 0.8, opacity: 0.45, fill: false }
+    }).addTo(map);
+
+    const k = feature.properties.kelas || 'N';
+    const batas = L.geoJSON(feature, {
+      style: { color: '#ffffff', weight: 2.2, fillColor: kelasColor[k] || '#888', fillOpacity: 0.35, className: 'kec-mini-boundary' }
+    }).addTo(map);
+
+    const chip = document.createElement('div');
+    chip.className = 'kec-map-chip';
+    const skor = feature.properties.skor ? feature.properties.skor.toFixed(2).replace('.', ',') : '-';
+    chip.innerHTML = `<span class="kec-map-chip-kelas" style="background:${kelasColor[k] || '#888'}">${k}</span>${kelasLabel[k] || ''} · ${skor}`;
+    card.querySelector('.kec-map-icon').appendChild(chip);
+
+    // Ruang ekstra di atas untuk label kelas dan di bawah untuk atribusi
+    const fit = () => {
+      map.invalidateSize();
+      map.fitBounds(batas.getBounds(), { paddingTopLeft: [20, 44], paddingBottomRight: [20, 26] });
+    };
+    fit();
+    setTimeout(fit, 700); // ulangi setelah animasi kemunculan kartu selesai
+  };
+
+  const cards = [...document.querySelectorAll('.kec-card[data-kec]')];
+  if (!('IntersectionObserver' in window)) { cards.forEach(buat); return; }
+  // Dibuat saat kartu mendekati layar, agar tile tidak dimuat sebelum diperlukan
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { obs.unobserve(e.target); buat(e.target); } });
+  }, { rootMargin: '200px' });
+  cards.forEach(c => obs.observe(c));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initCardCropTags();
   initCardImages();
+  initCardMiniMaps();
   initHeroMap();
   initNavbar();
   initHamburger();

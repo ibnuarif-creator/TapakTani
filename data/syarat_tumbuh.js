@@ -2,47 +2,59 @@
 // Database Syarat Tumbuh Tanaman & Data Iklim Kecamatan
 // AgroRaya PDM — Universitas Tanjungpura
 // Sumber: FAO, BBSDLP, Direktorat Jenderal Pertanian RI
-// Iklim: CHIRPS v2 + ERA5-Land + SRTM + OpenLandMap (GEE 2022–2024)
+// Iklim: CHIRPS v2 + ERA5-Land + FABDEM + OpenLandMap (GEE 2022–2024, per poligon kecamatan)
 // ============================================================
 
-// Data iklim & fisik per kecamatan
-// dataStatus: 'real' = langsung dari GEE, 'estimasi' = interpolasi regional
+// Data iklim & fisik per kecamatan — statistik zonal per POLIGON kecamatan (GEE, Okt 2026):
+//   curahHujan = CHIRPS 2022–2024 (mm/tahun), suhu = ERA5-Land 2022–2024 (°C),
+//   elevasi = median FABDEM (m dpl, tanpa pengaruh tajuk/bangunan),
+//   kodeTanah/namaTanah = kelas tekstur USDA dominan (OpenLandMap),
+//   tanahProporsi = proporsi luas tiap kelas tekstur → nilai r tekstur tertimbang luas
 const iklimKecamatan = {
   'sungai-raya': {
-    curahHujan: 3262, suhu: 26.2, elevasi: 6, kodeTanah: 5,
-    namaTanah: 'Silty Clay Loam', dataStatus: 'real'
+    curahHujan: 3284, suhu: 26.2, elevasi: 7, kodeTanah: 6,
+    namaTanah: 'Sandy Clay Loam', dataStatus: 'real',
+    tanahProporsi: { 6: 0.531, 4: 0.417, 1: 0.025, 9: 0.016, 7: 0.01, 3: 0.002 }
   },
   'sungai-kakap': {
-    curahHujan: 2743, suhu: 26.5, elevasi: 3, kodeTanah: 4,
-    namaTanah: 'Clay Loam', dataStatus: 'real'
+    curahHujan: 2961, suhu: 26.5, elevasi: 4, kodeTanah: 4,
+    namaTanah: 'Clay Loam', dataStatus: 'real',
+    tanahProporsi: { 4: 0.522, 6: 0.459, 9: 0.007, 7: 0.007, 1: 0.005 }
   },
   'rasau-jaya': {
-    curahHujan: 2984, suhu: 26.4, elevasi: 7, kodeTanah: 6,
-    namaTanah: 'Sandy Clay Loam', dataStatus: 'real'
+    curahHujan: 3069, suhu: 26.3, elevasi: 4, kodeTanah: 6,
+    namaTanah: 'Sandy Clay Loam', dataStatus: 'real',
+    tanahProporsi: { 6: 0.751, 4: 0.2, 7: 0.029, 9: 0.018, 3: 0.001 }
   },
   'sungai-ambawang': {
-    curahHujan: 3249, suhu: 26.1, elevasi: 8, kodeTanah: 6,
-    namaTanah: 'Sandy Clay Loam', dataStatus: 'real'
+    curahHujan: 3341, suhu: 26.1, elevasi: 8, kodeTanah: 6,
+    namaTanah: 'Sandy Clay Loam', dataStatus: 'real',
+    tanahProporsi: { 6: 0.764, 4: 0.199, 9: 0.014, 1: 0.011, 3: 0.008, 7: 0.003 }
   },
   'kubu': {
-    curahHujan: 2750, suhu: 26.4, elevasi: 2, kodeTanah: 4,
-    namaTanah: 'Clay Loam (Gambut)', dataStatus: 'estimasi'
+    curahHujan: 2982, suhu: 26.4, elevasi: 3, kodeTanah: 6,
+    namaTanah: 'Sandy Clay Loam', dataStatus: 'real',
+    tanahProporsi: { 6: 0.648, 4: 0.319, 9: 0.015, 7: 0.012, 1: 0.003, 3: 0.002 }
   },
   'batu-ampar': {
-    curahHujan: 2620, suhu: 26.6, elevasi: 2, kodeTanah: 5,
-    namaTanah: 'Silty Clay Loam (Mangrove)', dataStatus: 'estimasi'
+    curahHujan: 3181, suhu: 26.6, elevasi: 5, kodeTanah: 6,
+    namaTanah: 'Sandy Clay Loam', dataStatus: 'real',
+    tanahProporsi: { 6: 0.514, 4: 0.464, 7: 0.007, 1: 0.006, 9: 0.005, 3: 0.004 }
   },
   'teluk-pakedai': {
-    curahHujan: 2980, suhu: 26.5, elevasi: 3, kodeTanah: 4,
-    namaTanah: 'Clay Loam (Pesisir)', dataStatus: 'estimasi'
+    curahHujan: 2814, suhu: 26.5, elevasi: 5, kodeTanah: 4,
+    namaTanah: 'Clay Loam', dataStatus: 'real',
+    tanahProporsi: { 4: 0.492, 6: 0.473, 9: 0.02, 7: 0.011, 1: 0.003, 3: 0.001 }
   },
   'terentang': {
-    curahHujan: 2849, suhu: 26.5, elevasi: 14, kodeTanah: 6,
-    namaTanah: 'Sandy Clay Loam', dataStatus: 'real'
+    curahHujan: 3330, suhu: 26.2, elevasi: 8, kodeTanah: 4,
+    namaTanah: 'Clay Loam', dataStatus: 'real',
+    tanahProporsi: { 4: 0.52, 6: 0.443, 1: 0.015, 9: 0.014, 7: 0.005, 3: 0.003 }
   },
   'kuala-mandor': {
-    curahHujan: 3040, suhu: 26.4, elevasi: 19, kodeTanah: 6,
-    namaTanah: 'Sandy Clay Loam', dataStatus: 'real'
+    curahHujan: 3244, suhu: 26.1, elevasi: 9, kodeTanah: 6,
+    namaTanah: 'Sandy Clay Loam', dataStatus: 'real',
+    tanahProporsi: { 6: 0.77, 4: 0.187, 9: 0.031, 3: 0.006, 7: 0.003, 1: 0.003 }
   }
 };
 

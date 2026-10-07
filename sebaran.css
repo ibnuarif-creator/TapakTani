@@ -1,0 +1,151 @@
+/* ============================================================
+   AgroRaya — Halaman Sebaran Potensi Padi Sawah
+   Melengkapi style.css (token warna, navbar, footer)
+   ============================================================ */
+
+.page-sebaran { background: var(--bg); }
+.page-sebaran .nav-logo { text-decoration: none; }
+
+/* ── Header ── */
+.sb-header {
+  padding: 132px 0 120px;
+  background:
+    radial-gradient(ellipse at 85% 0%, rgba(76,168,114,0.28), transparent 55%),
+    linear-gradient(160deg, #06150c 0%, #0d2a19 60%, #12391f 100%);
+  color: #E8F5EE;
+}
+.sb-eyebrow {
+  display: inline-block; margin-bottom: 16px; padding: 6px 14px;
+  border: 1px solid rgba(184,223,203,0.35); border-radius: 100px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #B8DFCB;
+}
+.sb-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5vw, 3rem); font-weight: 700; line-height: 1.1;
+  letter-spacing: -0.03em; margin-bottom: 16px; color: #fff;
+}
+.sb-lead { max-width: 760px; font-size: 1rem; line-height: 1.75; color: rgba(232,245,238,0.85); }
+.sb-lead strong { color: #fff; }
+
+.sb-main { padding: 40px 0 72px; }
+
+/* ── Kartu statistik ── */
+.sb-stats {
+  display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px;
+  margin-top: -84px; margin-bottom: 28px; position: relative; z-index: 2;
+}
+.sb-stat {
+  position: relative; padding: 16px 16px 14px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+.sb-stat--utama { background: var(--accent); border-color: var(--accent); }
+.sb-stat--utama .sb-stat-label,
+.sb-stat--utama .sb-stat-ket { color: rgba(255,255,255,0.82); }
+.sb-stat--utama .sb-stat-val { color: #fff; }
+.sb-stat-sw { position: absolute; top: 16px; right: 16px; width: 10px; height: 10px; border-radius: 3px; }
+.sb-stat-label { font-size: 0.72rem; font-weight: 600; color: var(--text-3); padding-right: 14px; line-height: 1.35; min-height: 2em; }
+.sb-stat-val {
+  font-family: var(--font-display); font-size: 1.55rem; font-weight: 700; color: var(--text-1);
+  letter-spacing: -0.02em; margin-top: 6px; font-variant-numeric: tabular-nums;
+}
+.sb-stat-val span { font-size: 0.8rem; font-weight: 600; margin-left: 4px; color: inherit; opacity: 0.7; }
+.sb-stat-ket { font-size: 0.72rem; color: var(--text-3); margin-top: 2px; }
+
+/* ── Kartu peta ── */
+.sb-map-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md); overflow: hidden; scroll-margin-top: 90px;
+}
+.sb-toolbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+}
+.sb-seg { display: inline-flex; padding: 3px; gap: 3px; background: var(--bg-alt); border-radius: 100px; }
+.sb-seg-btn {
+  border: 0; background: transparent; cursor: pointer;
+  padding: 8px 16px; border-radius: 100px;
+  font-family: var(--font-sans); font-size: 0.82rem; font-weight: 600; color: var(--text-2);
+  transition: background 0.2s, color 0.2s;
+}
+.sb-seg-btn:hover { color: var(--accent); }
+.sb-seg-btn.active { background: var(--accent); color: #fff; box-shadow: var(--shadow-sm); }
+.sb-seg-btn:focus-visible, .sb-check input:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
+.sb-check { display: inline-flex; align-items: center; gap: 8px; font-size: 0.84rem; font-weight: 500; color: var(--text-2); cursor: pointer; }
+.sb-check input { accent-color: var(--accent); width: 16px; height: 16px; }
+
+/* Konteks tumpukan sendiri agar kontrol Leaflet (z-index 1000) tidak menembus navbar */
+.sb-map-wrap { position: relative; z-index: 0; isolation: isolate; }
+#sebaranMap { height: 580px; background: #1b2a22; }
+.sb-error { padding: 2rem; color: #fff; text-align: center; }
+
+.sb-legend {
+  position: absolute; left: 12px; bottom: 34px; z-index: 500;
+  min-width: 190px; padding: 10px 12px;
+  background: rgba(255,255,255,0.94); border-radius: 10px; box-shadow: var(--shadow-sm);
+  font-size: 0.74rem; color: var(--text-2);
+}
+.sb-legend-title { font-weight: 700; color: var(--text-1); margin-bottom: 6px; }
+.sb-legend-ramp { height: 10px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.08); }
+.sb-legend-scale { display: flex; justify-content: space-between; margin-top: 3px; font-size: 0.68rem; color: var(--text-3); }
+.sb-legend-item { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
+.sb-legend-sw { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+
+.sb-desa-label {
+  background: transparent; border: 0; box-shadow: none;
+  color: #fff; font-family: var(--font-sans); font-size: 11px; font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6);
+}
+.sb-desa-label::before { display: none; }
+
+/* ── Tabel desa ── */
+.sb-desa, .sb-notes { margin-top: 44px; }
+.sb-section-head { margin-bottom: 14px; }
+.sb-h2 { font-size: 1.35rem; font-weight: 700; color: var(--text-1); letter-spacing: -0.02em; margin-bottom: 6px; }
+.sb-sub { font-size: 0.9rem; color: var(--text-2); line-height: 1.65; max-width: 760px; }
+
+.sb-table-wrap {
+  overflow-x: auto; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm);
+}
+.sb-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; min-width: 640px; }
+.sb-table th {
+  text-align: left; padding: 12px 14px; background: var(--surface-2);
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-3);
+  border-bottom: 1px solid var(--border);
+}
+.sb-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: middle; }
+.sb-table tbody tr:last-child td { border-bottom: 0; }
+.sb-table tbody tr { cursor: pointer; transition: background 0.15s; }
+.sb-table tbody tr:hover, .sb-table tbody tr:focus-visible { background: var(--accent-ghost); outline: none; }
+.sb-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.sb-td-desa { font-weight: 600; color: var(--text-1); }
+.sb-td-desa small { display: block; font-size: 0.7rem; font-weight: 500; color: var(--gold); margin-top: 2px; }
+.sb-bar { height: 8px; background: var(--bg-alt); border-radius: 100px; overflow: hidden; min-width: 120px; }
+.sb-bar-fill { height: 100%; background: linear-gradient(90deg, #5aac72, #1a6e3c); border-radius: 100px; }
+.sb-bar-txt { font-size: 0.76rem; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.sb-bar-txt strong { color: var(--accent); }
+.sb-note { font-size: 0.8rem; color: var(--text-3); margin-top: 10px; line-height: 1.6; }
+
+/* ── Catatan ── */
+.sb-notes ul { margin: 10px 0 0 1.1rem; display: grid; gap: 8px; }
+.sb-notes li { font-size: 0.88rem; color: var(--text-2); line-height: 1.65; }
+.sb-back {
+  display: inline-block; margin-top: 22px; padding: 10px 18px; border-radius: 100px;
+  background: var(--accent); color: #fff; font-weight: 600; font-size: 0.86rem; text-decoration: none;
+}
+.sb-back:hover { background: var(--accent-mid); }
+
+/* ── Responsif ── */
+@media (max-width: 1024px) {
+  .sb-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .sb-header { padding: 108px 0 112px; }
+  .sb-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .sb-stat-val { font-size: 1.3rem; }
+  #sebaranMap { height: 440px; }
+  .sb-toolbar { padding: 10px 12px; }
+  .sb-seg-btn { padding: 7px 12px; font-size: 0.78rem; }
+  .sb-legend { min-width: 0; max-width: calc(100% - 24px); bottom: 30px; }
+}
