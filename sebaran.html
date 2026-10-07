@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sebaran Potensi Padi Sawah – AgroRaya</title>
   <meta name="description" content="Sebaran potensi lahan padi sawah Kecamatan Rasau Jaya, Kabupaten Kubu Raya — heatmap dan kelas kesesuaian lahan (S1, S2, S3, N)." />
+  <link rel="icon" type="image/png" sizes="32x32" href="gambar/favicon-32.png" />
+  <link rel="apple-touch-icon" href="gambar/apple-touch-icon.png" />
+  <meta name="theme-color" content="#1E6B3C" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -13,7 +16,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=20261002" />
+  <link rel="stylesheet" href="style.css?v=20261008b" />
   <link rel="stylesheet" href="sebaran.css?v=20261002b" />
 </head>
 <body class="page-sebaran">
@@ -61,7 +64,7 @@
     <div class="section-inner">
       <div class="sb-eyebrow">Kecamatan Rasau Jaya · Wilayah Percontohan</div>
       <h1 class="sb-title">Sebaran Potensi Lahan <span class="gradient-text">Padi Sawah</span></h1>
-      <p class="sb-lead">Peta ini menunjukkan <strong>tingkat kesesuaian lahan untuk budidaya padi sawah</strong> di Kecamatan Rasau Jaya, berdasarkan klasifikasi kesesuaian lahan dari data spasial konsultan. Semakin hangat warna heatmap, semakin terkonsentrasi lahan yang sesuai untuk padi. Peta ini menggambarkan <em>potensi lahan</em>, bukan lokasi sawah yang sedang ditanami.</p>
+      <p class="sb-lead">Peta ini menunjukkan <strong>tingkat kesesuaian lahan untuk budidaya padi sawah</strong> di Kecamatan Rasau Jaya, berdasarkan klasifikasi kesesuaian lahan padi sawah yang disusun dengan hukum minimum dari tujuh parameter lahan. Semakin hangat warna heatmap, semakin terkonsentrasi lahan yang sesuai untuk padi. Peta ini menggambarkan <em>potensi lahan</em>, bukan lokasi sawah yang sedang ditanami.</p>
     </div>
   </header>
 
@@ -117,7 +120,7 @@
       <section class="sb-notes">
         <h2 class="sb-h2">Catatan Data</h2>
         <ul>
-          <li><strong>Sumber:</strong> klasifikasi kesesuaian lahan padi sawah (<em>Kesesuaian_Lahan_Padi_Sawah</em>) dari konsultan spasial, dengan kelas S1 (sangat sesuai), S2 (cukup sesuai), S3 (sesuai marginal), dan N (tidak sesuai).</li>
+          <li><strong>Sumber:</strong> klasifikasi kesesuaian lahan padi sawah (<em>Kesesuaian_Lahan_Padi_Sawah</em>) hasil hukum minimum tujuh parameter — pH dan C-organik (OpenLandMap), ketebalan gambut (KLHK), lereng (SRTM), bahaya banjir (InaRISK), temperatur (ERA5-Land), dan tekstur tanah — dengan ambang Permentan No. 79/2013, dengan kelas S1 (sangat sesuai), S2 (cukup sesuai), S3 (sesuai marginal), dan N (tidak sesuai).</li>
           <li><strong>Heatmap:</strong> titik sampel berjarak 200 m di dalam setiap poligon kelas, dengan bobot S1 = 1,00 · S2 = 0,67 · S3 = 0,33 · N = 0. Warna hangat menandakan konsentrasi lahan yang lebih sesuai.</li>
           <li><strong>Penyederhanaan tampilan:</strong> fragmen poligon di bawah 0,5 ha tidak digambar di peta agar ringan diakses. Seluruh angka luas dihitung dari data lengkap.</li>
           <li><strong>Batasan:</strong> peta ini menunjukkan potensi berdasarkan kondisi lahan, bukan lahan sawah eksisting. Validasi lapangan tetap diperlukan sebelum digunakan untuk perencanaan.</li>

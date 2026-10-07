@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AgroRaya – SIG Pertanian Kabupaten Kubu Raya</title>
   <meta name="description" content="AgroRaya – Sistem Informasi Geografis Pertanian Kabupaten Kubu Raya, Kalimantan Barat. Jelajahi potensi pertanian 9 kecamatan." />
+  <link rel="icon" type="image/png" sizes="32x32" href="gambar/favicon-32.png" />
+  <link rel="apple-touch-icon" href="gambar/apple-touch-icon.png" />
+  <meta name="theme-color" content="#1E6B3C" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="AgroRaya – SIG Pertanian Kabupaten Kubu Raya" />
+  <meta property="og:description" content="Kesesuaian lahan, zonasi agroekologi, dan komoditas unggulan 9 kecamatan Kabupaten Kubu Raya, Kalimantan Barat." />
+  <meta property="og:image" content="gambar/og-agroraya.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -13,7 +21,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
-  <link rel="stylesheet" href="style.css?v=20261007" />
+  <link rel="stylesheet" href="style.css?v=20261008b" />
 </head>
 <body>
 
@@ -88,9 +96,9 @@
         <div class="hero-meta-sep"></div>
         <div class="hero-meta-item"><strong>123</strong>Desa / Kelurahan</div>
         <div class="hero-meta-sep"></div>
-        <div class="hero-meta-item"><strong>6.985 km²</strong>Luas Wilayah</div>
+        <div class="hero-meta-item"><strong>8.568 km²</strong>Luas Wilayah</div>
         <div class="hero-meta-sep"></div>
-        <div class="hero-meta-item"><strong>657 Rb</strong>Penduduk</div>
+        <div class="hero-meta-item"><strong>650 Rb</strong>Penduduk</div>
       </div>
     </div>
     <div class="hero-scroll-indicator">
@@ -150,11 +158,11 @@
             </svg>
           </div>
           <div class="stat-value-wrap">
-            <span class="stat-number" data-target="6985">0</span>
+            <span class="stat-number" data-target="8568">0</span>
             <span class="stat-suffix">km²</span>
           </div>
           <div class="stat-label">Luas Wilayah</div>
-          <div class="stat-sub">Total area daratan &amp; perairan</div>
+          <div class="stat-sub">Luas daerah (BPS, 2025)</div>
         </div>
 
         <div class="stat-item reveal reveal-delay-1">
@@ -166,11 +174,11 @@
             </svg>
           </div>
           <div class="stat-value-wrap">
-            <span class="stat-number" data-target="657">0</span>
+            <span class="stat-number" data-target="650">0</span>
             <span class="stat-suffix">Rb</span>
           </div>
           <div class="stat-label">Jiwa Penduduk</div>
-          <div class="stat-sub">Estimasi total populasi aktif</div>
+          <div class="stat-sub">Penduduk 2024 (BPS, 2025)</div>
         </div>
 
         <div class="stat-item reveal reveal-delay-2">
@@ -637,7 +645,7 @@
             <h3 class="metod-card-title">SAW Tingkat Desa — 9 Kriteria Kualitas Lahan (Rasau Jaya)</h3>
           </div>
           <p style="font-size:0.8rem;color:var(--text-2);line-height:1.65;margin-bottom:1.1rem;">
-            Pada rincian desa Kecamatan Rasau Jaya, 4 kriteria iklim &amp; tanah di atas dilengkapi <strong>5 parameter kualitas lahan</strong> dari data spasial konsultan: pH tanah, C-organik, ketebalan gambut, kemiringan lereng, dan bahaya banjir. Skor tiap parameter (1–4 = N/S3/S2/S1) dirata-rata tertimbang luas per desa lalu dinormalisasi <em>r</em> = (skor &minus; 1) / 3. Bobot dikelompokkan menurut kualitas lahan Petunjuk Teknis Evaluasi Lahan BBSDLP (2011).
+            Pada rincian desa Kecamatan Rasau Jaya, 4 kriteria iklim &amp; tanah di atas dilengkapi <strong>5 parameter kualitas lahan</strong> dari data spasial publik: pH tanah dan C-organik (OpenLandMap), ketebalan gambut (KLHK), kemiringan lereng (SRTM), dan bahaya banjir (indeks InaRISK), yang dikelaskan dengan ambang kesesuaian padi sawah Permentan No. 79/2013. Skor tiap parameter (1–4 = N/S3/S2/S1) dirata-rata tertimbang luas per desa lalu dinormalisasi <em>r</em> = (skor &minus; 1) / 3. Bobot dikelompokkan menurut kualitas lahan Petunjuk Teknis Evaluasi Lahan BBSDLP (2011).
           </p>
           <div class="metod-weights">
             <div class="weight-row">
@@ -795,9 +803,11 @@
         <div class="footer-research-title">Penelitian Dosen Pemula (PDM) — Universitas Tanjungpura</div>
         <p class="footer-research-judul">"Analisis Kesesuaian Lahan Komoditas Pertanian Unggulan Berbasis SIG untuk Ketahanan Pangan Kabupaten Kubu Raya"</p>
         <div class="footer-research-team">
-          <span class="footer-team-item">Ibnu Arif, S.Kom., M.Cs. <em>(Ketua)</em></span>
+          <span class="footer-team-item">Ibnu Arif, S.Kom., M.Kom. <em>(Ketua)</em></span>
           <span class="footer-team-sep">·</span>
-          <span class="footer-team-item">Safriadi, S.T., M.T. <em>(Anggota)</em></span>
+          <span class="footer-team-item">Safriadi, S.P., M.P. <em>(Anggota)</em></span>
+          <span class="footer-team-sep">·</span>
+          <span class="footer-team-item">Ir. Boy Rangga, S.T., M.Ling., IPM <em>(Anggota)</em></span>
         </div>
         <div class="footer-research-meta">
           <span class="footer-meta-tag">Sentinel-2 SR 2022–2024</span>
@@ -810,6 +820,7 @@
       <div class="footer-info">
         <p class="footer-datasrc"><strong>Sumber Data:</strong> BPS Kabupaten Kubu Raya · Copernicus Sentinel-2 SR (ESA) · GADM Level 3 · Oxford Accessibility Map · OpenLandMap Soil · FABDEM · USGS SRTM DEM</p>
         <p class="footer-method"><strong>Metodologi:</strong> Analisis kesesuaian lahan menggunakan citra multitemporal Sentinel-2 SR Harmonized (2022–2024) diproses di Google Earth Engine dengan statistik zonal per poligon kecamatan. Skor Weighted Overlay dihitung berdasarkan 5 kriteria: NDVI (30%), Jenis Tanah (25%), Ketersediaan Air/NDWI (20%), Kemiringan Lereng/SRTM (15%), Aksesibilitas (10%). Kelas S2 (Cukup Sesuai, skor 2,5–3,5) mencakup seluruh 9 kecamatan Kubu Raya.</p>
+        <p class="footer-method"><strong>Versi data:</strong> Oktober 2026 (data iklim, tanah, dan citra 2022–2024; statistik BPS 2025). Zonasi dan rekomendasi komoditas bersifat kesesuaian biofisik untuk perencanaan, bukan penetapan tata ruang, dan berlaku di luar kawasan hutan, ekosistem gambut berfungsi lindung, dan mangrove.</p>
         <p class="footer-copy">© 2025–2026 AgroRaya · Program Studi Informatika · Universitas Tanjungpura · Pontianak, Kalimantan Barat</p>
       </div>
 
@@ -984,11 +995,11 @@
     </div>
   </div>
 
-  <script src="data/kesesuaian_data_v2.js?v=20261006"></script>
+  <script src="data/kesesuaian_data_v2.js?v=20261008b"></script>
   <script src="data/syarat_tumbuh.js?v=20261006"></script>
   <script src="data/rasau_jaya_desa.js?v=20260801"></script>
   <script src="data/parameter_lahan_desa.js?v=20260930"></script>
-  <script src="script.js?v=20261008" defer></script>
+  <script src="script.js?v=20261008b" defer></script>
 </body>
 </html>
 

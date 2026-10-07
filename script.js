@@ -68,10 +68,8 @@ const kecamatanData = {
     tagline: 'Ibu Kota Kabupaten Kubu Raya',
     desc: 'Kecamatan Sungai Raya termasuk Zona IV hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona tekstur campuran lempung liat berpasir dan lempung berliat dengan curah hujan tinggi. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 3.284 mm/tahun, suhu udara 26,2 °C, dan elevasi median 7 m dpl (FABDEM). Tekstur tanah didominasi Lempung Liat Berpasir (53% luas) diikuti Lempung Berliat (42%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,67 (Sentinel-2) dan skor weighted overlay 3,27 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah jeruk siam (0,886), jahe (0,861), pinang (0,857).',
     stats: [
-      { val: '±742 km²', key: 'Luas Wilayah' },
-      { val: '17 Desa', key: 'Jumlah Desa' },
-      { val: '~300 rb', key: 'Penduduk' },
-      { val: 'Sungai Raya', key: 'Ibu Kota' }
+      { val: '1.190 km²', key: 'Luas Wilayah' }, { val: '22 Desa', key: 'Jumlah Desa' },
+      { val: '251,7 rb', key: 'Penduduk 2024' }, { val: 'Sungai Raya', key: 'Ibu Kota' }
     ],
     commodities: [
       { icon: '🍍', name: 'Nanas' }, { icon: '🌾', name: 'Padi Sawah' },
@@ -100,8 +98,8 @@ const kecamatanData = {
     tagline: 'Sentra Kelapa & Padi Pasang Surut',
     desc: 'Kecamatan Sungai Kakap termasuk Zona I hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona pesisir barat bercurah hujan terendah dengan tekstur lempung berliat yang seimbang dengan lempung liat berpasir. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 2.961 mm/tahun, suhu udara 26,5 °C, dan elevasi median 4 m dpl (FABDEM). Tekstur tanah didominasi Lempung Berliat (52% luas) diikuti Lempung Liat Berpasir (46%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,68 (Sentinel-2) dan skor weighted overlay 3,37 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah karet (0,936), padi sawah (0,917), pinang (0,917).',
     stats: [
-      { val: '±508 km²', key: 'Luas Wilayah' }, { val: '14 Desa', key: 'Jumlah Desa' },
-      { val: '~68 rb', key: 'Penduduk' }, { val: 'Sungai Kakap', key: 'Ibu Kota' }
+      { val: '587 km²', key: 'Luas Wilayah' }, { val: '15 Desa', key: 'Jumlah Desa' },
+      { val: '131,2 rb', key: 'Penduduk 2024' }, { val: 'Sungai Kakap', key: 'Ibu Kota' }
     ],
     commodities: [
       { icon: '🥥', name: 'Kelapa' }, { icon: '🌾', name: 'Padi Pasut' },
@@ -130,8 +128,8 @@ const kecamatanData = {
     tagline: 'Kawasan Transmigrasi Pertanian Gambut',
     desc: 'Kecamatan Rasau Jaya termasuk Zona II hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona dominan lempung liat berpasir dengan curah hujan sedang. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 3.069 mm/tahun, suhu udara 26,3 °C, dan elevasi median 4 m dpl (FABDEM). Tekstur tanah didominasi Lempung Liat Berpasir (75% luas) diikuti Lempung Berliat (20%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,68 (Sentinel-2) dan skor weighted overlay 3,40 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah jeruk siam (0,955), lada (0,951), jahe (0,951).',
     stats: [
-      { val: '±243 km²', key: 'Luas Wilayah' }, { val: '5 Desa', key: 'Jumlah Desa' },
-      { val: '~42 rb', key: 'Penduduk' }, { val: 'Rasau Jaya', key: 'Ibu Kota' }
+      { val: '209 km²', key: 'Luas Wilayah' }, { val: '6 Desa', key: 'Jumlah Desa' },
+      { val: '33,1 rb', key: 'Penduduk 2024' }, { val: 'Rasau Jaya', key: 'Ibu Kota' }
     ],
     commodities: [
       { icon: '🥥', name: 'Kelapa' }, { icon: '🌾', name: 'Padi Gambut' },
@@ -160,8 +158,8 @@ const kecamatanData = {
     tagline: 'Sentra Perkebunan Karet & Pertanian Terpadu',
     desc: 'Kecamatan Sungai Ambawang termasuk Zona III hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona dominan lempung liat berpasir dengan curah hujan tinggi. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 3.341 mm/tahun, suhu udara 26,1 °C, dan elevasi median 8 m dpl (FABDEM). Tekstur tanah didominasi Lempung Liat Berpasir (76% luas) diikuti Lempung Berliat (20%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,70 (Sentinel-2) dan skor weighted overlay 3,38 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah jeruk siam (0,922), lada (0,890), jahe (0,890).',
     stats: [
-      { val: '±727 km²', key: 'Luas Wilayah' }, { val: '16 Desa', key: 'Jumlah Desa' },
-      { val: '~57 rb', key: 'Penduduk' }, { val: 'Sei Ambawang', key: 'Ibu Kota' }
+      { val: '1.181 km²', key: 'Luas Wilayah' }, { val: '15 Desa', key: 'Jumlah Desa' },
+      { val: '89,8 rb', key: 'Penduduk 2024' }, { val: 'Ambawang Kuala', key: 'Ibu Kota' }
     ],
     commodities: [
       { icon: '🌾', name: 'Padi Sawah' }, { icon: '🌳', name: 'Karet' },
@@ -190,8 +188,8 @@ const kecamatanData = {
     tagline: 'Kelapa Hibrida & Pengelolaan Gambut',
     desc: 'Kecamatan Kubu termasuk Zona II hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona dominan lempung liat berpasir dengan curah hujan sedang. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 2.982 mm/tahun, suhu udara 26,4 °C, dan elevasi median 3 m dpl (FABDEM). Tekstur tanah didominasi Lempung Liat Berpasir (65% luas) diikuti Lempung Berliat (32%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,71 (Sentinel-2) dan skor weighted overlay 3,22 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah karet (0,931), pinang (0,882), langsat (0,882).',
     stats: [
-      { val: '±1.212 km²', key: 'Luas Wilayah' }, { val: '20 Desa', key: 'Jumlah Desa' },
-      { val: '~47 rb', key: 'Penduduk' }, { val: 'Kubu', key: 'Ibu Kota' }
+      { val: '1.562 km²', key: 'Luas Wilayah' }, { val: '20 Desa', key: 'Jumlah Desa' },
+      { val: '43,9 rb', key: 'Penduduk 2024' }, { val: 'Kubu', key: 'Ibu Kota' }
     ],
     commodities: [
       { icon: '🥥', name: 'Kelapa Hibrida' }, { icon: '🌿', name: 'Sagu' },
@@ -220,8 +218,8 @@ const kecamatanData = {
     tagline: 'Ekosistem Mangrove & Pesisir Strategis',
     desc: 'Kecamatan Batu Ampar termasuk Zona IV hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona tekstur campuran lempung liat berpasir dan lempung berliat dengan curah hujan tinggi. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 3.181 mm/tahun, suhu udara 26,6 °C, dan elevasi median 5 m dpl (FABDEM). Tekstur tanah didominasi Lempung Liat Berpasir (51% luas) diikuti Lempung Berliat (46%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,75 (Sentinel-2) dan skor weighted overlay 3,21 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah karet (0,905), pinang (0,882), padi sawah (0,871).',
     stats: [
-      { val: '±1.680 km²', key: 'Luas Wilayah' }, { val: '17 Desa', key: 'Jumlah Desa' },
-      { val: '~30 rb', key: 'Penduduk' }, { val: 'Batu Ampar', key: 'Ibu Kota' }
+      { val: '2.431 km²', key: 'Luas Wilayah' }, { val: '15 Desa', key: 'Jumlah Desa' },
+      { val: '36,5 rb', key: 'Penduduk 2024' }, { val: 'Padang Tikar', key: 'Ibu Kota' }
     ],
     commodities: [
       { icon: '🌿', name: 'Sagu' }, { icon: '🥥', name: 'Kelapa' },
@@ -250,8 +248,8 @@ const kecamatanData = {
     tagline: 'Pertanian Sagu & Perikanan Kepulauan',
     desc: 'Kecamatan Teluk Pakedai termasuk Zona I hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona pesisir barat bercurah hujan terendah dengan tekstur lempung berliat yang seimbang dengan lempung liat berpasir. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 2.814 mm/tahun, suhu udara 26,5 °C, dan elevasi median 5 m dpl (FABDEM). Tekstur tanah didominasi Lempung Berliat (49% luas) diikuti Lempung Liat Berpasir (47%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,72 (Sentinel-2) dan skor weighted overlay 3,23 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah karet (0,953), pinang (0,912), langsat (0,912).',
     stats: [
-      { val: '±506 km²', key: 'Luas Wilayah' }, { val: '10 Desa', key: 'Jumlah Desa' },
-      { val: '~27 rb', key: 'Penduduk' }, { val: 'Teluk Pakedai', key: 'Ibu Kota' }
+      { val: '409 km²', key: 'Luas Wilayah' }, { val: '14 Desa', key: 'Jumlah Desa' },
+      { val: '20,7 rb', key: 'Penduduk 2024' }, { val: 'Teluk Pakedai', key: 'Ibu Kota' }
     ],
     commodities: [
       { icon: '🌿', name: 'Sagu' }, { icon: '🥥', name: 'Kelapa' },
@@ -280,8 +278,8 @@ const kecamatanData = {
     tagline: 'Kawasan Hutan & Perkebunan Penyangga',
     desc: 'Kecamatan Terentang termasuk Zona IV hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona tekstur campuran lempung liat berpasir dan lempung berliat dengan curah hujan tinggi. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 3.330 mm/tahun, suhu udara 26,2 °C, dan elevasi median 8 m dpl (FABDEM). Tekstur tanah didominasi Lempung Berliat (52% luas) diikuti Lempung Liat Berpasir (44%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,68 (Sentinel-2) dan skor weighted overlay 3,20 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah karet (0,881), pinang (0,870), jeruk siam (0,867).',
     stats: [
-      { val: '±1.270 km²', key: 'Luas Wilayah' }, { val: '14 Desa', key: 'Jumlah Desa' },
-      { val: '~18 rb', key: 'Penduduk' }, { val: 'Terentang', key: 'Ibu Kota' }
+      { val: '677 km²', key: 'Luas Wilayah' }, { val: '10 Desa', key: 'Jumlah Desa' },
+      { val: '14,5 rb', key: 'Penduduk 2024' }, { val: 'Terentang', key: 'Ibu Kota' }
     ],
     commodities: [
       { icon: '🌳', name: 'Karet' }, { icon: '🍌', name: 'Pisang' },
@@ -310,8 +308,8 @@ const kecamatanData = {
     tagline: 'Pertanian Organik Dekat Cagar Alam',
     desc: 'Kecamatan Kuala Mandor B termasuk Zona III hasil klaster agroekologi Kabupaten Kubu Raya, yaitu zona dominan lempung liat berpasir dengan curah hujan tinggi. Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata 3.244 mm/tahun, suhu udara 26,1 °C, dan elevasi median 9 m dpl (FABDEM). Tekstur tanah didominasi Lempung Liat Berpasir (77% luas) diikuti Lempung Berliat (19%), sehingga nilai kesesuaian tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata 0,72 (Sentinel-2) dan skor weighted overlay 3,37 menempatkan kecamatan ini pada kelas S2 (Cukup Sesuai). Komoditas dengan skor SAW tertinggi adalah jeruk siam (0,934), lada (0,915), jahe (0,915).',
     stats: [
-      { val: '±396 km²', key: 'Luas Wilayah' }, { val: '10 Desa', key: 'Jumlah Desa' },
-      { val: '~25 rb', key: 'Penduduk' }, { val: 'Kuala Mandor', key: 'Ibu Kota' }
+      { val: '320 km²', key: 'Luas Wilayah' }, { val: '6 Desa', key: 'Jumlah Desa' },
+      { val: '28,5 rb', key: 'Penduduk 2024' }, { val: 'Kuala Mandor', key: 'Ibu Kota' }
     ],
     commodities: [
       { icon: '🌳', name: 'Karet' }, { icon: '🌾', name: 'Padi Sawah' },
@@ -832,7 +830,7 @@ function initRasauJayaDesaMap() {
 
 // ── SAW komoditas tingkat DESA — Rasau Jaya (9 kriteria) ────────────────────
 // Memperluas hitungSkorKrop (4 kriteria iklim/tanah tingkat kecamatan) dengan
-// 5 parameter kualitas lahan per desa dari data spasial konsultan
+// 5 parameter kualitas lahan per desa: OpenLandMap (pH, C-organik), KLHK (gambut), SRTM (lereng), InaRISK (banjir)
 // (data/parameter_lahan_desa.js): pH, C-Organik, Ketebalan Gambut, Lereng,
 // Bahaya Banjir. Kelima parameter bernilai sama untuk tiap komoditas dalam satu
 // desa (kualitas lahan, bukan syarat tumbuh spesifik komoditas).
@@ -873,7 +871,7 @@ function hitungSkorKropDesa(iklim, syarat, desaProps) {
   const param = getParamLahanDesa(desaProps.NAME_4);
   if (!param) return { ...dasar, juknis: null };
 
-  // Skor konsultan 1–4 → r 0–1 (N = 0, S1 = 1), sejajar dengan skala r kriteria iklim
+  // Skor kelas 1–4 → r 0–1 (N = 0, S1 = 1), sejajar dengan skala r kriteria iklim
   const nilaiParam = PARAM_LAHAN_DESA.map(p => param[p.key] ? (param[p.key].skor - 1) / 3 : 0);
   const nilaiArr = [...dasar.nilaiArr, ...nilaiParam];
   const sawScore = +nilaiArr.reduce((s, v, i) => s + SAW_BOBOT_DESA[i] * v, 0).toFixed(3);
@@ -981,7 +979,7 @@ function buildSAWPanelDesa(iklim, syarat, hasil, desaProps) {
       </tr>` : '';
   const cakupanMin = Math.min(...PARAM_LAHAN_DESA.map(p => param[p.key] ? param[p.key].cakupan : 0));
   const cakupanNote = cakupanMin < 95
-    ? ` Data parameter lahan konsultan mencakup ±${fmtAngka(cakupanMin, 0)}% wilayah ${desaProps.NAME_4}; skor dihitung dari bagian yang tercakup.`
+    ? ` Data parameter kualitas lahan mencakup ±${fmtAngka(cakupanMin, 0)}% wilayah ${desaProps.NAME_4}; skor dihitung dari bagian yang tercakup.`
     : '';
 
   return `<div class="crop-detail-panel">
@@ -997,7 +995,7 @@ function buildSAWPanelDesa(iklim, syarat, hasil, desaProps) {
         <td class="saw-td-c saw-total-val st-lvl-${hasil.level}">${hasil.sawScore.toFixed(2)}</td>
       </tr>${juknisRow}</tfoot>
     </table>
-    <p class="saw-note">SAW tingkat desa memakai 9 kriteria yang dikelompokkan menurut kualitas lahan Juknis Evaluasi Lahan BBSDLP (2011): 4 kriteria iklim &amp; tanah tingkat Kecamatan Rasau Jaya, ditambah 5 parameter lahan spesifik ${desaProps.NAME_4} dari data spasial konsultan (rata-rata skor tertimbang luas; r = (skor &minus; 1) / 3). Kode: tc temperatur, wa ketersediaan air, rc media perakaran, nr retensi hara, eh bahaya erosi, fh bahaya banjir.${cakupanNote}</p>
+    <p class="saw-note">SAW tingkat desa memakai 9 kriteria yang dikelompokkan menurut kualitas lahan Juknis Evaluasi Lahan BBSDLP (2011): 4 kriteria iklim &amp; tanah tingkat Kecamatan Rasau Jaya, ditambah 5 parameter lahan spesifik ${desaProps.NAME_4} (pH dan C-organik OpenLandMap, ketebalan gambut KLHK, lereng SRTM, bahaya banjir InaRISK; dikelaskan dengan ambang padi sawah Permentan 79/2013; rata-rata skor tertimbang luas; r = (skor &minus; 1) / 3). Kode: tc temperatur, wa ketersediaan air, rc media perakaran, nr retensi hara, eh bahaya erosi, fh bahaya banjir.${cakupanNote}</p>
   </div>`;
 }
 
@@ -1110,7 +1108,7 @@ function generateDesaRekomendasi(props, rank, totalDesa) {
     rekom.push(`Skor Weighted Overlay desa ini berada pada separuh bawah (peringkat ${rank} dari ${totalDesa}) — disarankan validasi lapangan untuk memastikan faktor pembatas utama (tanah, air, atau aksesibilitas).`);
   }
 
-  // Faktor pembatas dari parameter lahan konsultan (kelas dominan S3/N)
+  // Faktor pembatas dari parameter kualitas lahan desa (kelas dominan S3/N)
   const tindakan = {
     ph:     'pengapuran (dolomit) dan pemupukan berimbang untuk menaikkan pH tanah',
     corg:   'penambahan bahan organik (pupuk kandang/kompos) untuk memperbaiki C-organik',
@@ -1195,7 +1193,7 @@ function openDesaModal(feature, rank, totalDesa) {
   const items = allCrops.slice(0, count);
 
   document.getElementById('desaModalNote').textContent =
-    `Peringkat komoditas dihitung dari SAW 9 kriteria khusus tingkat desa: Curah Hujan, Suhu, Elevasi, dan Jenis Tanah (data iklim Kecamatan Rasau Jaya), ditambah 5 parameter kualitas lahan ${desaProps.NAME_4} dari data spasial konsultan (pH Tanah, C-Organik, Ketebalan Gambut, Kemiringan Lereng, Bahaya Banjir). Bobot dikelompokkan menurut kualitas lahan Juknis BBSDLP (2011); kelas Juknis pada tiap kartu menunjukkan kelas kriteria terburuk beserta faktor pembatasnya. Jumlah komoditas yang ditampilkan (${count} dari ${allCrops.length}) menyesuaikan peringkat skor desa ini relatif terhadap ${totalDesa - 1} desa lain di kecamatan yang sama.`;
+    `Peringkat komoditas dihitung dari SAW 9 kriteria khusus tingkat desa: Curah Hujan, Suhu, Elevasi, dan Jenis Tanah (data iklim Kecamatan Rasau Jaya), ditambah 5 parameter kualitas lahan ${desaProps.NAME_4} (pH Tanah, C-Organik, Ketebalan Gambut, Kemiringan Lereng, Bahaya Banjir) dari data spasial OpenLandMap, KLHK, SRTM, dan InaRISK. Bobot dikelompokkan menurut kualitas lahan Juknis BBSDLP (2011); kelas Juknis pada tiap kartu menunjukkan kelas kriteria terburuk beserta faktor pembatasnya. Jumlah komoditas yang ditampilkan (${count} dari ${allCrops.length}) menyesuaikan peringkat skor desa ini relatif terhadap ${totalDesa - 1} desa lain di kecamatan yang sama.`;
 
   const iklimDesa = (typeof iklimKecamatan !== 'undefined') ? iklimKecamatan['rasau-jaya'] : null;
   const gridEl = document.getElementById('desaModalCropsGrid');
@@ -1315,7 +1313,7 @@ function initHeroMap() {
     }).addTo(heroMap);
 
     // ── Layer Kesesuaian Lahan (GeoJSON) ──────────────────────
-    // kesesuaianLahanData dimuat dari data/kesesuaian_lahan.js
+    // kesesuaianLahanData dimuat dari data/kesesuaian_data_v2.js
     if (typeof kesesuaianLahanData !== 'undefined') {
         const geoData = kesesuaianLahanData;
         L.geoJSON(geoData, {
@@ -1366,7 +1364,7 @@ function initHeroMap() {
         };
         legend.addTo(heroMap);
     } else {
-      console.warn('kesesuaianLahanData tidak ditemukan — pastikan data/kesesuaian_lahan.js dimuat.');
+      console.warn('kesesuaianLahanData tidak ditemukan — pastikan data/kesesuaian_data_v2.js dimuat.');
     }
 
   } catch (e) {
