@@ -1741,15 +1741,17 @@ function getKecamatanAvgScores() {
     .sort((a, b) => b.value - a.value);
 }
 
+// Skor SAW komoditas di seluruh 9 kecamatan (matriks komoditas × kecamatan);
+// kecamatan yang mencantumkan komoditas ini di relevantCrops diberi penanda "komoditas wilayah"
 function getCropScores(cropId) {
   const syarat = syaratTumbuhDB[cropId];
   if (!syarat) return [];
   return Object.entries(kecamatanData)
-    .filter(([, d]) => d.relevantCrops && d.relevantCrops.includes(cropId))
     .map(([kecId, d]) => {
       const iklim = iklimKecamatan[kecId];
       if (!iklim) return null;
-      return { label: d.name, value: hitungSkorKrop(iklim, syarat).sawScore };
+      const wilayah = (d.relevantCrops || []).includes(cropId);
+      return { label: d.name, value: hitungSkorKrop(iklim, syarat).sawScore, sub: wilayah ? '● Komoditas wilayah' : '' };
     })
     .filter(Boolean)
     .sort((a, b) => b.value - a.value);
@@ -1771,7 +1773,7 @@ function updateCropChart(cropId) {
   if (!syarat) return;
   const descEl = document.getElementById('chartKomoditasDesc');
   if (descEl) descEl.textContent =
-    `Skor kesesuaian SAW untuk ${syarat.nama} di setiap kecamatan yang relevan, diurutkan dari tertinggi.`;
+    `Skor kesesuaian SAW untuk ${syarat.nama} di seluruh 9 kecamatan, diurutkan dari tertinggi. Tanda ● = komoditas ini tercantum sebagai komoditas wilayah kecamatan tersebut.`;
   renderBarChart('chartKomoditas', getCropScores(cropId));
 }
 
