@@ -1812,7 +1812,7 @@ function initZonasi() {
   const zonaDari = {};
   Z.zona.forEach(z => z.kecamatan.forEach(k => { zonaDari[k] = z; }));
   const namaKec = n => n === "Telok Pa'Kedai" ? 'Teluk Pakedai' : n;
-  const fmt = v => v.toFixed(2).replace('.', ',');
+  const fmt = v => (Math.round(v * 100 + 1e-9) / 100).toFixed(2).replace('.', ',');   // pembulatan setengah ke atas, sama dengan naskah
 
   const chip = (x, kelas) => `<span class="zona-chip ${kelas}">${x.komoditas}` +
     (x.kecamatan && x.kecamatan.length < 3 ? ` <small>(${x.kecamatan.join(', ')})</small>` : '') +

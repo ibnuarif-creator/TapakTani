@@ -29,12 +29,18 @@ for zn, ks, warna, judul in ZONA:
     idx = [z['nama'].index(k) for k in ks]
     ch = [float(pol[k]['curah_hujan_mm']) for k in ks]
     el = [float(fab[k]['median']) for k in ks]
-    scl = []
+    scl, cl = [], []   # proporsi lempung liat berpasir (kode 6) dan lempung berliat (kode 4)
     for k in ks:
         h = {int(a): b for a, b in json.loads(pol[k]['tekstur_hist']).items()}
-        scl.append(h.get(6, 0) / sum(h.values()) * 100)
-    ciri = (f'Lempung liat berpasir {round(min(scl))}–{round(max(scl))}%; curah hujan {ribu(min(ch))}–{ribu(max(ch))} mm/tahun; '
-            f'elevasi median {round(min(el))}–{round(max(el))} m dpl')
+        scl.append(h.get(6, 0) / sum(h.values()) * 100); cl.append(h.get(4, 0) / sum(h.values()) * 100)
+    rentang = lambda v: f'{round(min(v))}–{round(max(v))}%'
+    if max(cl) >= 40:   # tekstur campuran: sebut kedua kelas, kelas dengan rerata lebih besar lebih dulu
+        dua = [('lempung liat berpasir', scl), ('lempung berliat', cl)]
+        dua.sort(key=lambda x: -sum(x[1]))
+        tekstur = f'{dua[0][0].capitalize()} {rentang(dua[0][1])}, {dua[1][0]} {rentang(dua[1][1])}'
+    else:
+        tekstur = f'Lempung liat berpasir {rentang(scl)}'
+    ciri = f'{tekstur}; curah hujan {ribu(min(ch))}–{ribu(max(ch))} mm/tahun; elevasi median {round(min(el))}–{round(max(el))} m dpl'
     aktual = [{'komoditas': NM(a['komoditas']), 'skor': a['skor'], 'kecamatan': a['kec_lq1']} for a in zz['unggulan_aktual']]
     akt_id = {a['komoditas'] for a in zz['unggulan_aktual']}
     # potensial: skor rata-rata zona ≥ 0,85, belum LQ > 1 (termasuk komoditas tanpa data produksi, mis. padi sawah)

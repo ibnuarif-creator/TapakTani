@@ -626,7 +626,7 @@
             <h3 class="metod-card-title">Weighted Overlay GIS — Skor Tingkat Wilayah</h3>
           </div>
           <p style="font-size:0.8rem;color:var(--text-2);line-height:1.65;margin-bottom:1.1rem;">
-            Berbeda dengan SAW yang menghitung kesesuaian per-komoditas, metode ini menghasilkan <strong>satu skor kesesuaian lahan per kecamatan</strong> secara keseluruhan — ditampilkan sebagai warna pada peta interaktif (bagian Beranda) dan sebagai "Skor Weighted Overlay" pada kartu tiap kecamatan. Skor dihitung dari overlay tertimbang 5 lapisan raster Sentinel-2 SR &amp; turunannya melalui Zonal Statistics QGIS.
+            Berbeda dengan SAW yang menghitung kesesuaian per-komoditas, metode ini menghasilkan <strong>satu skor kesesuaian lahan per kecamatan</strong> secara keseluruhan — ditampilkan sebagai warna pada peta interaktif (bagian Beranda) dan sebagai "Skor Weighted Overlay" pada kartu tiap kecamatan. Skor dihitung dari overlay tertimbang 5 lapisan raster Sentinel-2 SR &amp; turunannya melalui statistik zonal per poligon kecamatan di Google Earth Engine.
           </p>
           <div class="metod-weights">
             <div class="weight-row">
@@ -831,7 +831,7 @@
           <span class="footer-meta-tag">Sentinel-2 SR 2022–2024</span>
           <span class="footer-meta-tag">Google Earth Engine</span>
           <span class="footer-meta-tag">Weighted Overlay GIS</span>
-          <span class="footer-meta-tag">QGIS Zonal Statistics</span>
+          <span class="footer-meta-tag">GEE Zonal Statistics</span>
         </div>
       </div>
 
@@ -1014,11 +1014,11 @@
   </div>
 
   <script src="data/kesesuaian_data_v2.js?v=20261008d"></script>
-  <script src="data/zonasi.js?v=20261008d"></script>
+  <script src="data/zonasi.js?v=20261008h"></script>
   <script src="data/syarat_tumbuh.js?v=20261006"></script>
   <script src="data/rasau_jaya_desa.js?v=20260801"></script>
   <script src="data/parameter_lahan_desa.js?v=20260930"></script>
-  <script src="script.js?v=20261008g" defer></script>
+  <script src="script.js?v=20261008h" defer></script>
 </body>
 </html>
 

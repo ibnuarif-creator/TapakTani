@@ -16,7 +16,7 @@ const zonasiAgroekologi = {
     "Sungai Kakap",
     "Teluk Pakedai"
    ],
-   "ciri": "Lempung liat berpasir 46–47%; curah hujan 2.814–2.961 mm/tahun; elevasi median 4–5 m dpl",
+   "ciri": "Lempung berliat 49–52%, lempung liat berpasir 46–47%; curah hujan 2.814–2.961 mm/tahun; elevasi median 4–5 m dpl",
    "teratas": [
     {
      "komoditas": "Karet",
@@ -269,7 +269,7 @@ const zonasiAgroekologi = {
     "Batu Ampar",
     "Terentang"
    ],
-   "ciri": "Lempung liat berpasir 44–53%; curah hujan 3.181–3.330 mm/tahun; elevasi median 5–8 m dpl",
+   "ciri": "Lempung liat berpasir 44–53%, lempung berliat 42–52%; curah hujan 3.181–3.330 mm/tahun; elevasi median 5–8 m dpl",
    "teratas": [
     {
      "komoditas": "Karet",
