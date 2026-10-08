@@ -42,14 +42,16 @@ const zonasiAgroekologi = {
      "kecamatan": [
       "Sungai Kakap",
       "Teluk Pakedai"
-     ]
+     ],
+     "peringatan": false
     },
     {
      "komoditas": "Jahe",
      "skor": 0.909,
      "kecamatan": [
       "Sungai Kakap"
-     ]
+     ],
+     "peringatan": false
     },
     {
      "komoditas": "Jambu Biji",
@@ -57,14 +59,16 @@ const zonasiAgroekologi = {
      "kecamatan": [
       "Sungai Kakap",
       "Teluk Pakedai"
-     ]
+     ],
+     "peringatan": false
     },
     {
      "komoditas": "Jeruk Siam",
      "skor": 0.907,
      "kecamatan": [
       "Teluk Pakedai"
-     ]
+     ],
+     "peringatan": false
     },
     {
      "komoditas": "Langsat",
@@ -72,7 +76,8 @@ const zonasiAgroekologi = {
      "kecamatan": [
       "Sungai Kakap",
       "Teluk Pakedai"
-     ]
+     ],
+     "peringatan": false
     },
     {
      "komoditas": "Pinang",
@@ -80,31 +85,36 @@ const zonasiAgroekologi = {
      "kecamatan": [
       "Sungai Kakap",
       "Teluk Pakedai"
-     ]
+     ],
+     "peringatan": false
     },
     {
      "komoditas": "Pisang",
      "skor": 0.863,
      "kecamatan": [
       "Sungai Kakap"
-     ]
+     ],
+     "peringatan": false
     }
    ],
    "potensial": [
     {
      "komoditas": "Karet",
      "skor": 0.945,
-     "tanpaData": false
+     "tanpaData": false,
+     "peringatan": true
     },
     {
      "komoditas": "Padi Sawah",
      "skor": 0.913,
-     "tanpaData": true
+     "tanpaData": true,
+     "peringatan": false
     },
     {
      "komoditas": "Lada",
      "skor": 0.909,
-     "tanpaData": false
+     "tanpaData": false,
+     "peringatan": false
     }
    ]
   },
@@ -141,58 +151,68 @@ const zonasiAgroekologi = {
      "skor": 0.937,
      "kecamatan": [
       "Rasau Jaya"
-     ]
+     ],
+     "peringatan": false
     },
     {
      "komoditas": "Jambu Biji",
      "skor": 0.883,
      "kecamatan": [
       "Kubu"
-     ]
+     ],
+     "peringatan": false
     },
     {
      "komoditas": "Jeruk Siam",
      "skor": 0.948,
      "kecamatan": [
       "Kubu"
-     ]
+     ],
+     "peringatan": false
     }
    ],
    "potensial": [
     {
      "komoditas": "Jahe",
      "skor": 0.946,
-     "tanpaData": false
+     "tanpaData": false,
+     "peringatan": false
     },
     {
      "komoditas": "Lada",
      "skor": 0.946,
-     "tanpaData": false
+     "tanpaData": false,
+     "peringatan": false
     },
     {
      "komoditas": "Karet",
      "skor": 0.926,
-     "tanpaData": false
+     "tanpaData": false,
+     "peringatan": true
     },
     {
      "komoditas": "Pinang",
      "skor": 0.869,
-     "tanpaData": false
+     "tanpaData": false,
+     "peringatan": false
     },
     {
      "komoditas": "Langsat",
      "skor": 0.867,
-     "tanpaData": false
+     "tanpaData": false,
+     "peringatan": false
     },
     {
      "komoditas": "Padi Sawah",
      "skor": 0.865,
-     "tanpaData": true
+     "tanpaData": true,
+     "peringatan": false
     },
     {
      "komoditas": "Ubi Kayu",
      "skor": 0.851,
-     "tanpaData": true
+     "tanpaData": true,
+     "peringatan": false
     }
    ]
   },
@@ -229,7 +249,8 @@ const zonasiAgroekologi = {
      "skor": 0.855,
      "kecamatan": [
       "Sungai Ambawang"
-     ]
+     ],
+     "peringatan": false
     },
     {
      "komoditas": "Karet",
@@ -237,26 +258,30 @@ const zonasiAgroekologi = {
      "kecamatan": [
       "Sungai Ambawang",
       "Kuala Mandor B"
-     ]
+     ],
+     "peringatan": false
     },
     {
      "komoditas": "Lada",
      "skor": 0.903,
      "kecamatan": [
       "Sungai Ambawang"
-     ]
+     ],
+     "peringatan": false
     }
    ],
    "potensial": [
     {
      "komoditas": "Jeruk Siam",
      "skor": 0.928,
-     "tanpaData": false
+     "tanpaData": false,
+     "peringatan": false
     },
     {
      "komoditas": "Jahe",
      "skor": 0.903,
-     "tanpaData": false
+     "tanpaData": false,
+     "peringatan": false
     }
    ]
   },
@@ -295,7 +320,8 @@ const zonasiAgroekologi = {
      "kecamatan": [
       "Sungai Raya",
       "Terentang"
-     ]
+     ],
+     "peringatan": false
     },
     {
      "komoditas": "Jeruk Siam",
@@ -303,7 +329,8 @@ const zonasiAgroekologi = {
      "kecamatan": [
       "Batu Ampar",
       "Terentang"
-     ]
+     ],
+     "peringatan": false
     },
     {
      "komoditas": "Lada",
@@ -311,29 +338,34 @@ const zonasiAgroekologi = {
      "kecamatan": [
       "Sungai Raya",
       "Batu Ampar"
-     ]
+     ],
+     "peringatan": false
     }
    ],
    "potensial": [
     {
      "komoditas": "Karet",
      "skor": 0.89,
-     "tanpaData": false
+     "tanpaData": false,
+     "peringatan": true
     },
     {
      "komoditas": "Pinang",
      "skor": 0.87,
-     "tanpaData": false
+     "tanpaData": false,
+     "peringatan": false
     },
     {
      "komoditas": "Padi Sawah",
      "skor": 0.855,
-     "tanpaData": true
+     "tanpaData": true,
+     "peringatan": false
     },
     {
      "komoditas": "Langsat",
      "skor": 0.852,
-     "tanpaData": false
+     "tanpaData": false,
+     "peringatan": false
     }
    ]
   }

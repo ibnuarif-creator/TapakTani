@@ -1,5 +1,5 @@
 """
-Zonal statistik 5 parameter kualitas lahan (data konsultan spasial) per desa
+Zonal statistik 5 parameter kualitas lahan (data spasial parameter lahan) per desa
 Kecamatan Rasau Jaya -> data/parameter_lahan_desa.js
 
 Input : ../../newgjson/Skor_*.geojson  (atribut skor 1-4 = N/S3/S2/S1)
@@ -20,7 +20,7 @@ from pyproj import Transformer
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, '..', 'newgjson')
-PARAMS = {  # key di website -> file konsultan
+PARAMS = {  # key di website -> berkas data parameter
     'lereng': 'Skor_Lereng',
     'banjir': 'Skor_Bahaya_Banjir',
     'ph':     'Skor_pH_Tanah',
@@ -36,7 +36,7 @@ def load_js_geojson(path):
     return json.loads(s[s.index('{'):].rstrip().rstrip(';'))
 
 desa = load_js_geojson(os.path.join(ROOT, 'data', 'rasau_jaya_desa.js'))
-desa_geom = [(f['properties']['NAME_4'], transform(to_utm, make_valid(shape(f['geometry']))))
+desa_geom = [(f['properties']['NAME_4'].replace(' Iii', ' III').replace(' Ii', ' II'), transform(to_utm, make_valid(shape(f['geometry']))))
              for f in desa['features']]
 
 hasil = {nama: {} for nama, _ in desa_geom}
@@ -64,7 +64,7 @@ for key, fname in PARAMS.items():
 out = os.path.join(ROOT, 'data', 'parameter_lahan_desa.js')
 with open(out, 'w', encoding='utf-8') as fh:
     fh.write('// Parameter kualitas lahan per desa — Kecamatan Rasau Jaya\n')
-    fh.write('// Sumber: data spasial konsultan (Skor_Lereng, Skor_Bahaya_Banjir, Skor_pH_Tanah,\n')
+    fh.write('// Sumber: data spasial parameter lahan (Skor_Lereng, Skor_Bahaya_Banjir, Skor_pH_Tanah,\n')
     fh.write('// Skor_C_Organik, Skor_Ketebalan_Gambut); skala skor 1–4 (N/S3/S2/S1).\n')
     fh.write('// Digenerasi oleh tools/zonal_parameter_desa.py — jangan diedit manual.\n')
     fh.write('const parameterLahanDesa = ' + json.dumps(hasil, ensure_ascii=False, indent=2) + ';\n')

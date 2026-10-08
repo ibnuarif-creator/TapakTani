@@ -1,5 +1,5 @@
 // Parameter kualitas lahan per desa — Kecamatan Rasau Jaya
-// Sumber: data spasial konsultan (Skor_Lereng, Skor_Bahaya_Banjir, Skor_pH_Tanah,
+// Sumber: data spasial parameter lahan (Skor_Lereng, Skor_Bahaya_Banjir, Skor_pH_Tanah,
 // Skor_C_Organik, Skor_Ketebalan_Gambut); skala skor 1–4 (N/S3/S2/S1).
 // Digenerasi oleh tools/zonal_parameter_desa.py — jangan diedit manual.
 const parameterLahanDesa = {
@@ -153,7 +153,7 @@ const parameterLahanDesa = {
       "cakupan": 100.0
     }
   },
-  "Rasau Jaya Ii": {
+  "Rasau Jaya II": {
     "lereng": {
       "skor": 3.209,
       "kelas": "S2",
@@ -204,7 +204,7 @@ const parameterLahanDesa = {
       "cakupan": 93.2
     }
   },
-  "Rasau Jaya Iii": {
+  "Rasau Jaya III": {
     "lereng": {
       "skor": 3.262,
       "kelas": "S2",

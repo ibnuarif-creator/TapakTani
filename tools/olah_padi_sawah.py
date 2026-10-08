@@ -1,5 +1,5 @@
 """
-Pengolahan Kesesuaian_Lahan_Padi_Sawah.geojson (data konsultan spasial)
+Pengolahan Kesesuaian_Lahan_Padi_Sawah.geojson (data spasial parameter lahan)
 untuk halaman Sebaran -> data/padi_sawah.js
 
 Input : ../../newgjson/Kesesuaian_Lahan_Padi_Sawah.geojson  (atribut kelas S1/S2/S3/N, skor 4..1)
@@ -90,13 +90,13 @@ for f in desa['features']:
     g = transform(to_utm, make_valid(shape(f['geometry'])))
     gabungan_desa.append(g)
     luas = {k: round(g.intersection(p).area / 1e4, 1) for k, p in per_kelas.items()}
-    per_desa.append({'desa': f['properties']['NAME_4'], 'luas_desa_ha': round(g.area / 1e4, 1),
+    per_desa.append({'desa': f['properties']['NAME_4'].replace(' Iii', ' III').replace(' Ii', ' II'), 'luas_desa_ha': round(g.area / 1e4, 1),
                      **{k: luas.get(k, 0.0) for k in ['S1', 'S2', 'S3', 'N']}})
 luar = semua.difference(unary_union(gabungan_desa))
 luar_kelas = {k: round(p.intersection(luar).area / 1e4, 1) for k, p in per_kelas.items()}
 
 data = {
-    'sumber': 'Kesesuaian_Lahan_Padi_Sawah.geojson (konsultan spasial)',
+    'sumber': 'Kesesuaian_Lahan_Padi_Sawah.geojson (data spasial parameter lahan)',
     'ringkas': {k: ringkas.get(k, 0.0) for k in ['S1', 'S2', 'S3', 'N']},
     'desa': per_desa,
     'luarDesa': {k: luar_kelas.get(k, 0.0) for k in ['S1', 'S2', 'S3', 'N']},
@@ -105,7 +105,7 @@ data = {
 }
 out = os.path.join(ROOT, 'data', 'padi_sawah.js')
 with open(out, 'w', encoding='utf-8') as fh:
-    fh.write('// Kesesuaian lahan padi sawah — Kecamatan Rasau Jaya (data konsultan spasial)\n')
+    fh.write('// Kesesuaian lahan padi sawah — Kecamatan Rasau Jaya (data spasial parameter lahan)\n')
     fh.write('// Digenerasi oleh tools/olah_padi_sawah.py — jangan diedit manual.\n')
     fh.write('const padiSawahData = ' + json.dumps(data, ensure_ascii=False, separators=(',', ':')) + ';\n')
 print('ditulis:', out, '| ukuran KB:', round(os.path.getsize(out) / 1024), '| titik heat:', len(heat))

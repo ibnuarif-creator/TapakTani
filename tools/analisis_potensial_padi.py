@@ -4,7 +4,7 @@ Analisis kesesuaian lahan AKTUAL vs POTENSIAL padi sawah — Kecamatan Rasau Jay
 faktor pembatas yang dapat diperbaiki ditangani.
 
 Metode (grid titik 50 m, tiap titik mewakili 0,25 ha):
-  - kelas aktual  = kelas pada Kesesuaian_Lahan_Padi_Sawah (konsultan)
+  - kelas aktual  = kelas pada Kesesuaian_Lahan_Padi_Sawah (data parameter lahan)
   - parameter     = kelas pH (nr), C-organik (nr), ketebalan gambut (rc), lereng (eh), banjir (fh)
   - pembatas titik S3 = parameter yang berkelas S3/N di titik itu
   - Skenario A (perbaikan tata air)            : S3 -> S2 bila satu-satunya pembatas = banjir

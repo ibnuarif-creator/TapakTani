@@ -48,7 +48,7 @@ def gambar_alur():
     ax.set_xlim(0, 10); ax.set_ylim(0, 14); ax.axis('off')
     tahap = [
         (12.4, 'Identifikasi masalah & kebutuhan\n(Dinas Pertanian, peneliti, penyuluh)'),
-        (10.6, 'Pengumpulan & pengolahan data\n(GEE, QGIS, data konsultan, Python)'),
+        (10.6, 'Pengumpulan & pengolahan data\n(GEE, QGIS, data parameter lahan, Python)'),
     ]
     for y, t in tahap:
         kotak(ax, 1.0, y, 8.0, 1.3, t)
@@ -97,7 +97,7 @@ def gambar_arsitektur():
     ax.add_patch(FancyBboxPatch((0.1, 0.2), 3.7, 9.6, boxstyle='round,pad=0.02,rounding_size=0.12', fc=ABU, ec='#888888', lw=1.0))
     ax.text(1.95, 9.45, 'Pengolahan data\n(luar sistem)', ha='center', va='top', fontsize=8.2, fontweight='bold', color=TEKS)
     src = ['Google Earth\nEngine: Sentinel-2,\nCHIRPS, ERA5,\nSRTM', 'QGIS\n(statistik zonal)',
-           'Data konsultan\n(GeoJSON parameter\n& kelas padi)', 'Skrip Python\n(Shapely, pyproj)']
+           'Data parameter lahan\n(GeoJSON parameter\n& kelas padi)', 'Skrip Python\n(Shapely, pyproj)']
     for i, t in enumerate(src):
         kotak(ax, 0.35, 6.55 - i * 2.05, 3.2, 1.75, t, warna='white', tepi='#888888', ukuran=6.6)
     for i in range(3):
@@ -122,7 +122,7 @@ def gambar_model():
     ax.set_xlim(0, 20); ax.set_ylim(0, 9.4); ax.axis('off')
     # Input kiri
     kotak(ax, 0.1, 6.3, 4.4, 2.6, 'Kriteria kecamatan\nCurah hujan (wa)\nSuhu, elevasi (tc)\nTekstur tanah (rc)', warna=ABU, tepi='#888888', ukuran=7.6)
-    kotak(ax, 0.1, 2.0, 4.4, 3.4, 'Parameter lahan desa\n(data konsultan)\npH, C-organik (nr)\nKetebalan gambut (rc)\nLereng (eh), banjir (fh)', warna=ABU, tepi='#888888', ukuran=7.6)
+    kotak(ax, 0.1, 2.0, 4.4, 3.4, 'Parameter lahan desa\n(data parameter lahan)\npH, C-organik (nr)\nKetebalan gambut (rc)\nLereng (eh), banjir (fh)', warna=ABU, tepi='#888888', ukuran=7.6)
     kotak(ax, 0.1, 0.1, 4.4, 1.4, 'Syarat tumbuh\n22 komoditas', warna=ABU, tepi='#888888', ukuran=7.6)
 
     # Normalisasi

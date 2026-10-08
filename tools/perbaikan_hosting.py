@@ -2,7 +2,7 @@
 Perbaikan isi website sebelum hosting (Okt 2026):
   - statistik kecamatan & kabupaten dari BPS Kubu Raya Dalam Angka 2025 (luas, desa, penduduk, ibu kota)
   - gelar & susunan tim peneliti di footer
-  - teks sumber data parameter lahan (bukan "konsultan")
+  - teks sumber data parameter lahan (sumber data terbuka)
   - catatan versi data & batasan penggunaan, favicon, meta Open Graph
 Jalankan: python tools/perbaikan_hosting.py
 """
@@ -39,15 +39,15 @@ for kid, (luas, desa, pdd, ibu) in BPS.items():
     s = s[:a] + blok2 + s[b:]
 
 # teks sumber parameter lahan desa
-s = ganti(s, '// 5 parameter kualitas lahan per desa dari data spasial konsultan',
+s = ganti(s, '// 5 parameter kualitas lahan per desa dari data spasial parameter lahan',
           '// 5 parameter kualitas lahan per desa: OpenLandMap (pH, C-organik), KLHK (gambut), SRTM (lereng), InaRISK (banjir)')
-s = ganti(s, '// Skor konsultan 1–4 → r 0–1', '// Skor kelas 1–4 → r 0–1')
-s = ganti(s, '// Faktor pembatas dari parameter lahan konsultan', '// Faktor pembatas dari parameter kualitas lahan desa')
-s = ganti(s, ' Data parameter lahan konsultan mencakup ±', ' Data parameter kualitas lahan mencakup ±')
-s = ganti(s, 'dari data spasial konsultan (rata-rata skor tertimbang luas; r = (skor &minus; 1) / 3).',
+s = ganti(s, '// Skor kelas 1–4 → r 0–1', '// Skor kelas 1–4 → r 0–1')
+s = ganti(s, '// Faktor pembatas dari parameter lahan desa', '// Faktor pembatas dari parameter kualitas lahan desa')
+s = ganti(s, ' Data parameter lahan desa mencakup ±', ' Data parameter kualitas lahan mencakup ±')
+s = ganti(s, 'dari data spasial parameter lahan (rata-rata skor tertimbang luas; r = (skor &minus; 1) / 3).',
           '(pH dan C-organik OpenLandMap, ketebalan gambut KLHK, lereng SRTM, bahaya banjir InaRISK; dikelaskan dengan ambang padi sawah Permentan 79/2013; '
           'rata-rata skor tertimbang luas; r = (skor &minus; 1) / 3).')
-s = ganti(s, 'dari data spasial konsultan (pH Tanah, C-Organik, Ketebalan Gambut, Kemiringan Lereng, Bahaya Banjir).',
+s = ganti(s, 'dari data spasial parameter lahan (pH Tanah, C-Organik, Ketebalan Gambut, Kemiringan Lereng, Bahaya Banjir).',
           '(pH Tanah, C-Organik, Ketebalan Gambut, Kemiringan Lereng, Bahaya Banjir) dari data spasial OpenLandMap, KLHK, SRTM, dan InaRISK.')
 s = s.replace("console.warn('kesesuaianLahanData tidak ditemukan — pastikan data/kesesuaian_lahan.js dimuat.');",
               "console.warn('kesesuaianLahanData tidak ditemukan — pastikan data/kesesuaian_data_v2.js dimuat.');")
@@ -63,7 +63,7 @@ h = ganti(h, 'data-target="6985"', 'data-target="8568"')
 h = ganti(h, 'Total area daratan &amp; perairan', 'Luas daerah (BPS, 2025)')
 h = ganti(h, 'data-target="657"', 'data-target="650"')
 h = ganti(h, 'Estimasi total populasi aktif', 'Penduduk 2024 (BPS, 2025)')
-h = ganti(h, 'dari data spasial konsultan: pH tanah, C-organik, ketebalan gambut, kemiringan lereng, dan bahaya banjir.',
+h = ganti(h, 'dari data spasial parameter lahan: pH tanah, C-organik, ketebalan gambut, kemiringan lereng, dan bahaya banjir.',
           'dari data spasial publik: pH tanah dan C-organik (OpenLandMap), ketebalan gambut (KLHK), kemiringan lereng (SRTM), dan bahaya banjir '
           '(indeks InaRISK), yang dikelaskan dengan ambang kesesuaian padi sawah Permentan No. 79/2013.')
 h = ganti(h, '''          <span class="footer-team-item">Ibnu Arif, S.Kom., M.Cs. <em>(Ketua)</em></span>
@@ -93,9 +93,9 @@ print('index.html: statistik, tim peneliti, sumber data, versi data, favicon, me
 
 # ── sebaran.html ──
 g = baca('sebaran.html'); crlf_g = chr(13) + chr(10) in g; g = g.replace(chr(13) + chr(10), chr(10))
-g = ganti(g, 'berdasarkan klasifikasi kesesuaian lahan dari data spasial konsultan.',
+g = ganti(g, 'berdasarkan klasifikasi kesesuaian lahan dari data spasial parameter lahan.',
           'berdasarkan klasifikasi kesesuaian lahan padi sawah yang disusun dengan hukum minimum dari tujuh parameter lahan.')
-g = ganti(g, '(<em>Kesesuaian_Lahan_Padi_Sawah</em>) dari konsultan spasial, dengan kelas',
+g = ganti(g, '(<em>Kesesuaian_Lahan_Padi_Sawah</em>) dari data spasial parameter lahan, dengan kelas',
           '(<em>Kesesuaian_Lahan_Padi_Sawah</em>) hasil hukum minimum tujuh parameter — pH dan C-organik (OpenLandMap), ketebalan gambut (KLHK), '
           'lereng (SRTM), bahaya banjir (InaRISK), temperatur (ERA5-Land), dan tekstur tanah — dengan ambang Permentan No. 79/2013, dengan kelas')
 if 'rel="icon"' not in g:

@@ -41,13 +41,15 @@ for zn, ks, warna, judul in ZONA:
     else:
         tekstur = f'Lempung liat berpasir {rentang(scl)}'
     ciri = f'{tekstur}; curah hujan {ribu(min(ch))}–{ribu(max(ch))} mm/tahun; elevasi median {round(min(el))}–{round(max(el))} m dpl'
-    aktual = [{'komoditas': NM(a['komoditas']), 'skor': a['skor'], 'kecamatan': a['kec_lq1']} for a in zz['unggulan_aktual']]
+    aktual = [{'komoditas': NM(a['komoditas']), 'skor': a['skor'], 'kecamatan': a['kec_lq1'],
+               'peringatan': NM(a['komoditas']) == 'Karet' and zn in ('I', 'II', 'IV')} for a in zz['unggulan_aktual']]
+    # karet di zona pasang surut: skor model cenderung terlalu tinggi (validasi produksi ρ = −0,85; model tanpa drainase)
     akt_id = {a['komoditas'] for a in zz['unggulan_aktual']}
     # potensial: skor rata-rata zona ≥ 0,85, belum LQ > 1 (termasuk komoditas tanpa data produksi, mis. padi sawah)
     rata = {}
     for c in z['komoditas']:
         rata[c] = sum(b for b in [json.load(open(os.path.join(D, 'saw_matriks_lengkap.json'), encoding='utf-8'))['baris'][i]['skor'][z['komoditas'].index(c)] for i in idx]) / len(idx)
-    potensial = [{'komoditas': NM(c), 'skor': round(v, 3), 'tanpaData': c not in z['lq']}
+    potensial = [{'komoditas': NM(c), 'skor': round(v, 3), 'tanpaData': c not in z['lq'], 'peringatan': NM(c) == 'Karet' and zn in ('I', 'II', 'IV')}
                  for c, v in sorted(rata.items(), key=lambda x: -x[1]) if v >= z['ambang_unggulan'] and c not in akt_id]
     out.append({'zona': zn, 'judul': judul, 'warna': warna, 'kecamatan': ks, 'ciri': ciri,
                 'teratas': [{'komoditas': NM(t['komoditas']), 'skor': t['skor']} for t in zz['teratas'][:4]],

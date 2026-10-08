@@ -83,11 +83,13 @@ function renderLegenda(mode) {
 }
 
 function renderStatistik() {
-  const r = padiSawahData.ringkas;
+  // Angka utama dihitung di dalam enam desa Rasau Jaya (bukan seluruh cakupan data yang juga menyentuh kecamatan tetangga)
+  const r = KELAS.reduce((o, k) => (o[k] = padiSawahData.desa.reduce((s, d) => s + d[k], 0), o), {});
   const total = KELAS.reduce((s, k) => s + r[k], 0);
+  const semua = KELAS.reduce((s, k) => s + padiSawahData.ringkas[k], 0);
   const potensi = r.S1 + r.S2;
   const kartu = [
-    { label: 'Total area dianalisis', nilai: fmtHa(total), unit: 'ha', ket: 'Sebagian besar di Kec. Rasau Jaya', warna: null },
+    { label: 'Area dianalisis (6 desa)', nilai: fmtHa(total), unit: 'ha', ket: `Dari ${fmtHa(semua)} ha cakupan data; sisanya di luar batas desa`, warna: null },
     { label: 'Lahan berpotensi (S1 + S2)', nilai: fmtHa(potensi), unit: 'ha', ket: `${fmtPct(potensi / total * 100)}% dari area`, warna: 'var(--accent)', utama: true },
     ...KELAS.map(k => ({ label: `${k} — ${KELAS_LABEL[k]}`, nilai: fmtHa(r[k]), unit: 'ha', ket: `${fmtPct(r[k] / total * 100)}% dari area`, warna: KELAS_WARNA[k] }))
   ];

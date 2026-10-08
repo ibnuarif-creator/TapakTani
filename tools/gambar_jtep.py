@@ -141,7 +141,7 @@ def gambar_alir():
     judul = [(0.1, 'Akuisisi data'), (5.2, 'Pengolahan geospasial'), (10.3, 'Evaluasi lahan'), (15.4, 'Keluaran')]
     for x, t in judul:
         ax.text(x + 2.25, 10.25, t, ha='center', fontsize=8.3, fontweight='bold', color='#1E6B3C')
-    data = ['Citra Sentinel-2\n(NDVI, NDWI)', 'Iklim: CHIRPS,\nERA5-Land', 'DEM SRTM &\ntekstur tanah', 'Survei lahan\nkonsultan: pH, C-org,\ngambut, lereng, banjir', 'Syarat tumbuh\n22 komoditas']
+    data = ['Citra Sentinel-2\n(NDVI, NDWI)', 'Iklim: CHIRPS,\nERA5-Land', 'DEM SRTM &\ntekstur tanah', 'Survei lahan\npendukung: pH, C-org,\ngambut, lereng, banjir', 'Syarat tumbuh\n22 komoditas']
     for i, t in enumerate(data):
         kotak(0.1, 8.3 - i * 1.95, 4.5, 1.6, t, fc='#F5F5F5', ec='#888888')
     olah = ['Komposit median\n2022–2024 (GEE)', 'Statistik zonal\nkecamatan & desa', 'Reproyeksi UTM 49S,\noverlay & rata-rata\ntertimbang luas', 'Grid titik 50 m\n(85.661 titik)']
