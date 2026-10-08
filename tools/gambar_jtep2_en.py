@@ -23,10 +23,10 @@ os.makedirs(OUT, exist_ok=True)
 TEKS = G.TEKS
 
 # Zonasi agroekologi hasil klaster Ward (tools/zonasi_lq_validasi.py); urutan & warna zona tetap
-ZONA_URUT = [('I', ['Sungai Kakap', 'Teluk Pakedai'], '#8fb8de', '....'),
-             ('II', ['Rasau Jaya', 'Kubu'], '#7cc28f', '////'),
-             ('III', ['Sungai Ambawang', 'Kuala Mandor B'], '#f0cf4a', ''),
-             ('IV', ['Sungai Raya', 'Batu Ampar', 'Terentang'], '#d9a3c6', '\\')]
+ZONA_URUT = [('A1', ['Sungai Kakap', 'Batu Ampar', 'Teluk Pakedai'], '#8fb8de', '....'),
+             ('A2', ['Sungai Raya', 'Terentang'], '#d9a3c6', 'xx'),
+             ('B1', ['Rasau Jaya', 'Kubu'], '#7cc28f', '////'),
+             ('B2', ['Sungai Ambawang', 'Kuala Mandor B'], '#f0cf4a', '')]
 ZONA_KEC = {k: z for z, ks, _, _ in ZONA_URUT for k in ks}
 GAYA = {z: (w, h) for z, _, w, h in ZONA_URUT}
 
@@ -126,21 +126,25 @@ def gambar_zonasi():
         a1.text(p.x, p.y, (n + "\n" + f"{kec[n]['skorWO']:.2f}"), fontsize=5.4, ha='center', va='center',
                 color=TEKS, bbox=dict(boxstyle='round,pad=0.12', fc='white', ec='none', alpha=0.8))
     G.sumbu_utm(a1, unary_union([g for _, g in G.kec_geom]).bounds, pad=2000)
-    a1.set_title('(a) Agroecological zones and weighted overlay scores', loc='left')
+    a1.set_title('(a) Agroecological subzones and land condition index', loc='left')
     G.panah_utara(a1); G.skala(a1, 20000, '20 km')
     a1.set_xlabel('Easting, UTM 49S (km)', fontsize=7); a1.set_ylabel('Northing, UTM 49S (km)', fontsize=7)
     a1.tick_params(labelsize=6.5)
-    a1.legend(handles=[Patch(fc=w, hatch=h, ec='#444444', label=f'Zone {zn}') for zn, _, w, h in ZONA_URUT],
+    a1.legend(handles=[Patch(fc=w, hatch=h, ec='#444444', label=f'Subzone {zn}') for zn, _, w, h in ZONA_URUT],
               loc='lower right', fontsize=6.3, frameon=True, framealpha=0.9, ncol=1)
 
     Z = np.array(z['linkage'])
-    dendrogram(Z, labels=[f'{n} ({ZONA_KEC[n]})' for n in nama], orientation='right', ax=a2, color_threshold=0.2, above_threshold_color='#555555',
+    tg = sorted(Z[:, 2]); n_daun = len(nama)
+    potong4 = (tg[n_daun - 5] + tg[n_daun - 4]) / 2      # 4 subzona
+    potong2 = (tg[n_daun - 3] + tg[n_daun - 2]) / 2      # 2 zona utama
+    dendrogram(Z, labels=[f'{n} ({ZONA_KEC[n]})' for n in nama], orientation='right', ax=a2, color_threshold=potong4, above_threshold_color='#555555',
                     leaf_font_size=6.5)
-    a2.axvline(0.2, color='#c05621', lw=0.8, ls='--')
-    a2.text(0.205, 0.3, 'cut (4 zones)', fontsize=6, color='#c05621', rotation=90, va='bottom')
+    a2.axvline(potong4, color='#c05621', lw=0.8, ls='--'); a2.axvline(potong2, color='#1E6B3C', lw=0.8, ls='--')
+    a2.text(potong4 + 0.005, 0.3, 'k = 4 (subzones)', fontsize=6, color='#c05621', rotation=90, va='bottom')
+    a2.text(potong2 + 0.005, 0.3, 'k = 2 (zones)', fontsize=6, color='#1E6B3C', rotation=90, va='bottom')
     a2.set_xlabel('Ward linkage distance', fontsize=7); a2.tick_params(labelsize=6.3)
     for sp in ['top', 'right']: a2.spines[sp].set_visible(False)
-    a2.set_title(f"(b) Cluster dendrogram (silhouette {z['silhouette']['4']:.2f})", loc='left')
+    a2.set_title(f"(b) Ward dendrogram (silhouette k = 2: {z['silhouette']['2']:.2f}; k = 4: {z['silhouette']['4']:.2f})", loc='left')
 
     cmap = LinearSegmentedColormap.from_list('hijau', ['#f7fcf5', '#c7e9c0', '#74c476', '#238b45', '#00441b'])
     im = a3.imshow(M, cmap=cmap, vmin=0.5, vmax=1.0, aspect='auto')

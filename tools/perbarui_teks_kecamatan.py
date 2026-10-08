@@ -26,7 +26,7 @@ IKON = {'Padi Sawah': '🌾', 'Kelapa': '🥥', 'Karet': '🌳', 'Sagu': '🌴',
         'Jambu Biji': '🍐', 'Alpukat': '🥑'}
 TAGLINE = {'Rasau Jaya': 'Kawasan Transmigrasi Lahan Pasang Surut', 'Teluk Pakedai': 'Sentra Buah & Pinang Pesisir',
            'Kuala Mandor B': 'Sentra Karet Lahan Daratan'}
-KARET_PASANG_SURUT = {'I', 'II', 'IV'}      # karet dinilai terlalu tinggi oleh model di lahan pasang surut (ρ = −0,85)
+KARET_PASANG_SURUT = {'A1', 'A2', 'B1'}      # karet dinilai terlalu tinggi oleh model di lahan pasang surut (ρ = −0,85)
 f2 = lambda v: f'{v:.2f}'.replace('.', ',')
 f3 = lambda v: f'{v:.3f}'.replace('.', ',')
 ribu = lambda v: f'{v:,.0f}'.replace(',', '.')
@@ -61,8 +61,8 @@ def teks(n):
     rank = urut_wo.index(n) + 1
     kond = kondisi(k['skorWO'])
     suhu = f"{ik['suhu']:.1f}".replace('.', ',')
-    desc = (f'Kecamatan {n} termasuk Zona {zn} hasil klaster agroekologi Kabupaten Kubu Raya ({z["judul"].lower()}). '
-            f'Statistik zonal pada poligon kecamatan (Google Earth Engine, 2022–2024) menunjukkan curah hujan rata-rata {ribu(ik["curahHujan"])} mm/tahun, '
+    desc = (f'Kecamatan {n} termasuk Subzona {zn} hasil klaster agroekologi Kabupaten Kubu Raya ({z["judul"]}). '
+            f'Statistik zonal pada poligon kecamatan (Google Earth Engine) menunjukkan curah hujan normal 1991–2020 {ribu(ik["curahHujan"])} mm/tahun (CHIRPS), '
             f'suhu udara {suhu} °C, dan elevasi median {ik["elevasi"]} m dpl (FABDEM). Tekstur tanah didominasi '
             f'{TANAH.get(t1[0], t1[0])} ({round(t1[1] * 100)}% luas) diikuti {TANAH.get(t2[0], t2[0])} ({round(t2[1] * 100)}%), sehingga nilai kesesuaian '
             f'tekstur dihitung tertimbang menurut proporsi luas kedua kelas tersebut. NDVI rata-rata {f2(k["ndvi"])} (Sentinel-2) dan indeks kondisi lahan '
@@ -70,18 +70,18 @@ def teks(n):
             f'Komoditas dengan skor SAW tertinggi adalah {top3}.')
     aktual = ', '.join(label_kom(a['komoditas'], zn) + (f" ({', '.join(a['kecamatan'])})" if a['kecamatan'] else '') for a in z['aktual'])
     potensial = ', '.join(label_kom(p['komoditas'], zn) + ('†' if p['tanpaData'] else '') for p in z['potensial'])
-    potensi = [f'Zona {zn}: komoditas paling sesuai di kecamatan ini adalah {top3}.',
+    potensi = [f'Subzona {zn}: komoditas paling sesuai di kecamatan ini adalah {top3}.',
                f'Indeks kondisi lahan (weighted overlay) {f2(k["skorWO"])} — kondisi {kond.lower()}, peringkat {rank} dari 9 kecamatan; '
                f'seluruh kecamatan berada pada kondisi sedang (2,5–3,5).',
-               f'Unggulan aktual Zona {zn} (skor SAW rata-rata zona ≥ 0,85 dan LQ produksi BPS 2024 > 1 di kecamatan yang disebut): '
+               f'Unggulan aktual Subzona {zn} (skor SAW rata-rata subzona ≥ 0,85 dan LQ produksi BPS 2024 > 1 di kecamatan yang disebut): '
                + (aktual or 'belum ada') + '.',
-               f'Unggulan potensial Zona {zn} (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia †): ' + (potensial or '–') + '.']
+               f'Unggulan potensial Subzona {zn} (sangat sesuai, LQ ≤ 1 atau data produksi belum tersedia †): ' + (potensial or '–') + '.']
     if zn in KARET_PASANG_SURUT and any(x['komoditas'] == 'Karet' for x in z['aktual'] + z['potensial']):
         potensi.append('‡ Skor karet di lahan pasang surut kemungkinan terlalu tinggi karena model belum memuat drainase dan bahaya banjir '
-                       '(produksi karet justru terpusat di Kuala Mandor B dan Sungai Ambawang); jangan direkomendasikan tanpa kajian drainase.')
+                       '(produksi karet justru terpusat di Kuala Mandor B dan Sungai Ambawang, Subzona B2); jangan direkomendasikan tanpa kajian drainase.')
     if n in ('Kubu', 'Batu Ampar'):
         potensi.append('Sebagian wilayah berupa gambut dalam dan mangrove; pengembangan diarahkan di luar kawasan hutan, gambut berfungsi lindung, dan mangrove dengan tata air yang menjaga muka air tanah.')
-    elif zn == 'I':
+    elif zn == 'A1':
         potensi.append('Padi sawah memperoleh skor tertinggi di zona ini; pengembangannya memerlukan pengelolaan tata air pada lahan pasang surut.')
     elif n == 'Rasau Jaya':
         a, pa, pb = padi_enam_desa()
@@ -90,7 +90,7 @@ def teks(n):
     else:
         potensi.append('Arahan zonasi bersifat biofisik dan berlaku di luar kawasan hutan serta ekosistem gambut berfungsi lindung.')
     topo = f'Dataran rendah (elevasi median {ik["elevasi"]} m dpl)' + ('; sebagian gambut dalam & mangrove' if n in ('Kubu', 'Batu Ampar') else '')
-    data = [('Kondisi Lahan', f'{kond} (indeks weighted overlay)'), ('Zona Agroekologi', f'Zona {zn} (klaster Ward)'),
+    data = [('Kondisi Lahan', f'{kond} (indeks weighted overlay)'), ('Zona Agroekologi', f'Subzona {zn} (klaster Ward)'),
             ('NDVI Rata-rata', f'{f2(k["ndvi"])} (Sentinel-2, 2022–2024)'),
             ('Indeks Kondisi Lahan', f'{f2(k["skorWO"])} / 4,00' + (' (tertinggi)' if rank == 1 else '')),
             ('Topografi', topo)]
@@ -132,7 +132,7 @@ for n, kid in ID.items():
     kartu = re.sub(r'(<div class="kec-tags">).*?(\s*</div>)', lambda m: m.group(1) + ''.join(f'{ind}<span class="tag">{t}</span>' for t in tag[:3]) + m.group(2),
                    kartu, count=1, flags=re.S)
     h = h[:i] + kartu + h[j:]
-    print(f'{n:16s} Zona {ZONA_DARI[n]["zona"]:3s} | tag: {", ".join(tag)}')
+    print(f'{n:16s} Subzona {ZONA_DARI[n]["zona"]:3s} | tag: {", ".join(tag)}')
 open(p, 'w', encoding='utf-8', newline='').write(s)
 open(os.path.join(ROOT, 'index.html'), 'w', encoding='utf-8', newline='').write(h)
 print('script.js & index.html diperbarui')

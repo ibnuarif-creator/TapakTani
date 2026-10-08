@@ -2,6 +2,7 @@
 Perbarui data kecamatan website dari hasil GEE per poligon (Okt 2026):
   data/agroraya_kecamatan_poligon_2022_2024.csv  (CHIRPS, ERA5-Land, OpenLandMap, Sentinel-2, akses, skor WO)
   data/agroraya_kecamatan_fabdem.csv             (elevasi permukaan tanah FABDEM, median)
+  data/tapaktani_kecamatan_chirps_normal.csv     (normal curah hujan CHIRPS 1991–2020)
 → data/syarat_tumbuh.js       blok iklimKecamatan (+ tanahProporsi untuk nilai tekstur tertimbang luas)
 → data/kesesuaian_data_v2.js  atribut ndvi, skor, kelas, luas_s1, luas_s2, data_status
 Jalankan: python tools/perbarui_data_kecamatan.py
@@ -18,6 +19,10 @@ TANAH = {1: 'Clay', 2: 'Silty Clay', 3: 'Sandy Clay', 4: 'Clay Loam', 5: 'Silty 
 
 poligon = {r['kecamatan']: r for r in csv.DictReader(open(os.path.join(SUMBER, 'agroraya_kecamatan_poligon_2022_2024.csv'), encoding='utf-8'))}
 fabdem = {r['kecamatan']: r for r in csv.DictReader(open(os.path.join(SUMBER, 'agroraya_kecamatan_fabdem.csv'), encoding='utf-8'))}
+# Curah hujan: normal 30 tahun CHIRPS 1991–2020 (catatan revisi A8), menggantikan rerata 2022–2024
+normal = {r['kecamatan']: r for r in csv.DictReader(open(os.path.join(SUMBER, 'tapaktani_kecamatan_chirps_normal.csv'), encoding='utf-8'))}
+for k in poligon:
+    poligon[k]['curah_hujan_mm'] = normal[k]['ch_normal_1991_2020']
 assert set(poligon) == set(ID) == set(fabdem)
 
 
@@ -46,7 +51,7 @@ p_st = os.path.join(ROOT, 'data', 'syarat_tumbuh.js')
 s = open(p_st, encoding='utf-8-sig').read()
 s = re.sub(r'// Data iklim & fisik per kecamatan.*?\n};', lambda m: (
     '// Data iklim & fisik per kecamatan — statistik zonal per POLIGON kecamatan (GEE, Okt 2026):\n'
-    '//   curahHujan = CHIRPS 2022–2024 (mm/tahun), suhu = ERA5-Land 2022–2024 (°C),\n'
+    '//   curahHujan = normal CHIRPS 1991–2020 (mm/tahun), suhu = ERA5-Land 2022–2024 (°C),\n'
     '//   elevasi = median FABDEM (m dpl, tanpa pengaruh tajuk/bangunan),\n'
     '//   kodeTanah/namaTanah = kelas tekstur USDA dominan (OpenLandMap),\n'
     '//   tanahProporsi = proporsi luas tiap kelas tekstur → nilai r tekstur tertimbang luas\n' + baru), s, count=1, flags=re.S)
