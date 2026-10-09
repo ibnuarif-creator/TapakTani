@@ -234,7 +234,7 @@ def sejajar(panel, nama):
 
 
 def gambar_layar():
-    susun([(potong('beranda.png', (0, 0, 2560, 1150)), '(a)'), (potong('kartu.png'), '(b)')], 'Gambar_5_Beranda_Kartu.png')
+    susun([(potong('beranda.png', (0, 0, 2560, 1150)), '(a)'), (potong('n_metod_bobot.png'), '(b)')], 'Gambar_5_Beranda_Metodologi.png')
     susun([(potong('n_saw_kartu.png'), '(a)'), (potong('n_saw_tabel.png'), '(b)')], 'Gambar_6_Profil_Kecamatan_SAW.png')
     susun([(potong('n_desa_tabel.png', (0, 0, 1692, 2190)), '(a)'), (potong('n_desa_rekom.png'), '(b)')], 'Gambar_7_Profil_Desa.png')
     susun([(potong('zonasi.png', (0, 0, 1165, 1160)), '(a)'), (potong('n_zona_a1.png'), '(b)')], 'Gambar_8_Zonasi.png')
