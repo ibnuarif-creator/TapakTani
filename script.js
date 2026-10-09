@@ -524,7 +524,7 @@ function renderSyaratTumbuh(kecId) {
 
   const srcNote = iklim.dataStatus === 'estimasi'
     ? '<span class="st-src estimasi">* Sebagian data estimasi interpolasi regional</span>'
-    : '<span class="st-src real">Sumber: CHIRPS v2 + ERA5-Land + FABDEM + OpenLandMap (GEE 2022–2024, statistik zonal per poligon kecamatan)</span>';
+    : '<span class="st-src real">Sumber: CHIRPS v2 (normal 1991–2020) + ERA5-Land + FABDEM + OpenLandMap (GEE 2022–2024, statistik zonal per poligon kecamatan)</span>';
 
   const iklimBarHTML = `
     <div class="st-iklim-bar">
