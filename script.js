@@ -379,6 +379,9 @@ const kecamatanData = {
 //              ≥0.40 Cukup Sesuai | <0.40 Kurang Sesuai
 // ============================================================
 const SAW_BOBOT = [0.20, 0.15, 0.30, 0.35]; // CH, Suhu, Elevasi, Tanah
+// Tampilan skor dua desimal: pembulatan setengah ke atas dari skor tiga desimal (sama dengan naskah);
+// toFixed(2) saja membulatkan 0,865 menjadi 0,86 tetapi 0,765 menjadi 0,77 karena galat biner.
+const fmtSkor = v => (Math.round(v * 100 + 1e-9) / 100).toFixed(2);
 
 function cekVariabel(nilai, r) {
   if (r.optMin !== undefined) {
@@ -503,7 +506,7 @@ function buildSAWPanel(iklim, syarat, hasil) {
       <tbody>${rows}</tbody>
       <tfoot><tr>
         <td colspan="5" class="saw-total-lbl">Skor SAW Total &nbsp;=&nbsp; &Sigma; (Bobot &times; Nilai)</td>
-        <td class="saw-td-c saw-total-val st-lvl-${hasil.level}">${hasil.sawScore.toFixed(2)}</td>
+        <td class="saw-td-c saw-total-val st-lvl-${hasil.level}">${fmtSkor(hasil.sawScore)}</td>
       </tr></tfoot>
     </table>
     <p class="saw-note">SAW (Simple Additive Weighting) &mdash; Normalisasi <em>r</em> kontinu: Optimal = 1,00; Zona transisi = interpolasi linear 0,00–1,00; Di luar toleransi = 0,00. Tekstur tanah: rata-rata tertimbang luas kelas tekstur (Sesuai = 1,00; Batas = 0,50; Tidak = 0,00).</p>
@@ -573,7 +576,7 @@ function renderSyaratTumbuh(kecId) {
         <div class="crop-st-right">
           <div class="crop-badge-block">
             <span class="crop-badge-st bdg-${hasil.level}">${hasil.label.replace(' ', '<br>')}</span>
-            <span class="crop-saw-val">${hasil.sawScore.toFixed(2)}</span>
+            <span class="crop-saw-val">${fmtSkor(hasil.sawScore)}</span>
           </div>
           <div class="crop-chevron-btn">
             <svg class="crop-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
@@ -1029,7 +1032,7 @@ function buildSAWPanelDesa(iklim, syarat, hasil, desaProps) {
       <tbody>${rows}</tbody>
       <tfoot><tr>
         <td colspan="5" class="saw-total-lbl">Skor SAW Total &nbsp;=&nbsp; &Sigma; (Bobot &times; Nilai)</td>
-        <td class="saw-td-c saw-total-val st-lvl-${hasil.level}">${hasil.sawScore.toFixed(2)}</td>
+        <td class="saw-td-c saw-total-val st-lvl-${hasil.level}">${fmtSkor(hasil.sawScore)}</td>
       </tr>${juknisRow}</tfoot>
     </table>
     <p class="saw-note">SAW tingkat desa memakai 9 kriteria yang dikelompokkan menurut kualitas lahan Juknis Evaluasi Lahan BBSDLP (2011): 4 kriteria iklim &amp; tanah tingkat Kecamatan Rasau Jaya, ditambah 5 parameter lahan spesifik ${desaProps.NAME_4} (pH dan C-organik OpenLandMap, ketebalan gambut KLHK, lereng SRTM, bahaya banjir InaRISK; dikelaskan dengan ambang padi sawah Permentan 79/2013; rata-rata skor tertimbang luas; r = (skor &minus; 1) / 3). Kode: tc temperatur, wa ketersediaan air, rc media perakaran, nr retensi hara, eh bahaya erosi, fh bahaya banjir.${cakupanNote}</p>
@@ -1254,7 +1257,7 @@ function openDesaModal(feature, rank, totalDesa) {
         </div>
         <div class="desa-crop-side">
           <span class="desa-crop-kelas-chip chip-${c.level}">${c.label}</span>
-          <span class="desa-crop-score-val">${c.sawScore.toFixed(2)}</span>
+          <span class="desa-crop-score-val">${fmtSkor(c.sawScore)}</span>
           ${c.juknis ? `<span class="desa-crop-juknis" title="Kelas Juknis BBSDLP (faktor pembatas)">Juknis ${c.juknis.label}</span>` : ''}
         </div>
         <div class="crop-chevron-btn">
@@ -1750,7 +1753,7 @@ function renderBarChart(containerId, items) {
           <div class="cmp-bar cmp-bar--${sc.cls}" style="--bar-w:${(d.value * 100).toFixed(1)}%"></div>
         </div>
         <div class="cmp-meta">
-          <span class="cmp-val">${d.value.toFixed(2)}</span>
+          <span class="cmp-val">${fmtSkor(d.value)}</span>
           <span class="cmp-badge cmp-badge--${sc.cls}">${sc.label}</span>
         </div>
       </div>`;
