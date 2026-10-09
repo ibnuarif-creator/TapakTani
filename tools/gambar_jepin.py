@@ -5,7 +5,7 @@ Output: ../Paper/Gambar_JEPIN/Gambar_*.png (300 dpi, Times New Roman)
   Gambar_1_Alur_Penelitian.png        diagram alur & iterasi prototyping
   Gambar_2_Use_Case.png               diagram use case
   Gambar_4_Arsitektur.png             arsitektur sistem
-  Gambar_3_Model_Keputusan.png        model keputusan bertingkat
+  Gambar_3_Alur_Data.png              alur transformasi data spasial
   Gambar_5_Beranda.png ... Gambar_10_Ponsel.png   susunan tangkapan layar
                                       (mentah dari Paper/_builder/tangkap_jepin.js)
 
@@ -156,38 +156,45 @@ def gambar_arsitektur():
     simpan(fig, 'Gambar_4_Arsitektur.png')
 
 
-# ── Gambar 4: model keputusan bertingkat ────────────────────────────────────
-def gambar_model():
-    fig, ax = plt.subplots(figsize=(LEBAR, 4.9))
-    ax.set_xlim(0, 10); ax.set_ylim(0.7, 16); ax.axis('off')
-    ax.text(2.45, 15.7, 'Tingkat kecamatan (9)', ha='center', fontsize=7.4, fontweight='bold', color=HIJAU)
-    ax.text(7.55, 15.7, 'Tingkat desa (6, Rasau Jaya)', ha='center', fontsize=7.4, fontweight='bold', color=HIJAU)
-    ax.plot([5, 5], [0.2, 15.9], color='#BBBBBB', lw=0.6, ls=':')
-    u = 6.3
-    kotak(ax, 0.2, 13.4, 4.5, 1.9, 'Curah hujan normal,\nsuhu, elevasi, tekstur\n+ syarat tumbuh\n20 komoditas', warna=ABU, tepi='#888888', ukuran=u)
-    kotak(ax, 0.2, 11.2, 4.5, 1.5, 'Normalisasi trapesoid\ndan tekstur tertimbang\nluas (r = 0–1)', ukuran=u)
-    kotak(ax, 0.2, 9.0, 4.5, 1.5, 'SAW 4 kriteria\nS = Σ w·r (93 pasangan)', ukuran=u, tebal=True)
-    kotak(ax, 0.2, 6.8, 4.5, 1.5, 'Klaster Ward matriks\n20 × 9 + LQ produksi\nBPS 2024', ukuran=u)
-    kotak(ax, 0.2, 4.1, 4.5, 2.0, 'Peringkat komoditas,\n2 zona dan 4 subzona,\nunggulan aktual\ndan potensial', warna=HIJAU, tepi=HIJAU, warna_teks='white', ukuran=u, tebal=True)
-    for y1, y2 in [(13.4, 12.7), (11.2, 10.5), (9.0, 8.3), (6.8, 6.1)]:
-        panah(ax, 2.45, y1, 2.45, y2)
+# ── Gambar 3: alur transformasi data spasial menjadi informasi di antarmuka ──
+def gambar_alur_data():
+    fig, ax = plt.subplots(figsize=(LEBAR, 5.6))
+    ax.set_xlim(0, 10); ax.set_ylim(0, 18.4); ax.axis('off')
+    u = 5.7
+    # Bagian luar aplikasi
+    ax.add_patch(FancyBboxPatch((0.1, 7.55), 9.8, 10.7, boxstyle='round,pad=0.02,rounding_size=0.15', fc='#FAFAFA', ec='#888888', lw=0.8, ls='--'))
+    ax.text(0.3, 18.05, 'Di luar aplikasi — diolah sekali oleh pengelola data', fontsize=6.6, fontweight='bold', va='top')
+    kol = [0.3, 3.55, 6.8]; lb = 2.9
+    sumber = ['Raster: Sentinel-2,\nCHIRPS, ERA5-Land,\nFABDEM,\nOpenLandMap',
+              'Vektor parameter\nlahan: 5 GeoJSON\n(17,8 MB)',
+              'Poligon padi\nsawah (2,99 MB);\nbatas kecamatan\n(719 KB)']
+    proses = ['Agregasi spasial:\nstatistik zonal\nper poligon\n→ CSV 9 baris',
+              'Irisan dengan\nbatas desa → rerata\ntertimbang luas,\nkelas dominan',
+              'Generalisasi:\nsimplifikasi, buang\n< 0,5 ha; grid\n200 m (heatmap)']
+    keluaran = ['syarat_tumbuh.js\n(11 KB);\nkesesuaian_data\n_v2.js (70 KB)',
+                'parameter_lahan_\ndesa.js (5,6 KB)',
+                'padi_sawah.js\n(312 KB)']
+    for x, s, p, k in zip(kol, sumber, proses, keluaran):
+        kotak(ax, x, 14.75, lb, 2.75, s, warna=ABU, tepi='#888888', ukuran=u)
+        kotak(ax, x, 11.35, lb, 2.75, p, ukuran=u)
+        kotak(ax, x, 8.0, lb, 2.35, k, warna='white', tepi=HIJAU, ukuran=u)
+        panah(ax, x + lb / 2, 14.75, x + lb / 2, 14.1)
+        panah(ax, x + lb / 2, 11.35, x + lb / 2, 10.35)
+    ax.text(5.0, 10.85, 'serialisasi ke objek JavaScript', ha='center', fontsize=5.8, style='italic', color='#555555')
+    panah(ax, 5.0, 8.0, 5.0, 7.0)
+    ax.text(5.2, 7.35, 'unggah ke GitHub Pages', fontsize=5.9, style='italic', va='center')
 
-    kotak(ax, 5.3, 13.4, 4.5, 1.9, 'pH, C-organik, gambut,\nlereng, bahaya banjir\n(kelas S1–N, ambang\npadi sawah)', warna=ABU, tepi='#888888', ukuran=u)
-    kotak(ax, 5.3, 11.2, 4.5, 1.5, 'Skor rata-rata tertimbang\nluas dan kelas dominan\nper desa', ukuran=u)
-    kotak(ax, 5.3, 9.0, 4.5, 1.5, 'SAW 9 kriteria\n(bobot per kualitas lahan)', ukuran=u, tebal=True)
-    kotak(ax, 5.3, 6.8, 4.5, 1.5, 'Kelas hukum minimum\n+ faktor pembatas', warna='#FFF4E5', tepi=EMAS, ukuran=u, tebal=True)
-    kotak(ax, 5.3, 4.1, 4.5, 2.0, 'Peringkat desa untuk\npadi sawah, rekomendasi\ntata air/pengapuran,\npotensi lahan', warna=EMAS, tepi=EMAS, warna_teks='white', ukuran=u, tebal=True)
-    for y1, y2 in [(13.4, 12.7), (11.2, 10.5), (9.0, 8.3), (6.8, 6.1)]:
-        panah(ax, 7.55, y1, 7.55, y2)
-    panah(ax, 4.7, 11.95, 5.3, 9.9, rad=-0.15)
-
-    kotak(ax, 0.2, 0.9, 9.6, 2.3, '', warna='white', tepi='#888888', garis='--')
-    ax.text(5, 2.95, 'Indeks kondisi lahan (weighted overlay, skala 1–4)', ha='center', va='top', fontsize=6.8, fontweight='bold')
-    ax.text(5, 2.3, 'NDVI 0,30 · tekstur 0,25 · NDWI 0,20 · lereng 0,15 · aksesibilitas 0,10\n'
-            'kelas tinggi (> 3,5), sedang, rendah, sangat rendah (< 1,5); ditampilkan\n'
-            'sebagai warna peta dan label kartu, bukan kelas kesesuaian komoditas',
-            ha='center', va='top', fontsize=6.0, linespacing=1.3)
-    simpan(fig, 'Gambar_3_Model_Keputusan.png')
+    # Bagian peramban
+    ax.add_patch(FancyBboxPatch((0.1, 0.1), 9.8, 6.75, boxstyle='round,pad=0.02,rounding_size=0.15', fc='white', ec=HIJAU, lw=0.9))
+    ax.text(0.3, 6.6, 'Di peramban — setiap kali halaman dibuka', fontsize=6.6, fontweight='bold', color=HIJAU, va='top')
+    kotak(ax, 0.3, 3.45, 4.5, 2.6, 'Normalisasi r (0–1):\ntrapesoid, tekstur\ntertimbang luas,\nr = (s̄ − 1) / 3', ukuran=u)
+    kotak(ax, 5.2, 3.45, 4.5, 2.6, 'Skor SAW S = Σ w·r\ndan label kelas;\nkelas hukum minimum\n+ faktor pembatas', ukuran=u, tebal=True)
+    kotak(ax, 5.2, 0.4, 4.5, 2.45, 'Aturan rekomendasi:\nfaktor pembatas →\nsaran pengelolaan', warna='#FFF4E5', tepi=EMAS, ukuran=u)
+    kotak(ax, 0.3, 0.4, 4.5, 2.45, 'Antarmuka: peta, kartu,\ntabel w × r, grafik,\nheatmap, rekomendasi', warna=HIJAU, tepi=HIJAU, warna_teks='white', ukuran=u, tebal=True)
+    panah(ax, 4.8, 4.75, 5.2, 4.75); panah(ax, 7.45, 3.45, 7.45, 2.85); panah(ax, 5.2, 1.6, 4.8, 1.6)
+    panah(ax, 2.55, 3.45, 2.55, 2.85, garis='--')
+    ax.text(2.7, 3.15, 'nilai r dan w·r', fontsize=5.6, style='italic', va='center')
+    simpan(fig, 'Gambar_3_Alur_Data.png')
 
 
 # ── Susunan tangkapan layar ─────────────────────────────────────────────────
@@ -231,7 +238,7 @@ def gambar_layar():
     susun([(potong('n_saw_kartu.png'), '(a)'), (potong('n_saw_tabel.png'), '(b)')], 'Gambar_6_Profil_Kecamatan_SAW.png')
     susun([(potong('n_desa_tabel.png', (0, 0, 1692, 2190)), '(a)'), (potong('n_desa_rekom.png'), '(b)')], 'Gambar_7_Profil_Desa.png')
     susun([(potong('zonasi.png', (0, 0, 1165, 1160)), '(a)'), (potong('n_zona_a1.png'), '(b)')], 'Gambar_8_Zonasi.png')
-    susun([(potong('n_komparasi.png', (0, 0, 1860, 1560)), '(a)'), (potong('sebaran_heat.png'), '(b)')], 'Gambar_9_Komparasi_Sebaran.png')
+    susun([(potong('n_komparasi.png', (0, 0, 1860, 1560)), '(a)'), (potong('sebaran_kelas.png'), '(b)')], 'Gambar_9_Komparasi_Sebaran.png')
     sejajar([(potong('ponsel_beranda.png'), '(a)'), (potong('ponsel_modal.png'), '(b)')], 'Gambar_10_Ponsel.png')
 
 
@@ -239,5 +246,5 @@ if __name__ == '__main__':
     gambar_alur()
     gambar_use_case()
     gambar_arsitektur()
-    gambar_model()
+    gambar_alur_data()
     gambar_layar()
